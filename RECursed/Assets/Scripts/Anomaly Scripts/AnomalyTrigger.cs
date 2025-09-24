@@ -1,42 +1,49 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class AnomalyTrigger : MonoBehaviour
 {
-    // How many seconds after game starts should this anomaly trigger
+    [Tooltip("Auto trigger this many seconds after Start. Set <= 0 to not auto-trigger.")]
     public float triggerTime = 60f;
 
-    // Make sure we only trigger once
-    private bool hasTriggered = false;
+    [Tooltip("Explicit anomalies to trigger. If empty, IAnomaly components on this GameObject will be used.")]
+    public List<MonoBehaviour> explicitAnomalies = new(); 
 
-    void Update()
+    private List<IAnomaly> _targets = new();
+    private bool _hasTriggered;
+
+    void Awake()
     {
-        // Check if enough time has passed and we haven't triggered yet
-        if (!hasTriggered && Time.time > triggerTime)
+        _targets.Clear();
+
+        if (explicitAnomalies != null && explicitAnomalies.Count > 0)
         {
-            // Look for MovedObject script on this same object
-            MovedObject movedScript = GetComponent<MovedObject>();
-            if (movedScript != null)
-            {
-                movedScript.TriggerMovedAnomaly();
-            }
-
-            // Look for DisappearedObject script on this same object
-            DisappearedObject disappearedScript = GetComponent<DisappearedObject>();
-            if (disappearedScript != null)
-            {
-                disappearedScript.TriggerDisappearedAnomaly();
-            }
-
-            // Look for ExtraObject script on this same object
-            ExtraObject extraScript = GetComponent<ExtraObject>();
-            if (extraScript != null)
-            {
-                extraScript.TriggerExtraAnomaly();
-            }
-
-            // Mark as triggered so this doesn't keep running every frame
-            hasTriggered = true;
-            Debug.Log("Anomaly trigger completed - no more triggers will fire");
+            foreach (var mb in explicitAnomalies)
+                if (mb is IAnomaly a) _targets.Add(a);
         }
+        else
+        {
+            GetComponents<IAnomaly>(_targets);
+        }
+    }
+
+    void Start()
+    {
+        if (triggerTime > 0f)
+            StartCoroutine(AutoTriggerAfter(triggerTime));
+    }
+
+    public void TriggerNow()
+    {
+        if (_hasTriggered) return;
+        foreach (var a in _targets) a.Trigger();
+        _hasTriggered = true;
+    }
+
+    IEnumerator AutoTriggerAfter(float t)
+    {
+        yield return new WaitForSeconds(t);
+        TriggerNow();
     }
 }

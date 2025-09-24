@@ -1,34 +1,44 @@
 using UnityEngine;
 
-public class ExtraObject : MonoBehaviour
+public class ExtraObject : MonoBehaviour, IAnomaly
 {
-    // Drag the prefab you want to spawn here in the inspector
+    [Header("Setup")]
+    [SerializeField] private Room room = Room.Bedroom1;
+    [Tooltip("Prefab to spawn when the anomaly triggers.")]
     public GameObject extraObjectPrefab;
 
-    // Where relative to this object should the extra one appear (local coordinates)
+    [Tooltip("Local position offset (relative to this object) to spawn at.")]
     public Vector3 spawnPosition;
 
-    // For the reporting system to check
+    [Header("Debug/State")]
     public bool hasExtraAnomaly = false;
+
+    private GameObject spawnedInstance;
+
+    // IAnomaly
+    public Room Room => room;
+    public AnomalyType Type => AnomalyType.ExtraObject;
+    public bool IsActive => hasExtraAnomaly;
 
     public void TriggerExtraAnomaly()
     {
-        Debug.Log("TriggerExtraAnomaly called. hasExtraAnomaly = " + hasExtraAnomaly);
+        if (hasExtraAnomaly || !extraObjectPrefab) return;
 
-        // Only spawn once and make sure we actually have a prefab to spawn
-        if (!hasExtraAnomaly && extraObjectPrefab != null)
-        {
-            Debug.Log("Spawning extra object...");
-            // Calculate world position from local position
-            Vector3 worldSpawnPos = transform.TransformPoint(spawnPosition);
-            // Create the duplicate at the calculated world position
-            Instantiate(extraObjectPrefab, worldSpawnPos, transform.rotation);
-            hasExtraAnomaly = true;
-            Debug.Log("Extra object spawned! hasExtraAnomaly now = " + hasExtraAnomaly);
-        }
-        else
-        {
-            Debug.Log("Not spawning - either already spawned or no prefab assigned");
-        }
+        Vector3 worldPos = transform.TransformPoint(spawnPosition);
+        spawnedInstance = Instantiate(extraObjectPrefab, worldPos, transform.rotation);
+        hasExtraAnomaly = true;
+    }
+
+    // IAnomaly
+    public void Trigger() => TriggerExtraAnomaly();
+
+    // IAnomaly
+    public void Revert()
+    {
+        if (spawnedInstance)
+            Destroy(spawnedInstance);
+
+        spawnedInstance = null;
+        hasExtraAnomaly = false;
     }
 }

@@ -5,11 +5,11 @@ using UnityEngine.InputSystem;
 public class FirstPersonMover : MonoBehaviour
 {
     [Header("References")]
-    public Transform cameraTransform;     
-    public Animator animator;             
+    public Transform cameraTransform;     // drag your Main Camera (child of player)
+    public Animator animator;             // drag the SkinnedMesh/rig Animator here
 
     [Header("Movement")]
-    public float moveSpeed = 4.2f;
+    public float moveSpeed = 4.2f;        // walk speed (increase if you want faster)
     public float sprintSpeed = 6.0f;
     public bool allowSprint = false;
     public float gravity = -9.81f;
@@ -19,16 +19,14 @@ public class FirstPersonMover : MonoBehaviour
     public float pitchMin = -89f;
     public float pitchMax = 89f;
 
+    // Animator params
     [Header("Animation")]
-    public string speedParam = "Speed";
-    public float animDamp = 0.1f;
+    public string speedParam = "Speed";   // your controller uses "Speed"
+    public float animDamp = 0.1f;         // damping to smooth Speed changes
 
     private CharacterController cc;
     private Vector3 verticalVelocity;
     private float yaw, pitch;
-
-    // Q toggles this:
-    private bool freezeMovement = false;
 
     void Awake()
     {
@@ -45,16 +43,8 @@ public class FirstPersonMover : MonoBehaviour
 
     void Update()
     {
-        // Toggle freeze on Q press (press once = stop, press again = resume)
-        if (Keyboard.current != null && Keyboard.current.qKey.wasPressedThisFrame)
-            freezeMovement = !freezeMovement;
-
         HandleLook();
         HandleMoveAndAnimate();
-
-	Cursor.lockState = freezeMovement ? CursorLockMode.None : CursorLockMode.Locked;
-	Cursor.visible   = freezeMovement;
-
     }
 
     void HandleLook()
@@ -72,41 +62,38 @@ public class FirstPersonMover : MonoBehaviour
 
     void HandleMoveAndAnimate()
     {
-        // Always apply gravity so you don't float while frozen
-        if (cc.isGrounded && verticalVelocity.y < 0f) verticalVelocity.y = -2f;
-        verticalVelocity.y += gravity * Time.deltaTime;
-
-        // If frozen: no horizontal movement; keep animation at 0
-        if (freezeMovement)
-        {
-            cc.Move(verticalVelocity * Time.deltaTime);
-            if (animator) animator.SetFloat(speedParam, 0f, animDamp, Time.deltaTime);
-            return;
-        }
-
-        // ----- Normal movement -----
         var kb = Keyboard.current;
         Vector2 input = Vector2.zero;
 
         if (kb != null)
         {
-            if (kb.aKey.isPressed || kb.leftArrowKey.isPressed)  input.x -= 1f;
+            if (kb.aKey.isPressed || kb.leftArrowKey.isPressed) input.x -= 1f;
             if (kb.dKey.isPressed || kb.rightArrowKey.isPressed) input.x += 1f;
-            if (kb.wKey.isPressed || kb.upArrowKey.isPressed)    input.y += 1f;
-            if (kb.sKey.isPressed || kb.downArrowKey.isPressed)  input.y -= 1f;
+            if (kb.wKey.isPressed || kb.upArrowKey.isPressed) input.y += 1f;
+            if (kb.sKey.isPressed || kb.downArrowKey.isPressed) input.y -= 1f;
         }
         if (input.sqrMagnitude > 1f) input.Normalize();
 
+        // Move relative to facing
         Vector3 move = transform.right * input.x + transform.forward * input.y;
         float targetSpeed = (allowSprint && kb != null && kb.leftShiftKey.isPressed) ? sprintSpeed : moveSpeed;
         Vector3 horizontal = move * targetSpeed;
 
+        // Apply horizontal first
         cc.Move(horizontal * Time.deltaTime);
+
+        // Gravity
+        if (cc.isGrounded && verticalVelocity.y < 0f) verticalVelocity.y = -2f;
+        verticalVelocity.y += gravity * Time.deltaTime;
         cc.Move(verticalVelocity * Time.deltaTime);
 
+        // ---- Animator hookup ----
         if (animator)
         {
-            float normalized = horizontal.magnitude / Mathf.Max(sprintSpeed, moveSpeed);
+            // Use intended horizontal speed (ignores gravity) for clean blending
+            float speedValue = horizontal.magnitude;                // units/sec
+            // Normalize to 0..1 so your transitions stay stable at different speeds
+            float normalized = speedValue / Mathf.Max(sprintSpeed, moveSpeed);
             animator.SetFloat(speedParam, normalized, animDamp, Time.deltaTime);
         }
     }
