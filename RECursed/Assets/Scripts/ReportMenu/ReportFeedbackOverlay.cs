@@ -1,42 +1,63 @@
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
+using System.Collections;
 
+/// <summary>
+/// Tiny helper for a feedback overlay: shows a line of text for a short time,
+/// blocks clicks behind it while visible, then hides itself. I keep this active
+/// in the scene so Awake runs and the CanvasGroup is ready.
+/// </summary>
 public class ReportFeedbackOverlay : MonoBehaviour
 {
-    [Header("Hook these")]
-    [SerializeField] private GameObject root;    
-    [SerializeField] private TMP_Text label;     
-    [SerializeField] private Image background;   
+    [Header("Refs")]
+    [SerializeField] CanvasGroup group;  // CanvasGroup I fade + use to block raycasts
+    [SerializeField] TMP_Text label;     // the TMP text element inside the overlay
 
-    [Header("Optional SFX")]
-    [SerializeField] private AudioSource sfx;
-    [SerializeField] private AudioClip showClip;
-    [SerializeField] private AudioClip hideClip;
+    [Header("Timing")]
+    [SerializeField] float showSeconds = 1.25f; // how long to keep it visible
+
+    Coroutine hideRoutine; // so I can cancel/restart if Show() is called again fast
 
     void Awake()
     {
-        if (!root) root = gameObject;
-        root.SetActive(false);
+        // Auto-wire references if I forgot in the inspector.
+        if (!group) group = GetComponent<CanvasGroup>();
+        if (!label) label = GetComponentInChildren<TMP_Text>(true);
+
+        // Start hidden but keep the GameObject active so this Awake ran already.
+        SetVisible(false);
     }
 
-    public void Show(string message)
+    /// <summary>
+    /// Central place to toggle visibility + input blocking.
+    /// </summary>
+    void SetVisible(bool v)
     {
-        if (!root) return;
-        if (label) label.text = message;
-        root.SetActive(true);
-        if (sfx && showClip) sfx.PlayOneShot(showClip);
+        group.alpha = v ? 1f : 0f;
+        group.interactable = v;       // keyboard/gamepad focus (not essential but nice)
+        group.blocksRaycasts = v;     // critical: prevents clicking the UI behind this
     }
 
-    public void SetText(string message)
+    /// <summary>
+    /// Pop the overlay with a message for a given duration (or my default).
+    /// </summary>
+    public void Show(string message, float? duration = null)
     {
-        if (label) label.text = message;
+        label.text = message;
+        SetVisible(true);
+
+        // If a previous timer was still running, stop it and restart.
+        if (hideRoutine != null) StopCoroutine(hideRoutine);
+        hideRoutine = StartCoroutine(HideAfter(duration ?? showSeconds));
     }
 
-    public void Hide()
+    /// <summary>
+    /// Wait a realtime delay (so it still hides even if Time.timeScale == 0),
+    /// then make the overlay go away and release input.
+    /// </summary>
+    IEnumerator HideAfter(float t)
     {
-        if (!root) return;
-        root.SetActive(false);
-        if (sfx && hideClip) sfx.PlayOneShot(hideClip);
+        yield return new WaitForSecondsRealtime(t);
+        SetVisible(false);
     }
 }
