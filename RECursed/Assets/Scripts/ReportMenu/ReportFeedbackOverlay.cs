@@ -1,42 +1,53 @@
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
 
 public class ReportFeedbackOverlay : MonoBehaviour
 {
-    [Header("Hook these")]
-    [SerializeField] private GameObject root;    
-    [SerializeField] private TMP_Text label;     
-    [SerializeField] private Image background;   
+    [Header("Refs")]
+    [SerializeField] private GameObject root;          // Defaults to this object
+    [SerializeField] private TMP_Text textLabel;       // Your OverlayText TMP
+    [SerializeField] private CanvasGroup cg;           // Optional (leave empty if you don't use it)
 
-    [Header("Optional SFX")]
-    [SerializeField] private AudioSource sfx;
-    [SerializeField] private AudioClip showClip;
-    [SerializeField] private AudioClip hideClip;
-
-    void Awake()
+    void Reset()
     {
-        if (!root) root = gameObject;
-        root.SetActive(false);
+        root = gameObject;
+        if (!textLabel) textLabel = GetComponentInChildren<TMP_Text>(true);
+        if (!cg) cg = GetComponent<CanvasGroup>(); // ok if null
+        HideImmediate();
     }
 
+    // --- API used by your ReportMenuController ---
     public void Show(string message)
     {
-        if (!root) return;
-        if (label) label.text = message;
-        root.SetActive(true);
-        if (sfx && showClip) sfx.PlayOneShot(showClip);
+        if (textLabel) textLabel.text = message;
+
+        if (root && !root.activeSelf) root.SetActive(true);
+
+        // If you added a CanvasGroup, we’ll respect it. Otherwise this is ignored.
+        if (cg)
+        {
+            cg.alpha = 1f;
+            cg.blocksRaycasts = true;
+            cg.interactable = true;
+        }
     }
 
     public void SetText(string message)
     {
-        if (label) label.text = message;
+        if (textLabel) textLabel.text = message;
     }
 
     public void Hide()
     {
-        if (!root) return;
-        root.SetActive(false);
-        if (sfx && hideClip) sfx.PlayOneShot(hideClip);
+        if (cg)
+        {
+            cg.alpha = 0f;
+            cg.blocksRaycasts = false;
+            cg.interactable = false;
+        }
+
+        if (root) root.SetActive(false);
     }
+
+    public void HideImmediate() => Hide();
 }

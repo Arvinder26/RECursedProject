@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -7,214 +9,296 @@ using TMPro;
 public class ReportMenuController : MonoBehaviour
 {
     [Header("Scene refs")]
-    [SerializeField] private Transform roomsParent;     // LeftColumn container
-    [SerializeField] private Transform typesParent;     // RightColumn container
-    [SerializeField] private Button cancelButton;       // Bottom left
-    [SerializeField] private Button reportButton;       // Bottom right
-    [SerializeField] private AnomalyManager anomalyManager; // auto-found if left empty
+    [SerializeField] private Transform roomsParent;     // Left column parent
+    [SerializeField] private Transform typesParent;     // Right column parent
+    [SerializeField] private Button cancelButton;       // Bottom-left
+    [SerializeField] private Button reportButton;       // Bottom-right
+    [SerializeField] private AnomalyManager anomalyManager;
 
     [Header("Feedback overlay (optional)")]
-    [SerializeField] private ReportFeedbackOverlay overlay;
-    [SerializeField] private float overlaySeconds = 2f;
-    [SerializeField] private string overlayText = "ANOMALY REPORTED";
+    [SerializeField] private CanvasGroup overlay;       // Drag CanvasGroup panel here
+    [SerializeField] private float overlaySeconds = 2f; // How long to show
+    [SerializeField] private string overlaySuccessText = "ANOMALY REPORTED";
+    [SerializeField] private string overlayFailText    = "NO ANOMALY MATCH";
+
+    [Header("Battery / Loss (optional)")]
+    [SerializeField] private SegmentBattery battery;    // Drag battery UI (with SegmentBattery)
 
     [Header("Selection visuals")]
-    [SerializeField] private Color normalColor = new Color(1f, 1f, 1f, 0.65f);
+    [SerializeField] private Color normalColor   = new Color(1f, 1f, 1f, 0.65f);
     [SerializeField] private Color selectedColor = Color.white;
-    [SerializeField] private float selectedScale = 1.05f;
+    [SerializeField, Min(1f)] private float selectedScale = 1.05f;
 
-    // runtime state
-    private readonly List<Button> _roomButtons = new List<Button>();
-    private readonly List<Button> _typeButtons = new List<Button>();
-    private readonly Dictionary<Button, Room> _roomMap = new Dictionary<Button, Room>();
-    private readonly Dictionary<Button, AnomalyType> _typeMap = new Dictionary<Button, AnomalyType>();
+    
+    [Header("SFX")]
+    [SerializeField] private AudioSource sfxSource;       // 2D UI source
+    [SerializeField] private AudioClip reportClickSfx;    // played immediately on click
+    [SerializeField] private AudioClip successSfx;        // on correct report
+    [SerializeField] private AudioClip failSfx;           // on wrong report
+    [SerializeField] private bool resetAfterReport = true; // reset selections even on fail
 
-    private Room? _selectedRoom = null;
-    private AnomalyType? _selectedType = null;
+    // --- internals ---
+    private readonly List<Button> _roomButtons = new();
+    private readonly List<Button> _typeButtons = new();
+
+    private Button _selectedRoomBtn;
+    private Button _selectedTypeBtn;
+
+    private Room? _selectedRoom;
+    private AnomalyType? _selectedType;
+
+    private Coroutine _overlayCo;
+
+    
+    private Dictionary<string, Room> _roomMap;
+    private Dictionary<string, AnomalyType> _typeMap;
 
     void Awake()
     {
-        
-#if UNITY_2023_1_OR_NEWER
-        if (!anomalyManager) anomalyManager = FindFirstObjectByType<AnomalyManager>(FindObjectsInactive.Include);
-#else
-        if (!anomalyManager) anomalyManager = FindObjectOfType<AnomalyManager>(true);
-#endif
+        BuildEnumMaps();
 
-        BuildRoomButtons();
-        BuildTypeButtons();
+        WireButtons(roomsParent, isRoom: true);
+        WireButtons(typesParent, isRoom: false);
 
         if (cancelButton) cancelButton.onClick.AddListener(Cancel);
         if (reportButton) reportButton.onClick.AddListener(Report);
 
-        ResetVisuals(_roomButtons);
-        ResetVisuals(_typeButtons);
+        ResetButtons(_roomButtons);
+        ResetButtons(_typeButtons);
+
+        
+        if (overlay)
+        {
+            overlay.alpha = 0f;
+            overlay.blocksRaycasts = false;
+            overlay.interactable = false;
+        }
+
+        
+        if (sfxSource)
+        {
+            sfxSource.playOnAwake = false;
+            sfxSource.loop = false;
+            sfxSource.spatialBlend = 0f; 
+        }
     }
 
-    // ---------- Build UI lists (now searches all descendants) ----------
-
-    void BuildRoomButtons()
+    // ---------- mapping helpers ----------
+    void BuildEnumMaps()
     {
-        _roomButtons.Clear();
-        _roomMap.Clear();
-        if (!roomsParent) return;
+        _roomMap = Enum.GetNames(typeof(Room))
+            .ToDictionary(Sanitize, n => (Room)Enum.Parse(typeof(Room), n));
 
-        foreach (var btn in roomsParent.GetComponentsInChildren<Button>(true))
+        _typeMap = Enum.GetNames(typeof(AnomalyType))
+            .ToDictionary(Sanitize, n => (AnomalyType)Enum.Parse(typeof(AnomalyType), n));
+
+        
+        _typeMap[Sanitize("Moved Object")]           = AnomalyType.MovedObject;
+        _typeMap[Sanitize("Object Disappeared")]     = AnomalyType.ObjectDisappeared;
+        _typeMap[Sanitize("Extra Object")]           = AnomalyType.ExtraObject;
+        _typeMap[Sanitize("Moved")]                  = AnomalyType.MovedObject;
+        _typeMap[Sanitize("Disappeared")]            = AnomalyType.ObjectDisappeared;
+        _typeMap[Sanitize("Extra")]                  = AnomalyType.ExtraObject;
+
+        
+        _roomMap[Sanitize("Bedroom 1")]              = Room.Bedroom1;
+        _roomMap[Sanitize("Walk-in Wardrobe")]       = Room.WalkinWardrobe;
+        _roomMap[Sanitize("Walk in Wardrobe")]       = Room.WalkinWardrobe;
+    }
+
+    static string Sanitize(string s)
+    {
+        if (string.IsNullOrEmpty(s)) return "";
+        
+        var arr = s.Where(char.IsLetterOrDigit).ToArray();
+        return new string(arr).ToUpperInvariant();
+    }
+
+    // ---------- UI wiring ----------
+    void WireButtons(Transform parent, bool isRoom)
+    {
+        if (!parent) return;
+
+        foreach (Transform child in parent)
         {
-            btn.onClick.RemoveAllListeners();
+            var b = child.GetComponent<Button>();
+            if (!b) continue;
 
-            var label = btn.GetComponentInChildren<TMP_Text>(true)?.text ?? "";
-            if (TryParseEnum(label, out Room room))
+            var label = b.GetComponentInChildren<TMP_Text>(true);
+            var text  = label ? label.text : b.name;
+            var key   = Sanitize(text);
+
+            if (isRoom)
             {
-                _roomButtons.Add(btn);
-                _roomMap[btn] = room;
-                btn.onClick.AddListener(() => OnRoomClicked(btn));
+                if (!_roomMap.TryGetValue(key, out var roomEnum))
+                {
+                    Debug.LogWarning($"[ReportMenu] Room label '{text}' doesn’t map to Room enum.");
+                    continue;
+                }
+                b.onClick.AddListener(() => OnRoomClicked(b, roomEnum));
+                _roomButtons.Add(b);
             }
             else
             {
-                Debug.LogWarning($"[ReportMenu] Could not map room label '{label}' to Room enum.");
+                if (!_typeMap.TryGetValue(key, out var typeEnum))
+                {
+                    Debug.LogWarning($"[ReportMenu] Type label '{text}' doesn’t map to AnomalyType enum.");
+                    continue;
+                }
+                b.onClick.AddListener(() => OnTypeClicked(b, typeEnum));
+                _typeButtons.Add(b);
             }
         }
     }
 
-    void BuildTypeButtons()
+    void OnRoomClicked(Button btn, Room value)
     {
-        _typeButtons.Clear();
-        _typeMap.Clear();
-        if (!typesParent) return;
-
-        foreach (var btn in typesParent.GetComponentsInChildren<Button>(true))
-        {
-            btn.onClick.RemoveAllListeners();
-
-            var label = btn.GetComponentInChildren<TMP_Text>(true)?.text ?? "";
-            if (TryParseEnum(label, out AnomalyType type))
-            {
-                _typeButtons.Add(btn);
-                _typeMap[btn] = type;
-                btn.onClick.AddListener(() => OnTypeClicked(btn));
-            }
-            else
-            {
-                Debug.LogWarning($"[ReportMenu] Could not map type label '{label}' to AnomalyType enum.");
-            }
-        }
+        _selectedRoom = value;
+        _selectedRoomBtn = btn;
+        HighlightExclusive(_roomButtons, _selectedRoomBtn);
     }
 
-    // ---------- Click handlers ----------
-
-    void OnRoomClicked(Button btn)
+    void OnTypeClicked(Button btn, AnomalyType value)
     {
-        if (!_roomMap.TryGetValue(btn, out var room)) return;
-        _selectedRoom = room;
-        HighlightExclusive(_roomButtons, btn);
+        _selectedType = value;
+        _selectedTypeBtn = btn;
+        HighlightExclusive(_typeButtons, _selectedTypeBtn);
     }
-
-    void OnTypeClicked(Button btn)
-    {
-        if (!_typeMap.TryGetValue(btn, out var type)) return;
-        _selectedType = type;
-        HighlightExclusive(_typeButtons, btn);
-    }
-
-    // ---------- Report / Cancel ----------
-
-    public void Cancel()
-    {
-        _selectedRoom = null;
-        _selectedType = null;
-
-        ResetVisuals(_roomButtons);
-        ResetVisuals(_typeButtons);
-    }
-
-    public void Report()
-    {
-        if (!anomalyManager)
-        {
-            Debug.LogWarning("[ReportMenu] No AnomalyManager assigned or found.");
-            return;
-        }
-        if (!_selectedRoom.HasValue || !_selectedType.HasValue)
-        {
-            Debug.Log("[ReportMenu] Select a room and an anomaly type first.");
-            return;
-        }
-
-        StartCoroutine(ResolveWithOverlay(_selectedRoom.Value, _selectedType.Value));
-    }
-
-    private IEnumerator ResolveWithOverlay(Room room, AnomalyType type)
-    {
-        if (overlay) overlay.Show(overlayText);
-
-        
-        yield return null;
-
-        bool ok = anomalyManager.ValidateAndResolve(room, type);
-
-        if (overlay) overlay.SetText(ok ? "REPORT ACCEPTED" : "NO ANOMALY FOUND");
-
-        
-        float hold = Mathf.Max(0.1f, overlaySeconds);
-        float end = Time.realtimeSinceStartup + hold;
-        while (Time.realtimeSinceStartup < end)
-            yield return null;
-
-        if (overlay) overlay.Hide();
-
-        if (ok) Cancel();
-    }
-
-    // ---------- Visual helpers ----------
 
     void HighlightExclusive(List<Button> list, Button selected)
     {
         foreach (var b in list)
         {
-            bool isSel = (b == selected);
+            var g  = b.targetGraphic;
+            var rt = b.transform as RectTransform;
 
-            
-            var g = b.targetGraphic;
-            if (!g)
-            {
-                var tmp = b.GetComponentInChildren<TextMeshProUGUI>(true);
-                if (tmp) g = tmp; 
-            }
-            if (g) g.color = isSel ? selectedColor : normalColor;
-
-            b.transform.localScale = isSel ? Vector3.one * selectedScale : Vector3.one;
+            bool isSel = b == selected;
+            if (g)  g.color          = isSel ? selectedColor : normalColor;
+            if (rt) rt.localScale    = isSel ? Vector3.one * selectedScale : Vector3.one;
         }
     }
 
-    void ResetVisuals(List<Button> list)
+    void ResetButtons(List<Button> list)
     {
         foreach (var b in list)
         {
-            var g = b.targetGraphic;
-            if (!g)
-            {
-                var tmp = b.GetComponentInChildren<TextMeshProUGUI>(true);
-                if (tmp) g = tmp;
-            }
-            if (g) g.color = normalColor;
-
-            b.transform.localScale = Vector3.one;
+            if (!b) continue;
+            if (b.targetGraphic) b.targetGraphic.color = normalColor;
+            var rt = b.transform as RectTransform;
+            if (rt) rt.localScale = Vector3.one;
         }
     }
 
-    
-
-    static bool TryParseEnum<TEnum>(string label, out TEnum value) where TEnum : struct
+    // ---------- Actions ----------
+    public void Cancel()
     {
-        string key = (label ?? "").Trim()
-                     .Replace(" ", "")
-                     .Replace("-", "")
-                     .Replace("'", "")
-                     .Replace("&", "And")
-                     .Replace("(", "")
-                     .Replace(")", "");
+        _selectedRoom = null;
+        _selectedType = null;
+        _selectedRoomBtn = null;
+        _selectedTypeBtn = null;
 
-        return System.Enum.TryParse(key, true, out value);
+        ResetButtons(_roomButtons);
+        ResetButtons(_typeButtons);
+    }
+
+    public void Report()
+    {
+        
+        PlayOneShot(reportClickSfx);
+
+        if (!anomalyManager)
+        {
+            Debug.LogWarning("[ReportMenu] No AnomalyManager reference.");
+            if (resetAfterReport) Cancel();
+            return;
+        }
+
+        if (!_selectedRoom.HasValue || !_selectedType.HasValue)
+        {
+            ShowOverlay(overlayFailText);
+            PlayOneShot(failSfx);
+            if (resetAfterReport) Cancel();
+            return;
+        }
+
+        bool ok = anomalyManager.ValidateAndResolve(_selectedRoom.Value, _selectedType.Value);
+
+        if (ok)
+        {
+            ShowOverlay(overlaySuccessText);
+            PlayOneShot(successSfx);
+        }
+        else
+        {
+            ShowOverlay(overlayFailText);
+            PlayOneShot(failSfx);
+            if (battery) battery.ApplyPenalty(1);
+        }
+
+       
+        if (resetAfterReport) Cancel();
+    }
+
+    // ---------- Overlay ----------
+    private void ShowOverlay(string message)
+    {
+        if (!overlay) return;
+
+        if (_overlayCo != null) StopCoroutine(_overlayCo);
+        _overlayCo = StartCoroutine(OverlayCo(message));
+    }
+
+    private IEnumerator OverlayCo(string message)
+    {
+        
+        TMP_Text label = overlay.GetComponentInChildren<TMP_Text>(true);
+        if (label) label.text = message;
+
+        overlay.alpha = 1f;
+        overlay.blocksRaycasts = true;
+        overlay.interactable = true;
+
+        yield return new WaitForSeconds(overlaySeconds);
+
+        overlay.alpha = 0f;
+        overlay.blocksRaycasts = false;
+        overlay.interactable = false;
+    }
+
+    
+    public void SelectRoomByName(string labelText)
+    {
+        var key = Sanitize(labelText);
+        if (_roomMap.TryGetValue(key, out var room))
+        {
+            _selectedRoom = room;
+            var btn = _roomButtons.FirstOrDefault(b =>
+            {
+                var t = b.GetComponentInChildren<TMP_Text>(true)?.text ?? b.name;
+                return Sanitize(t) == key;
+            });
+            if (btn) { _selectedRoomBtn = btn; HighlightExclusive(_roomButtons, btn); }
+        }
+    }
+
+    public void SelectTypeByName(string labelText)
+    {
+        var key = Sanitize(labelText);
+        if (_typeMap.TryGetValue(key, out var type))
+        {
+            _selectedType = type;
+            var btn = _typeButtons.FirstOrDefault(b =>
+            {
+                var t = b.GetComponentInChildren<TMP_Text>(true)?.text ?? b.name;
+                return Sanitize(t) == key;
+            });
+            if (btn) { _selectedTypeBtn = btn; HighlightExclusive(_typeButtons, btn); }
+        }
+    }
+
+    // NEW: tiny helper
+    private void PlayOneShot(AudioClip clip)
+    {
+        if (sfxSource && clip) sfxSource.PlayOneShot(clip);
     }
 }
