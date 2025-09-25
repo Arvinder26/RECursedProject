@@ -1,75 +1,56 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class SegmentBattery : MonoBehaviour
 {
-    [Header("Cells")]
-    [SerializeField] Transform cellsParent;              // BatteryPanel
-    [SerializeField] Color filledColor = new Color(0.42f, 1f, 0.38f, 1f);
-    [SerializeField] Color emptyColor  = new Color(0.25f, 0.25f, 0.25f, 0.8f);
+    [Header("Config")]
+    [SerializeField] int totalBars = 3;
+    [SerializeField] Image[] barImages;   // assign Bar1, Bar2, Bar3...
 
-    [Header("Values")]
-    [SerializeField] int maxSegments = 3;
-    [SerializeField] int startSegments = 3;
+    [Header("Events")]
+    [SerializeField] UnityEvent onDepleted; // optional; keep if you wired it
 
-    [Header("On Depleted")]
-    public UnityEvent onDepleted;                        // Hook your loss UI here
+    int barsRemaining;
+    bool depletedInvoked;
 
-    readonly List<Image> _cells = new();
-    int _current;
-
-    public int Current => _current;
-    public int Max => maxSegments;
+    public int Current => barsRemaining;
+    public int Total   => totalBars;
 
     void Awake()
     {
-        if (!cellsParent) cellsParent = transform;
-        _cells.Clear();
-
-        foreach (Transform t in cellsParent)
-        {
-            var img = t.GetComponent<Image>();
-            if (img) _cells.Add(img);
-        }
-
-        // If you built N children, use that as max
-        if (_cells.Count > 0) maxSegments = _cells.Count;
-
-        _current = Mathf.Clamp(startSegments, 0, maxSegments);
-        Refresh();
+        barsRemaining   = Mathf.Max(0, totalBars);
+        depletedInvoked = barsRemaining <= 0;
+        RefreshUI();
     }
 
-    void Refresh()
+    public void Consume(int bars = 1)
     {
-        for (int i = 0; i < _cells.Count; i++)
+        if (barsRemaining <= 0) return;
+        barsRemaining = Mathf.Max(0, barsRemaining - Mathf.Abs(bars));
+        RefreshUI();
+
+        if (barsRemaining == 0 && !depletedInvoked)
         {
-            if (!_cells[i]) continue;
-            _cells[i].color = (i < _current) ? filledColor : emptyColor;
+            depletedInvoked = true;
+            onDepleted?.Invoke(); // fine if nothing is hooked
         }
     }
 
-    public void ApplyPenalty(int amount = 1)
+    public void Refill(int bars)
     {
-        if (_current <= 0) return;
-        _current = Mathf.Max(0, _current - Mathf.Abs(amount));
-        Refresh();
-        if (_current == 0) onDepleted?.Invoke();
+        int before = barsRemaining;
+        barsRemaining = Mathf.Clamp(before + Mathf.Abs(bars), 0, totalBars);
+        if (before == 0 && barsRemaining > 0) depletedInvoked = false;
+        RefreshUI();
     }
 
-    public void Recharge(int amount = 1)
+    void RefreshUI()
     {
-        _current = Mathf.Min(maxSegments, _current + Mathf.Abs(amount));
-        Refresh();
+        if (barImages == null) return;
+        for (int i = 0; i < barImages.Length; i++)
+        {
+            if (barImages[i]) barImages[i].enabled = i < barsRemaining;
+        }
     }
-
-    public void SetValue(int value)
-    {
-        _current = Mathf.Clamp(value, 0, maxSegments);
-        Refresh();
-        if (_current == 0) onDepleted?.Invoke();
-    }
-
-    public void ResetBattery() { SetValue(startSegments); }
 }

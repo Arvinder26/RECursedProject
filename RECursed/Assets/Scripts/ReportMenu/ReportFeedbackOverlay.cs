@@ -1,53 +1,42 @@
 using UnityEngine;
 using TMPro;
+using System.Collections;
 
 public class ReportFeedbackOverlay : MonoBehaviour
 {
-    [Header("Refs")]
-    [SerializeField] private GameObject root;          // Defaults to this object
-    [SerializeField] private TMP_Text textLabel;       // Your OverlayText TMP
-    [SerializeField] private CanvasGroup cg;           // Optional (leave empty if you don't use it)
+    [SerializeField] CanvasGroup group;
+    [SerializeField] TMP_Text label;
+    [SerializeField] float showSeconds = 1.25f;
 
-    void Reset()
+    Coroutine hideRoutine;
+
+    void Awake()
     {
-        root = gameObject;
-        if (!textLabel) textLabel = GetComponentInChildren<TMP_Text>(true);
-        if (!cg) cg = GetComponent<CanvasGroup>(); // ok if null
-        HideImmediate();
+        if (!group) group = GetComponent<CanvasGroup>();
+        if (!label) label = GetComponentInChildren<TMP_Text>(true);
+        // Start hidden but active so Awake runs
+        SetVisible(false);
     }
 
-    // --- API used by your ReportMenuController ---
-    public void Show(string message)
+    void SetVisible(bool v)
     {
-        if (textLabel) textLabel.text = message;
-
-        if (root && !root.activeSelf) root.SetActive(true);
-
-        // If you added a CanvasGroup, we’ll respect it. Otherwise this is ignored.
-        if (cg)
-        {
-            cg.alpha = 1f;
-            cg.blocksRaycasts = true;
-            cg.interactable = true;
-        }
+        group.alpha = v ? 1f : 0f;
+        group.interactable = v;       // <- important for keyboard/gamepad
+        group.blocksRaycasts = v;     // <- critical: blocks clicks to buttons behind
     }
 
-    public void SetText(string message)
+    public void Show(string message, float? duration = null)
     {
-        if (textLabel) textLabel.text = message;
+        label.text = message;
+        SetVisible(true);
+
+        if (hideRoutine != null) StopCoroutine(hideRoutine);
+        hideRoutine = StartCoroutine(HideAfter(duration ?? showSeconds));
     }
 
-    public void Hide()
+    IEnumerator HideAfter(float t)
     {
-        if (cg)
-        {
-            cg.alpha = 0f;
-            cg.blocksRaycasts = false;
-            cg.interactable = false;
-        }
-
-        if (root) root.SetActive(false);
+        yield return new WaitForSecondsRealtime(t); // works even if you pause time on loss
+        SetVisible(false);
     }
-
-    public void HideImmediate() => Hide();
 }

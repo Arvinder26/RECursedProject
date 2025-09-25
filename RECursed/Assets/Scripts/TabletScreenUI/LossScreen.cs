@@ -1,20 +1,29 @@
 using UnityEngine;
-using TMPro;
 
 public class LossScreen : MonoBehaviour
 {
-    [SerializeField] GameObject panel;
-    [SerializeField] TMP_Text messageText;
-    [SerializeField] string defaultMessage = "You Lost";
+    [SerializeField] private GameObject panel;
+    [SerializeField] private bool pauseOnShow = true;
 
-    public void Show(string msg = null)
+    void Awake()
     {
-        if (messageText) messageText.text = string.IsNullOrEmpty(msg) ? defaultMessage : msg;
+        if (panel) panel.SetActive(false);
+    }
+
+    public void Show()
+    {
         if (panel) panel.SetActive(true);
 
-        // optional: pause & unlock cursor
-        Time.timeScale = 0f;
+        // UI best practices when showing a fail/game-over screen:
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+
+        if (pauseOnShow) Time.timeScale = 0f;
+    }
+
+    public void Hide()
+    {
+        if (panel) panel.SetActive(false);
+        Time.timeScale = 1f;
     }
 }
