@@ -1,44 +1,85 @@
 using UnityEngine;
 
 /// <summary>
-/// Dumb/simple "You Lost" screen controller.
-/// I keep the actual UI panel assigned so I can enable/disable it here,
-/// and I optionally pause the game when it shows.
+/// Simple "You Lost" screen controller.
+/// - Shows a panel (on top of everything) and optionally pauses the game
+/// - Hides any conflicting UI (e.g., Anomaly Menu) while visible
+/// - Restores state when hidden
 /// </summary>
 public class LossScreen : MonoBehaviour
 {
-    // The GameObject that contains my "You Lost" UI.
-    [SerializeField] private GameObject panel;
+    [Header("Panel")]
+    [SerializeField] private GameObject panel;          // Your loss panel GameObject
+    [SerializeField] private bool pauseOnShow = true;   // Freeze time when showing
 
-    // If this is on, I freeze time when the screen shows.
-    [SerializeField] private bool pauseOnShow = true;
+    [Header("Hide these while loss is shown")]
+    [Tooltip("Drag the AnomalyMenu root, Tablet UI, etc., here so they get hidden during the loss screen.")]
+    [SerializeField] private GameObject[] hideWhileShown;
+
+    // optional: if the panel has a CanvasGroup, we’ll use it to block clicks
+    CanvasGroup _group;
 
     void Awake()
     {
-        // Start hidden. I don't want this to flash on scene load.
-        if (panel) panel.SetActive(false);
+        if (panel)
+        {
+            _group = panel.GetComponent<CanvasGroup>();
+            panel.SetActive(false);
+        }
     }
 
-    /// <summary>
-    /// Show the loss panel and set up the input state so the player isn't stuck.
-    /// </summary>
+    /// <summary>Show the loss UI, block input behind it, and pause if requested.</summary>
     public void Show()
     {
-        if (panel) panel.SetActive(true);
+        if (!panel) return;
 
-        // UI best practices: unlock and show the cursor for menu interaction.
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
+        // Put panel visually on top of its siblings (same Canvas).
+        panel.transform.SetAsLastSibling();
 
+        // Ensure clicks don't leak through if you added a CanvasGroup.
+        if (_group)
+        {
+            _group.alpha = 1f;
+            _group.interactable = true;
+            _group.blocksRaycasts = true;
+        }
+
+        // Hide competing UI while this is up (e.g., Anomaly menu).
+        if (hideWhileShown != null)
+        {
+            foreach (var go in hideWhileShown)
+                if (go) go.SetActive(false);
+        }
+
+        panel.SetActive(true);
+
+        // Pause + free cursor so the player can read the screen.
         if (pauseOnShow) Time.timeScale = 0f;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
-    /// <summary>
-    /// Hide the loss panel and unpause (used when restarting/continuing).
-    /// </summary>
+    /// <summary>Hide the loss UI and restore anything we hid.</summary>
     public void Hide()
     {
-        if (panel) panel.SetActive(false);
+        if (!panel) return;
+
+        if (_group)
+        {
+            _group.alpha = 0f;
+            _group.interactable = false;
+            _group.blocksRaycasts = false;
+        }
+
+        panel.SetActive(false);
+
+        // Restore the UI we hid.
+        if (hideWhileShown != null)
+        {
+            foreach (var go in hideWhileShown)
+                if (go) go.SetActive(true);
+        }
+
         Time.timeScale = 1f;
     }
 }
