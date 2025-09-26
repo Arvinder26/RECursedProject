@@ -6,7 +6,7 @@ using TMPro;
 /// - Toggles the panel on/off and updates the button label
 /// - Shows current selections (room/type) in the tiny header labels
 /// - Exposes SelectRoom/SelectType that my buttons call
-/// - OnCancel clears the selections; OnReport just logs (main UI reports elsewhere)
+/// - OnCancel clears the selections and restores header text
 /// </summary>
 public class AnomalyMenuController : MonoBehaviour
 {
@@ -21,17 +21,24 @@ public class AnomalyMenuController : MonoBehaviour
     [SerializeField] string closeText = "CLOSE ANOMALY MENU";
 
     [Header("Labels")]
-    [SerializeField] TMP_Text roomLabel;   // tiny label that mirrors the selected room
-    [SerializeField] TMP_Text typeLabel;   // tiny label that mirrors the selected type
+    [SerializeField] TMP_Text roomLabel;   // tiny label that mirrors the selected room (or header)
+    [SerializeField] TMP_Text typeLabel;   // tiny label that mirrors the selected type (or header)
 
-    // Runtime state I keep for this mini-panel only.
+    // runtime state
     bool   isOpen;
     string selectedRoom;
     string selectedType;
 
+    // cached defaults for the header text so I can restore after Cancel/Close
+    string _roomHeaderDefault;
+    string _typeHeaderDefault;
+
     void Awake()
     {
-        // Start with the mini-panel hidden and the button showing OPEN.
+        // remember what the labels said in the editor (likely the static headers)
+        _roomHeaderDefault = roomLabel  ? roomLabel.text  : "";
+        _typeHeaderDefault = typeLabel ? typeLabel.text : "";
+
         HideMenuImmediate();
     }
 
@@ -48,6 +55,13 @@ public class AnomalyMenuController : MonoBehaviour
         isOpen = true;
         SetPanelVisible(true);
         if (openCloseLabel) openCloseLabel.text = closeText;
+        
+        // ensure this panel draws above time/battery/etc. (same Canvas only)
+        if (panelRoot) panelRoot.SetAsLastSibling();
+
+        // Ensure labels are correct every time we open.
+        if (roomLabel) roomLabel.text = string.IsNullOrEmpty(selectedRoom) ? _roomHeaderDefault : selectedRoom;
+        if (typeLabel) typeLabel.text = string.IsNullOrEmpty(selectedType) ? _typeHeaderDefault : selectedType;
     }
 
     /// <summary>Hide the panel and swap the button label back to OPEN.</summary>
@@ -58,9 +72,7 @@ public class AnomalyMenuController : MonoBehaviour
         if (openCloseLabel) openCloseLabel.text = openText;
     }
 
-    /// <summary>
-    /// Hard-hide with no transition; used on Awake to avoid flashes on load.
-    /// </summary>
+    /// <summary>Hard-hide with no transition; used on Awake to avoid flashes on load.</summary>
     void HideMenuImmediate()
     {
         isOpen = false;
@@ -86,18 +98,14 @@ public class AnomalyMenuController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Called by room buttons. I store the text and reflect it in the tiny label.
-    /// </summary>
+    /// <summary>Called by room buttons. Stores the text and reflects it in the label.</summary>
     public void SelectRoom(string room)
     {
         selectedRoom = room;
         if (roomLabel) roomLabel.text = room;
     }
 
-    /// <summary>
-    /// Called by anomaly-type buttons. I store the text and reflect it in the tiny label.
-    /// </summary>
+    /// <summary>Called by anomaly-type buttons. Stores the text and reflects it in the label.</summary>
     public void SelectType(string type)
     {
         selectedType = type;
@@ -105,15 +113,16 @@ public class AnomalyMenuController : MonoBehaviour
     }
 
     /// <summary>
-    /// Clear both selections and close the mini-panel (used by the panel’s Cancel).
+    /// Clear both selections and close the mini-panel.
+    /// Important: restore the header text instead of blanking the labels.
     /// </summary>
     public void OnCancel()
     {
         selectedRoom = null;
         selectedType = null;
 
-        if (roomLabel) roomLabel.text = "";
-        if (typeLabel) typeLabel.text = "";
+        if (roomLabel)  roomLabel.text  = _roomHeaderDefault;
+        if (typeLabel)  typeLabel.text  = _typeHeaderDefault;
 
         CloseMenu();
     }
@@ -132,7 +141,7 @@ public class AnomalyMenuController : MonoBehaviour
 
         Debug.Log($"REPORT sent: Room={selectedRoom}, Type={selectedType}");
 
-        // After sending, I clear and close so the next interaction starts fresh.
+        // After sending, clear + close so the next interaction starts fresh.
         OnCancel();
     }
 }

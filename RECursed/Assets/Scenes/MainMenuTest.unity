@@ -1002,6 +1002,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6942577173644734803, guid: 71e62ae4412e1e94aa3075320699e1bf, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8940388101138430128, guid: 71e62ae4412e1e94aa3075320699e1bf, type: 3}
       propertyPath: m_Name
       value: InGameTimeCanvas
