@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 025f6b86d79f60445945dfcd27dd4903
+timeCreated: 1430218491
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35718
+  packageName: Next-gen Electronics Pack
+  packageVersion: 1.0
+  assetPath: Assets/Next-gen Electronics Pack/Prefabs/pc_speaker_L.prefab
+  uploadId: 61333
