@@ -1,42 +1,88 @@
+using System.Collections;
 using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
+using TMPro;
 
 public class ReportFeedbackOverlay : MonoBehaviour
 {
-    [Header("Hook these")]
-    [SerializeField] private GameObject root;    
-    [SerializeField] private TMP_Text label;     
-    [SerializeField] private Image background;   
+    [Header("UI refs")]
+    [SerializeField] private CanvasGroup group;       // CanvasGroup to fade & block raycasts
+    [SerializeField] private TMP_Text label;          // Text that displays the overlay message
+    [SerializeField] private GameObject root;         // Root object for the overlay (enabled/disabled)
+    [SerializeField] private Image background;        // Optional background image (not required)
+
+    [Header("Timing")]
+    [SerializeField] private float showSeconds = 1.25f;   // How long the overlay stays visible by default
+    private Coroutine hideRoutine;                        // So we can cancel/restart if Show() is called again
 
     [Header("Optional SFX")]
-    [SerializeField] private AudioSource sfx;
-    [SerializeField] private AudioClip showClip;
-    [SerializeField] private AudioClip hideClip;
+    [SerializeField] private AudioSource sfx;             // One-shot audio source (optional)
+    [SerializeField] private AudioClip showClip;          // Clip to play when the overlay appears
+    [SerializeField] private AudioClip hideClip;          // Clip to play when the overlay hides
 
-    void Awake()
+    private void Awake()
     {
-        if (!root) root = gameObject;
-        root.SetActive(false);
+        // Auto-wire references if left empty in the Inspector
+        if (!group) group = GetComponent<CanvasGroup>();
+        if (!label) label = GetComponentInChildren<TMP_Text>(true);
+
+        // Start hidden but keep this GameObject active so Awake runs already
+        SetVisible(false);
+        if (root) root.SetActive(false);
     }
 
-    public void Show(string message)
+    /// <summary>
+    /// Central place to toggle visibility + input blocking.
+    /// </summary>
+    public void SetVisible(bool v)
     {
-        if (!root) return;
+        if (group)
+        {
+            group.alpha = v ? 1f : 0f;
+            group.interactable = v;        // keyboard/gamepad focus (nice to have)
+            group.blocksRaycasts = v;      // prevents clicking UI or world behind this
+        }
+
+        if (root) root.SetActive(v);
+    }
+
+    /// <summary>
+    /// Show the overlay with a message (and optional custom duration).
+    /// If duration is null, uses the default showSeconds.
+    /// </summary>
+    public void Show(string message, float? duration = null)
+    {
         if (label) label.text = message;
-        root.SetActive(true);
+        SetVisible(true);
+
+        // (Re)start the hide timer.
+        if (hideRoutine != null) StopCoroutine(hideRoutine);
+        hideRoutine = StartCoroutine(HideAfter(duration ?? showSeconds));
+
+        // Play show SFX (optional)
         if (sfx && showClip) sfx.PlayOneShot(showClip);
     }
 
+    /// <summary>
+    /// Update the message text while already visible (no timer changes).
+    /// </summary>
     public void SetText(string message)
     {
         if (label) label.text = message;
     }
 
-    public void Hide()
+    private IEnumerator HideAfter(float t)
     {
-        if (!root) return;
-        root.SetActive(false);
+        // Wait in real time so it still hides even if Time.timeScale == 0
+        yield return new WaitForSecondsRealtime(Mathf.Max(0f, t));
+
+        // Then make the overlay go away
+        SetVisible(false);
+        if (root) root.SetActive(false);
+
+        // Play hide SFX (optional)
         if (sfx && hideClip) sfx.PlayOneShot(hideClip);
+
+        hideRoutine = null;
     }
 }

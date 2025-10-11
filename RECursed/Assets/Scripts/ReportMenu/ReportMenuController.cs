@@ -7,214 +7,187 @@ using TMPro;
 public class ReportMenuController : MonoBehaviour
 {
     [Header("Scene refs")]
-    [SerializeField] private Transform roomsParent;     // LeftColumn container
-    [SerializeField] private Transform typesParent;     // RightColumn container
-    [SerializeField] private Button cancelButton;       // Bottom left
-    [SerializeField] private Button reportButton;       // Bottom right
-    [SerializeField] private AnomalyManager anomalyManager; // auto-found if left empty
-
-    [Header("Feedback overlay (optional)")]
-    [SerializeField] private ReportFeedbackOverlay overlay;
-    [SerializeField] private float overlaySeconds = 2f;
-    [SerializeField] private string overlayText = "ANOMALY REPORTED";
+    [SerializeField] private Transform roomsParent;     // Left column (buttons in enum order)
+    [SerializeField] private Transform typesParent;     // Right column
+    [SerializeField] private Button cancelButton;       // "Cancel" in the panel
+    [SerializeField] private Button reportButton;       // "Report" in the panel
+    [SerializeField] private Button closeMenuButton;    // "Close Anomaly Menu" (optional)
+    [SerializeField] private AnomalyManager anomalyManager;
 
     [Header("Selection visuals")]
-    [SerializeField] private Color normalColor = new Color(1f, 1f, 1f, 0.65f);
+    [SerializeField] private Color normalColor = new Color(1, 1, 1, 0.65f);
     [SerializeField] private Color selectedColor = Color.white;
-    [SerializeField] private float selectedScale = 1.05f;
+    [SerializeField, Min(1f)] private float selectedScale = 1.05f;
 
-    // runtime state
-    private readonly List<Button> _roomButtons = new List<Button>();
-    private readonly List<Button> _typeButtons = new List<Button>();
-    private readonly Dictionary<Button, Room> _roomMap = new Dictionary<Button, Room>();
-    private readonly Dictionary<Button, AnomalyType> _typeMap = new Dictionary<Button, AnomalyType>();
+    [Header("Feedback overlay")]
+    [SerializeField] private CanvasGroup overlay;     // CanvasGroup on your ReportOverlay object
+    [SerializeField] private TMP_Text overlayLabel;   // TMP child of the overlay
+    [SerializeField, Min(0f)] private float overlaySeconds = 2f;
+    [SerializeField] private string overlaySuccessText = "ANOMALY REPORTED";
+    [SerializeField] private string overlayFailText = "NO ANOMALY MATCH";
 
-    private Room? _selectedRoom = null;
-    private AnomalyType? _selectedType = null;
+    [Header("Overlay SFX")]
+    [SerializeField] private AudioSource sfxSource;       // <- drag an AudioSource (UI) here
+    [SerializeField] private AudioClip overlaySuccessSfx; // <- clip for success
+    [SerializeField] private AudioClip overlayFailSfx;    // <- clip for fail
+    [SerializeField, Range(0f, 1f)] private float overlaySfxVolume = 1f;
+
+    [Header("Battery / Loss")]
+    [SerializeField] private SegmentBattery battery; // your BatteryUI (SegmentBattery)
+    [SerializeField, Min(1)] private int wrongReportCost = 1;
+    [SerializeField] private LossScreen lossScreen;   // drag your LossScreen here (optional but recommended)
+
+    // runtime
+    private readonly List<Button> _roomButtons = new();
+    private readonly List<Button> _typeButtons = new();
+    private int _selectedRoom = -1;
+    private int _selectedType = -1;
+    private Coroutine _overlayCo;
 
     void Awake()
     {
-        
-#if UNITY_2023_1_OR_NEWER
-        if (!anomalyManager) anomalyManager = FindFirstObjectByType<AnomalyManager>(FindObjectsInactive.Include);
-#else
-        if (!anomalyManager) anomalyManager = FindObjectOfType<AnomalyManager>(true);
-#endif
+        BuildButtons(roomsParent, _roomButtons, OnRoomClicked);
+        BuildButtons(typesParent, _typeButtons, OnTypeClicked);
 
-        BuildRoomButtons();
-        BuildTypeButtons();
+        if (cancelButton)  cancelButton.onClick.AddListener(Cancel);
+        if (reportButton)  reportButton.onClick.AddListener(Report);
 
-        if (cancelButton) cancelButton.onClick.AddListener(Cancel);
-        if (reportButton) reportButton.onClick.AddListener(Report);
+        ResetButtonVisuals(_roomButtons);
+        ResetButtonVisuals(_typeButtons);
 
-        ResetVisuals(_roomButtons);
-        ResetVisuals(_typeButtons);
-    }
-
-    // ---------- Build UI lists (now searches all descendants) ----------
-
-    void BuildRoomButtons()
-    {
-        _roomButtons.Clear();
-        _roomMap.Clear();
-        if (!roomsParent) return;
-
-        foreach (var btn in roomsParent.GetComponentsInChildren<Button>(true))
+        if (overlay)
         {
-            btn.onClick.RemoveAllListeners();
-
-            var label = btn.GetComponentInChildren<TMP_Text>(true)?.text ?? "";
-            if (TryParseEnum(label, out Room room))
-            {
-                _roomButtons.Add(btn);
-                _roomMap[btn] = room;
-                btn.onClick.AddListener(() => OnRoomClicked(btn));
-            }
-            else
-            {
-                Debug.LogWarning($"[ReportMenu] Could not map room label '{label}' to Room enum.");
-            }
+            if (!overlayLabel) overlayLabel = overlay.GetComponentInChildren<TMP_Text>(true);
+            overlay.alpha = 0f;
+            overlay.interactable   = false;
+            overlay.blocksRaycasts = false;
+            overlay.gameObject.SetActive(false);
         }
     }
 
-    void BuildTypeButtons()
+    // ---------- UI building / selection ----------
+    private void BuildButtons(Transform parent, List<Button> list, System.Action<int> onClick)
     {
-        _typeButtons.Clear();
-        _typeMap.Clear();
-        if (!typesParent) return;
-
-        foreach (var btn in typesParent.GetComponentsInChildren<Button>(true))
+        list.Clear();
+        if (!parent) return;
+        for (int i = 0; i < parent.childCount; i++)
         {
-            btn.onClick.RemoveAllListeners();
-
-            var label = btn.GetComponentInChildren<TMP_Text>(true)?.text ?? "";
-            if (TryParseEnum(label, out AnomalyType type))
-            {
-                _typeButtons.Add(btn);
-                _typeMap[btn] = type;
-                btn.onClick.AddListener(() => OnTypeClicked(btn));
-            }
-            else
-            {
-                Debug.LogWarning($"[ReportMenu] Could not map type label '{label}' to AnomalyType enum.");
-            }
+            var b = parent.GetChild(i).GetComponent<Button>();
+            if (!b) continue;
+            int idx = i;
+            b.onClick.AddListener(() => onClick(idx));
+            list.Add(b);
         }
     }
 
-    // ---------- Click handlers ----------
+    private void OnRoomClicked(int idx) { _selectedRoom = idx; SetHighlight(_roomButtons, idx); }
+    private void OnTypeClicked(int idx) { _selectedType = idx; SetHighlight(_typeButtons, idx); }
 
-    void OnRoomClicked(Button btn)
+    private void SetHighlight(List<Button> list, int index)
     {
-        if (!_roomMap.TryGetValue(btn, out var room)) return;
-        _selectedRoom = room;
-        HighlightExclusive(_roomButtons, btn);
+        for (int i = 0; i < list.Count; i++)
+        {
+            var g = list[i].targetGraphic;
+            if (g) g.color = (i == index) ? selectedColor : normalColor;
+
+            var rt = list[i].transform as RectTransform;
+            if (rt) rt.localScale = (i == index) ? Vector3.one * selectedScale : Vector3.one;
+        }
     }
 
-    void OnTypeClicked(Button btn)
+    private void ResetButtonVisuals(List<Button> list)
     {
-        if (!_typeMap.TryGetValue(btn, out var type)) return;
-        _selectedType = type;
-        HighlightExclusive(_typeButtons, btn);
+        foreach (var b in list)
+        {
+            if (b.targetGraphic) b.targetGraphic.color = normalColor;
+            var rt = b.transform as RectTransform;
+            if (rt) rt.localScale = Vector3.one;
+        }
     }
-
-    // ---------- Report / Cancel ----------
 
     public void Cancel()
     {
-        _selectedRoom = null;
-        _selectedType = null;
-
-        ResetVisuals(_roomButtons);
-        ResetVisuals(_typeButtons);
+        _selectedRoom = -1;
+        _selectedType = -1;
+        ResetButtonVisuals(_roomButtons);
+        ResetButtonVisuals(_typeButtons);
     }
 
+    // ---------- Report flow ----------
     public void Report()
     {
-        if (!anomalyManager)
+        // Ignore reports if battery is dead; also show loss if wired
+        if (battery && battery.Current <= 0)
         {
-            Debug.LogWarning("[ReportMenu] No AnomalyManager assigned or found.");
-            return;
-        }
-        if (!_selectedRoom.HasValue || !_selectedType.HasValue)
-        {
-            Debug.Log("[ReportMenu] Select a room and an anomaly type first.");
+            if (lossScreen) lossScreen.Show();
             return;
         }
 
-        StartCoroutine(ResolveWithOverlay(_selectedRoom.Value, _selectedType.Value));
-    }
+        if (!anomalyManager) return;
+        if (_selectedRoom < 0 || _selectedType < 0) return;
 
-    private IEnumerator ResolveWithOverlay(Room room, AnomalyType type)
-    {
-        if (overlay) overlay.Show(overlayText);
-
-        
-        yield return null;
+        var room = (Room)_selectedRoom;
+        var type = (AnomalyType)_selectedType;
 
         bool ok = anomalyManager.ValidateAndResolve(room, type);
 
-        if (overlay) overlay.SetText(ok ? "REPORT ACCEPTED" : "NO ANOMALY FOUND");
-
-        
-        float hold = Mathf.Max(0.1f, overlaySeconds);
-        float end = Time.realtimeSinceStartup + hold;
-        while (Time.realtimeSinceStartup < end)
-            yield return null;
-
-        if (overlay) overlay.Hide();
-
-        if (ok) Cancel();
-    }
-
-    // ---------- Visual helpers ----------
-
-    void HighlightExclusive(List<Button> list, Button selected)
-    {
-        foreach (var b in list)
+        if (ok)
         {
-            bool isSel = (b == selected);
-
-            
-            var g = b.targetGraphic;
-            if (!g)
-            {
-                var tmp = b.GetComponentInChildren<TextMeshProUGUI>(true);
-                if (tmp) g = tmp; 
-            }
-            if (g) g.color = isSel ? selectedColor : normalColor;
-
-            b.transform.localScale = isSel ? Vector3.one * selectedScale : Vector3.one;
+            ShowOverlay(overlaySuccessText, true);
         }
-    }
-
-    void ResetVisuals(List<Button> list)
-    {
-        foreach (var b in list)
+        else
         {
-            var g = b.targetGraphic;
-            if (!g)
-            {
-                var tmp = b.GetComponentInChildren<TextMeshProUGUI>(true);
-                if (tmp) g = tmp;
-            }
-            if (g) g.color = normalColor;
-
-            b.transform.localScale = Vector3.one;
+            ShowOverlay(overlayFailText, false);
+            if (battery) battery.Consume(wrongReportCost);
+            if (battery && battery.Current <= 0 && lossScreen) lossScreen.Show();
         }
+
+        // Always clear selections after any report (success or fail)
+        Cancel();
     }
 
-    
-
-    static bool TryParseEnum<TEnum>(string label, out TEnum value) where TEnum : struct
+    // ---------- Overlay ----------
+    private void ShowOverlay(string text, bool success)
     {
-        string key = (label ?? "").Trim()
-                     .Replace(" ", "")
-                     .Replace("-", "")
-                     .Replace("'", "")
-                     .Replace("&", "And")
-                     .Replace("(", "")
-                     .Replace(")", "");
+        if (!overlay) return;
 
-        return System.Enum.TryParse(key, true, out value);
+        overlay.transform.SetAsLastSibling(); // draw above other UI
+
+        if (_overlayCo != null) StopCoroutine(_overlayCo);
+        if (overlayLabel) overlayLabel.text = text;
+
+        // play SFX
+        var clip = success ? overlaySuccessSfx : overlayFailSfx;
+        if (sfxSource && clip) sfxSource.PlayOneShot(clip, overlaySfxVolume);
+
+        // Lock inputs while overlay is shown
+        SetButtonsInteractable(false);
+
+        overlay.gameObject.SetActive(true);
+        overlay.alpha = 1f;
+        overlay.interactable   = true;
+        overlay.blocksRaycasts = true;
+
+        _overlayCo = StartCoroutine(OverlayRoutine());
+    }
+
+    private IEnumerator OverlayRoutine()
+    {
+        yield return new WaitForSecondsRealtime(overlaySeconds);
+
+        overlay.alpha = 0f;
+        overlay.interactable   = false;
+        overlay.blocksRaycasts = false;
+        overlay.gameObject.SetActive(false);
+
+        SetButtonsInteractable(true);
+        _overlayCo = null;
+    }
+
+    private void SetButtonsInteractable(bool v)
+    {
+        if (reportButton)    reportButton.interactable = v;
+        if (cancelButton)    cancelButton.interactable = v;
+        if (closeMenuButton) closeMenuButton.interactable = v;
     }
 }

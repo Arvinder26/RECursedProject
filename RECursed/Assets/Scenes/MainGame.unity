@@ -16909,9 +16909,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9ca2d3be86d5f244bd7b53b7e65b109, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  root: {fileID: 0}
+  group: {fileID: 0}
   label: {fileID: 1936938759}
+  root: {fileID: 0}
   background: {fileID: 0}
+  showSeconds: 1.25
   sfx: {fileID: 0}
   showClip: {fileID: 0}
   hideClip: {fileID: 0}
@@ -24275,13 +24277,34 @@ MonoBehaviour:
   typesParent: {fileID: 2077727417}
   cancelButton: {fileID: 1939099315}
   reportButton: {fileID: 1033168290}
+  closeMenuButton: {fileID: 0}
   anomalyManager: {fileID: 794639001}
-  overlay: {fileID: 320394972}
-  overlaySeconds: 2
-  overlayText: ANOMALY REPORTED
   normalColor: {r: 1, g: 1, b: 1, a: 0.65}
   selectedColor: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   selectedScale: 1.05
+  overlay: {fileID: 320394972}
+  overlayLabel: {fileID: 1936938759}
+  overlaySeconds: 2
+  overlaySuccessText: ANOMALY REPORTED
+  overlayFailText: NO ANOMALY MATCH
+  sfxSource: {fileID: 2099823772}
+  overlaySuccessSfx: {fileID: 8300000, guid: 2f177ebe568b85c4ba1f2ef6f2bb6d94, type: 3}
+  overlayFailSfx: {fileID: 8300000, guid: dc0c8506fe2620c4285ccc939b5c3ff7, type: 3}
+  overlaySfxVolume: 1
+  battery: {fileID: 760420565}
+  wrongReportCost: 1
+  lossScreen: {fileID: 7788814}
+--- !u!114 &472708011 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6077897318963504969, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
+  m_PrefabInstance: {fileID: 1782361656}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 472708004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf135d5b5bdba5e409b64dc84b4e1ce6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnomalyMenuController
 --- !u!4 &473364863 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 471828, guid: 19682540d8a014522a319b1cf788aee2, type: 3}
@@ -60795,11 +60818,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 471828, guid: 19682540d8a014522a319b1cf788aee2, type: 3}
   m_PrefabInstance: {fileID: 1061914569}
   m_PrefabAsset: {fileID: 0}
---- !u!224 &1218381544 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 8580302657162168240, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
-  m_PrefabInstance: {fileID: 1782361656}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1220804059 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 471828, guid: 19682540d8a014522a319b1cf788aee2, type: 3}
@@ -89424,6 +89442,14 @@ PrefabInstance:
       propertyPath: m_hasFontAssetChanged
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2128568001990693721, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 472708011}
+    - target: {fileID: 2128568001990693721, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnReport
+      objectReference: {fileID: 0}
     - target: {fileID: 2146001928066494693, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
       propertyPath: m_Name
       value: Left Arrow (Previous)
@@ -89459,11 +89485,11 @@ PrefabInstance:
     - target: {fileID: 2636447422388075767, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
       propertyPath: m_fontAsset
       value: 
-      objectReference: {fileID: 11400000, guid: 92af72323aef99743919a6d7f6617710, type: 2}
+      objectReference: {fileID: 11400000, guid: 401b05ba691eba74ea7abd169d3b50d2, type: 2}
     - target: {fileID: 2636447422388075767, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 2180264, guid: 92af72323aef99743919a6d7f6617710, type: 2}
+      objectReference: {fileID: 2180264, guid: 401b05ba691eba74ea7abd169d3b50d2, type: 2}
     - target: {fileID: 2636447422388075767, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
@@ -89696,6 +89722,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 122.06
       objectReference: {fileID: 0}
+    - target: {fileID: 5607030261898287759, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 472708011}
+    - target: {fileID: 5607030261898287759, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnCancel
+      objectReference: {fileID: 0}
     - target: {fileID: 5725232977267720161, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -89752,6 +89786,14 @@ PrefabInstance:
       propertyPath: typeLabel
       value: 
       objectReference: {fileID: 811902533}
+    - target: {fileID: 6077897318963504969, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
+      propertyPath: headerRoomTitle
+      value: 
+      objectReference: {fileID: 204320204}
+    - target: {fileID: 6077897318963504969, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
+      propertyPath: headerTypeTitle
+      value: 
+      objectReference: {fileID: 811902533}
     - target: {fileID: 6359879809656894116, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
       propertyPath: 'cameras.Array.data[0]'
       value: 
@@ -89791,6 +89833,14 @@ PrefabInstance:
     - target: {fileID: 6434612983922138254, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6570176333534712190, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 472708011}
+    - target: {fileID: 6570176333534712190, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ToggleOpenClose
       objectReference: {fileID: 0}
     - target: {fileID: 6582022988127813277, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
       propertyPath: m_Name
@@ -89967,11 +90017,11 @@ PrefabInstance:
     - target: {fileID: 8416268892838851873, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
       propertyPath: m_fontAsset
       value: 
-      objectReference: {fileID: 11400000, guid: 92af72323aef99743919a6d7f6617710, type: 2}
+      objectReference: {fileID: 11400000, guid: 401b05ba691eba74ea7abd169d3b50d2, type: 2}
     - target: {fileID: 8416268892838851873, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 2180264, guid: 92af72323aef99743919a6d7f6617710, type: 2}
+      objectReference: {fileID: 2180264, guid: 401b05ba691eba74ea7abd169d3b50d2, type: 2}
     - target: {fileID: 8416268892838851873, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
@@ -90002,7 +90052,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3907257325246373579, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1614996706}
-    - targetCorrespondingSourceObject: {fileID: 8580302657162168240, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 6620477901579185026, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1712741090}
     - targetCorrespondingSourceObject: {fileID: 6620477901579185026, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
@@ -94016,7 +94066,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1218381544}
+    m_TransformParent: {fileID: 518712867}
     m_Modifications:
     - target: {fileID: 1227143888969049911, guid: 71e62ae4412e1e94aa3075320699e1bf, type: 3}
       propertyPath: m_Pivot.x
@@ -94092,11 +94142,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1227143888969049911, guid: 71e62ae4412e1e94aa3075320699e1bf, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 50
+      value: 803.0137
       objectReference: {fileID: 0}
     - target: {fileID: 1227143888969049911, guid: 71e62ae4412e1e94aa3075320699e1bf, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 50
+      value: 427.84677
       objectReference: {fileID: 0}
     - target: {fileID: 1227143888969049911, guid: 71e62ae4412e1e94aa3075320699e1bf, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -94304,7 +94354,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b15ec88272310e842bd3b6d14e7dba4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggerTime: 240
+  triggerTime: 10
   explicitAnomalies: []
 --- !u!114 &1865314662
 MonoBehaviour:
@@ -97950,8 +98000,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: ANOMALY REPORTED
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 92af72323aef99743919a6d7f6617710, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 92af72323aef99743919a6d7f6617710, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 401b05ba691eba74ea7abd169d3b50d2, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 401b05ba691eba74ea7abd169d3b50d2, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -106128,6 +106178,11 @@ MonoBehaviour:
   onEnd:
     m_PersistentCalls:
       m_Calls: []
+--- !u!82 &2099823772 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 9084284571315949835, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
+  m_PrefabInstance: {fileID: 1782361656}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2099953629
 PrefabInstance:
   m_ObjectHideFlags: 0
