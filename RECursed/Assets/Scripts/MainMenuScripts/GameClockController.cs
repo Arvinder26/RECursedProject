@@ -5,7 +5,7 @@ using UnityEngine.Events;
 public class GameClockController : MonoBehaviour
 {
     [Header("Clock UI")]
-    [SerializeField] private TMP_Text clockText;     // drag your TextMeshPro label (the white 12:xx AM text)
+    [SerializeField] private TMP_Text clockText;     
 
     [Header("Time Control")]
     [Tooltip("In-game seconds added per real-time second. 60 = 1 real sec = 1 in-game minute.")]
@@ -37,9 +37,9 @@ public class GameClockController : MonoBehaviour
     public UnityEvent onEnd;
 
     // -------- internal state --------
-    private double elapsedGameSeconds;   // accumulates continuously
-    private double startSecondsOfDay;    // converted start time to seconds-of-day
-    private double endSecondsOfDay;      // converted end time to seconds-of-day
+    private double elapsedGameSeconds;  
+    private double startSecondsOfDay;    
+    private double endSecondsOfDay;      
     private bool endTriggered;
 
     void Awake()
@@ -47,7 +47,7 @@ public class GameClockController : MonoBehaviour
         startSecondsOfDay = ToSecondsOfDay(startHour, startMinute);
         endSecondsOfDay   = ToSecondsOfDay(endHour,  endMinute);
 
-        // Show initial time immediately
+        
         UpdateClockUI();
     }
 
@@ -55,13 +55,13 @@ public class GameClockController : MonoBehaviour
     {
         if (endTriggered) return;
 
-        // Advance game time continuously, independent of UI
+       
         elapsedGameSeconds += Time.deltaTime * timeMultiplier;
 
-        // Update any visible clock label (safe even if the label is hidden)
+        
         UpdateClockUI();
 
-        // Check end condition
+        
         if (GetCurrentSecondsOfDay() >= endSecondsOfDay)
         {
             TriggerEnd();
@@ -74,9 +74,9 @@ public class GameClockController : MonoBehaviour
 
     private double GetCurrentSecondsOfDay()
     {
-        // Total since 00:00 of “day 0”
+        
         double total = startSecondsOfDay + elapsedGameSeconds;
-        // If you ever wanted to allow passing midnight, you could mod by 86400 here.
+        
         return total;
     }
 
@@ -103,7 +103,7 @@ public class GameClockController : MonoBehaviour
         if (endTriggered) return;
         endTriggered = true;
 
-        // Disable any gameplay scripts you dragged into the list
+        // Disable any gameplay scripts that is dragged into the list
         if (disableWhileEnd != null)
         {
             foreach (var b in disableWhileEnd)
@@ -115,7 +115,7 @@ public class GameClockController : MonoBehaviour
         // Show global end panel (works whether tablet is open or closed)
         if (endPanel) endPanel.SetActive(true);
 
-        // Nice UX: unlock cursor so player can interact with UI
+        
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
 
@@ -127,14 +127,14 @@ public class GameClockController : MonoBehaviour
 
     // ---------------- optional utilities ----------------
 
-    /// <summary>Call this from a Restart/Continue button to hide the end panel and resume.</summary>
+    
     public void ResumeFromEnd()
     {
         if (!endTriggered) return;
 
         if (pauseOnEnd) Time.timeScale = 1f;
 
-        // Re-enable anything we disabled
+        // Re-enable anything that is disabled
         if (disableWhileEnd != null)
         {
             foreach (var b in disableWhileEnd)
@@ -145,7 +145,7 @@ public class GameClockController : MonoBehaviour
 
         if (endPanel) endPanel.SetActive(false);
 
-        // Keep time running or reset as you prefer; here we just keep running.
+        
         endTriggered = false;
 
         // Relock cursor if your game needs it
@@ -153,7 +153,7 @@ public class GameClockController : MonoBehaviour
         // Cursor.visible = false;
     }
 
-    /// <summary>Set the current in-game time from code (24h).</summary>
+    
     public void SetTime(int hour24, int minute)
     {
         startHour = hour24;

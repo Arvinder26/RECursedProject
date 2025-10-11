@@ -106851,7 +106851,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clockText: {fileID: 1954168356}
-  timeMultiplier: 4702.9
+  timeMultiplier: 60
   startHour: 0
   startMinute: 0
   endHour: 6
