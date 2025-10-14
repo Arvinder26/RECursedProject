@@ -14,7 +14,7 @@ public class GameClockController : MonoBehaviour
     [Tooltip("Start time (24h). Example: 0 = 12:00 AM, 23 = 11:00 PM.")]
     [Range(0, 23)] public int startHour = 0;
 
-    [Tooltip("Start minutes (0–59).")]
+    [Tooltip("Start minutes (0-59).")]
     [Range(0, 59)] public int startMinute = 0;
 
     [Header("Round End")]
@@ -22,10 +22,13 @@ public class GameClockController : MonoBehaviour
     [Range(0, 23)] public int endHour = 6;
     [Range(0, 59)] public int endMinute = 0;
 
-    [Tooltip("Panel that appears when time reaches End (place this on a global overlay canvas).")]
+    [Tooltip("DEPRECATED: Use RoundManager instead for multi-round games.")]
     [SerializeField] private GameObject endPanel;
 
-    [Tooltip("Pause the game (Time.timeScale = 0) when the round ends.")]
+    [Tooltip("Use Round Manager for multi-round games. Leave empty for single-round mode.")]
+    [SerializeField] private RoundManager roundManager;
+
+    [Tooltip("Pause the game (Time.timeScale = 0) when the round ends (single-round mode only).")]
     [SerializeField] private bool pauseOnEnd = true;
 
     [Header("Disable While End")]
@@ -47,7 +50,9 @@ public class GameClockController : MonoBehaviour
         startSecondsOfDay = ToSecondsOfDay(startHour, startMinute);
         endSecondsOfDay   = ToSecondsOfDay(endHour,  endMinute);
 
-        
+        // Auto-find RoundManager if not set
+        if (!roundManager) roundManager = FindObjectOfType<RoundManager>();
+
         UpdateClockUI();
     }
 
@@ -55,13 +60,10 @@ public class GameClockController : MonoBehaviour
     {
         if (endTriggered) return;
 
-       
         elapsedGameSeconds += Time.deltaTime * timeMultiplier;
 
-        
         UpdateClockUI();
 
-        
         if (GetCurrentSecondsOfDay() >= endSecondsOfDay)
         {
             TriggerEnd();
@@ -74,9 +76,7 @@ public class GameClockController : MonoBehaviour
 
     private double GetCurrentSecondsOfDay()
     {
-        
         double total = startSecondsOfDay + elapsedGameSeconds;
-        
         return total;
     }
 
@@ -103,6 +103,27 @@ public class GameClockController : MonoBehaviour
         if (endTriggered) return;
         endTriggered = true;
 
+        Debug.Log("[GameClock] Round end reached.");
+
+        // If we have a RoundManager, let it handle the transition
+        if (roundManager)
+        {
+            roundManager.OnRoundTimeComplete();
+            
+            // Reset this flag so the clock can run again for the next round
+            endTriggered = false;
+        }
+        else
+        {
+            // Single-round mode: show the end panel and stop
+            HandleSingleRoundEnd();
+        }
+
+        onEnd?.Invoke();
+    }
+
+    private void HandleSingleRoundEnd()
+    {
         // Disable any gameplay scripts that is dragged into the list
         if (disableWhileEnd != null)
         {
@@ -115,19 +136,14 @@ public class GameClockController : MonoBehaviour
         // Show global end panel (works whether tablet is open or closed)
         if (endPanel) endPanel.SetActive(true);
 
-        
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
 
         if (pauseOnEnd) Time.timeScale = 0f;
-
-        onEnd?.Invoke();
-        Debug.Log("[GameClock] Round end reached — end panel shown.");
     }
 
     // ---------------- optional utilities ----------------
 
-    
     public void ResumeFromEnd()
     {
         if (!endTriggered) return;
@@ -145,21 +161,19 @@ public class GameClockController : MonoBehaviour
 
         if (endPanel) endPanel.SetActive(false);
 
-        
         endTriggered = false;
-
-        // Relock cursor if your game needs it
-        // Cursor.lockState = CursorLockMode.Locked;
-        // Cursor.visible = false;
     }
 
-    
+    /// <summary>
+    /// Manually set the clock time. Used by RoundManager to reset between rounds.
+    /// </summary>
     public void SetTime(int hour24, int minute)
     {
         startHour = hour24;
         startMinute = minute;
         startSecondsOfDay = ToSecondsOfDay(startHour, startMinute);
         elapsedGameSeconds = 0;
+        endTriggered = false; // Allow the clock to run again
         UpdateClockUI();
     }
 }
