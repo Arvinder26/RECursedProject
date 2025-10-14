@@ -17,17 +17,27 @@ public class AnomalyTimerUI : MonoBehaviour
     [SerializeField] private Color warningColor = Color.yellow;
     [SerializeField] private Color criticalColor = Color.red;
 
+    [Header("Battery Loss Notification")]
+    [SerializeField] private string batteryLossMessage = "⚡ BATTERY LOST!";
+    [SerializeField] private float notificationDuration = 2f;
+    [SerializeField] private Color notificationColor = Color.red;
+
     [Header("Debug")]
     [SerializeField] private bool verboseDebug = true;
 
     private HashSet<MonoBehaviour> warnedAnomalies = new HashSet<MonoBehaviour>();
     private HashSet<MonoBehaviour> criticalAnomalies = new HashSet<MonoBehaviour>();
+    private HashSet<MonoBehaviour> previousActiveAnomalies = new HashSet<MonoBehaviour>();
 
     private List<MovedObject> movedObjects = new List<MovedObject>();
     private List<DisappearedObject> disappearedObjects = new List<DisappearedObject>();
     private List<ExtraObject> extraObjects = new List<ExtraObject>();
     
     private int updateCount = 0;
+    
+    // Battery loss notification state
+    private float notificationTimer = 0f;
+    private bool showingNotification = false;
 
     void Awake()
     {
@@ -67,6 +77,16 @@ public class AnomalyTimerUI : MonoBehaviour
             Debug.Log($"[AnomalyTimerUI] Update() is running (frame {updateCount})");
         }
         
+        // Update notification timer
+        if (showingNotification)
+        {
+            notificationTimer -= Time.deltaTime;
+            if (notificationTimer <= 0f)
+            {
+                showingNotification = false;
+            }
+        }
+        
         UpdateTimerDisplay();
     }
 
@@ -82,6 +102,7 @@ public class AnomalyTimerUI : MonoBehaviour
         }
 
         var activeTimers = new List<AnomalyTimerInfo>();
+        var currentActiveAnomalies = new HashSet<MonoBehaviour>();
 
         // Check MovedObjects
         foreach (var obj in movedObjects)
@@ -104,6 +125,7 @@ public class AnomalyTimerUI : MonoBehaviour
                         timeRemaining = timeRemaining,
                         anomalyObject = obj
                     });
+                    currentActiveAnomalies.Add(obj);
                 }
             }
         }
@@ -129,6 +151,7 @@ public class AnomalyTimerUI : MonoBehaviour
                         timeRemaining = timeRemaining,
                         anomalyObject = obj
                     });
+                    currentActiveAnomalies.Add(obj);
                 }
             }
         }
@@ -154,9 +177,25 @@ public class AnomalyTimerUI : MonoBehaviour
                         timeRemaining = timeRemaining,
                         anomalyObject = obj
                     });
+                    currentActiveAnomalies.Add(obj);
                 }
             }
         }
+
+        // Detect if an anomaly expired (was active before, now not active)
+        foreach (var prevAnomaly in previousActiveAnomalies)
+        {
+            if (prevAnomaly != null && !currentActiveAnomalies.Contains(prevAnomaly))
+            {
+                // An anomaly just expired! Show notification
+                TriggerBatteryLossNotification();
+                Debug.Log("[AnomalyTimerUI] Battery loss detected - showing notification!");
+                break; // Only trigger once per frame
+            }
+        }
+
+        // Update the previous active list
+        previousActiveAnomalies = currentActiveAnomalies;
 
         // Log active timer count
         if (verboseDebug && (activeTimers.Count > 0 || updateCount % 300 == 0))
@@ -192,7 +231,15 @@ public class AnomalyTimerUI : MonoBehaviour
 
         activeTimers.Sort((a, b) => a.timeRemaining.CompareTo(b.timeRemaining));
 
-        string displayText = "<b>ACTIVE ANOMALIES:</b>\n";
+        // Build display text with optional notification
+        string notificationText = "";
+        if (showingNotification)
+        {
+            string notifColorHex = ColorUtility.ToHtmlStringRGB(notificationColor);
+            notificationText = $" <color=#{notifColorHex}>{batteryLossMessage}</color>";
+        }
+
+        string displayText = $"<b>ACTIVE ANOMALIES:</b>{notificationText}\n";
 
         foreach (var info in activeTimers)
         {
@@ -217,6 +264,12 @@ public class AnomalyTimerUI : MonoBehaviour
 
         warnedAnomalies.RemoveWhere(a => a == null);
         criticalAnomalies.RemoveWhere(a => a == null);
+    }
+
+    private void TriggerBatteryLossNotification()
+    {
+        showingNotification = true;
+        notificationTimer = notificationDuration;
     }
 
     private class AnomalyTimerInfo

@@ -42,6 +42,18 @@ public class RoundManager : MonoBehaviour
     [SerializeField] private SegmentBattery battery;
     [SerializeField] private GameObject roundTransitionPanel; // "ROUND 2 STARTING..." UI
     [SerializeField] private GameObject finalVictoryPanel;    // "YOU WON!" UI
+    
+    [Header("Player Reset")]
+    [Tooltip("Drag your player GameObject here. If empty, will try to find it automatically.")]
+    [SerializeField] private Transform playerTransform;
+    [Tooltip("Should the player's rotation also reset between rounds?")]
+    [SerializeField] private bool resetRotation = true;
+
+    [Header("Disable During Transition")]
+    [Tooltip("Drag scripts here to disable during round transition (e.g., FirstPersonMover, MouseLook, TabletPanelController).")]
+    [SerializeField] private Behaviour[] disableDuringTransition;
+    [Tooltip("Should the cursor be locked and hidden during transition?")]
+    [SerializeField] private bool lockCursorDuringTransition = true;
 
     [Header("Debug")]
     [SerializeField] private bool debugMode = false;
@@ -51,6 +63,14 @@ public class RoundManager : MonoBehaviour
     private List<IAnomaly> activeAnomaliesThisRound = new List<IAnomaly>();
     private Coroutine spawnRoutine;
     private bool roundInProgress = false;
+    
+    // Store the player's starting position and rotation
+    private Vector3 playerStartPosition;
+    private Quaternion playerStartRotation;
+    
+    // Store cursor state before transition
+    private CursorLockMode previousCursorLockMode;
+    private bool previousCursorVisible;
 
     void Awake()
     {
@@ -69,6 +89,34 @@ public class RoundManager : MonoBehaviour
         // Auto-find references if not set
         if (!gameClock) gameClock = FindObjectOfType<GameClockController>();
         if (!battery) battery = FindObjectOfType<SegmentBattery>();
+
+        // Auto-find player if not assigned
+        if (!playerTransform)
+        {
+            // Try to find by common player names or tags
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (!player) player = GameObject.Find("FINALPLAYER");
+            if (!player) player = GameObject.Find("Player");
+            if (!player) player = GameObject.Find("FPSController");
+            
+            if (player)
+            {
+                playerTransform = player.transform;
+                if (debugMode) Debug.Log($"[RoundManager] Auto-found player: {player.name}");
+            }
+            else
+            {
+                Debug.LogWarning("[RoundManager] Could not find player! Drag your player into the 'Player Transform' field.");
+            }
+        }
+
+        // Store the player's initial position and rotation
+        if (playerTransform)
+        {
+            playerStartPosition = playerTransform.position;
+            playerStartRotation = playerTransform.rotation;
+            if (debugMode) Debug.Log($"[RoundManager] Stored player start position: {playerStartPosition}");
+        }
 
         // Hide panels
         if (roundTransitionPanel) roundTransitionPanel.SetActive(false);
@@ -120,8 +168,17 @@ public class RoundManager : MonoBehaviour
 
     private void StartRound(int roundNumber)
     {
+        // Ensure game is unpaused
+        Time.timeScale = 1f;
+        
         currentRound = roundNumber;
         roundInProgress = true;
+
+        // Re-enable all gameplay controls
+        EnableGameplayControls();
+
+        // Reset player position to starting position
+        ResetPlayerPosition();
 
         // Get settings for this round
         int anomalyCount;
@@ -191,6 +248,78 @@ public class RoundManager : MonoBehaviour
         spawnRoutine = StartCoroutine(SpawnAnomaliesRoutine(spawnInterval, startDelay));
     }
 
+    private void ResetPlayerPosition()
+    {
+        if (!playerTransform)
+        {
+            if (debugMode) Debug.LogWarning("[RoundManager] Cannot reset player position - no player assigned!");
+            return;
+        }
+
+        // Check if player has a CharacterController (need to disable it to teleport)
+        CharacterController cc = playerTransform.GetComponent<CharacterController>();
+        if (cc)
+        {
+            cc.enabled = false;
+            playerTransform.position = playerStartPosition;
+            if (resetRotation) playerTransform.rotation = playerStartRotation;
+            cc.enabled = true;
+        }
+        else
+        {
+            // No CharacterController, just set position directly
+            playerTransform.position = playerStartPosition;
+            if (resetRotation) playerTransform.rotation = playerStartRotation;
+        }
+
+        if (debugMode) Debug.Log($"[RoundManager] Reset player to starting position: {playerStartPosition}");
+    }
+
+    private void DisableGameplayControls()
+    {
+        if (debugMode) Debug.Log("[RoundManager] Disabling gameplay controls during transition...");
+
+        // Disable all gameplay scripts
+        if (disableDuringTransition != null)
+        {
+            foreach (var b in disableDuringTransition)
+            {
+                if (b) b.enabled = false;
+            }
+        }
+
+        // Store current cursor state and lock it
+        if (lockCursorDuringTransition)
+        {
+            previousCursorLockMode = Cursor.lockState;
+            previousCursorVisible = Cursor.visible;
+            
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+    }
+
+    private void EnableGameplayControls()
+    {
+        if (debugMode) Debug.Log("[RoundManager] Re-enabling gameplay controls...");
+
+        // Re-enable all gameplay scripts
+        if (disableDuringTransition != null)
+        {
+            foreach (var b in disableDuringTransition)
+            {
+                if (b) b.enabled = true;
+            }
+        }
+
+        // Restore previous cursor state
+        if (lockCursorDuringTransition)
+        {
+            Cursor.lockState = previousCursorLockMode;
+            Cursor.visible = previousCursorVisible;
+        }
+    }
+
     private IEnumerator SpawnAnomaliesRoutine(float interval, float startDelay)
     {
         // Wait before spawning the first anomaly (gives player time to prepare)
@@ -242,16 +371,23 @@ public class RoundManager : MonoBehaviour
 
     private IEnumerator TransitionToNextRound()
     {
+        if (debugMode) Debug.Log($"[RoundManager] Showing transition to Round {currentRound}...");
+
+        // DISABLE ALL GAMEPLAY CONTROLS
+        DisableGameplayControls();
+
         // Show transition screen
         if (roundTransitionPanel) roundTransitionPanel.SetActive(true);
 
-        // Wait a few seconds
-        yield return new WaitForSeconds(3f);
+        // Wait using realtime (works even if game is paused)
+        yield return new WaitForSecondsRealtime(3f);
 
         // Hide transition
         if (roundTransitionPanel) roundTransitionPanel.SetActive(false);
 
-        // Start next round
+        if (debugMode) Debug.Log($"[RoundManager] Starting Round {currentRound} now!");
+
+        // Start next round (this will re-enable controls)
         StartRound(currentRound);
     }
 
@@ -261,8 +397,13 @@ public class RoundManager : MonoBehaviour
 
         if (finalVictoryPanel) finalVictoryPanel.SetActive(true);
 
+        // Disable gameplay controls
+        DisableGameplayControls();
+
         // Pause game
         Time.timeScale = 0f;
+        
+        // Show cursor for final victory screen
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }

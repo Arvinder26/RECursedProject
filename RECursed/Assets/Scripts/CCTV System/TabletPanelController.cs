@@ -28,10 +28,6 @@ public class TabletPanelController : MonoBehaviour
 
     public bool IsOpen { get; private set; }
 
-    
-    bool prevCursorVisible;
-    CursorLockMode prevCursorLock;
-
     void Awake()
     {
         if (panelRoot) panelRoot.SetActive(false);
@@ -44,19 +40,24 @@ public class TabletPanelController : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        // Lock cursor at game start
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
     void Update()
     {
         if (ignoreKeyWhenPointerOverUI && IsPointerOverUI())
             return;
 
-        
         if (closeKey != KeyCode.None && Input.GetKeyDown(closeKey))
         {
             Close();
             return;
         }
 
-        
         if (Input.GetKeyDown(openKey))
         {
             if (closeKey == KeyCode.None)
@@ -76,11 +77,9 @@ public class TabletPanelController : MonoBehaviour
     {
         if (IsOpen || panelRoot == null) return;
 
-        
-        prevCursorVisible = Cursor.visible;
-        prevCursorLock    = Cursor.lockState;
-
         panelRoot.SetActive(true);
+        
+        // Unlock cursor when tablet opens
         Cursor.visible   = true;
         Cursor.lockState = CursorLockMode.None;
 
@@ -96,9 +95,9 @@ public class TabletPanelController : MonoBehaviour
 
         panelRoot.SetActive(false);
 
-        
-        Cursor.visible   = prevCursorVisible;
-        Cursor.lockState = prevCursorLock;
+        // Lock cursor when tablet closes
+        Cursor.visible   = false;
+        Cursor.lockState = CursorLockMode.Locked;
 
         SetBehavioursEnabled(true);
         IsOpen = false;
@@ -106,7 +105,6 @@ public class TabletPanelController : MonoBehaviour
         PlayOneShot(closeSfx);
     }
 
-    
     public void CloseFromUI() => Close();
 
     void SetBehavioursEnabled(bool enabled)
