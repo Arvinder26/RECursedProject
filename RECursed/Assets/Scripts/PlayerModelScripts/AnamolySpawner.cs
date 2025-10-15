@@ -27,6 +27,10 @@ public class AnomalySpawner : MonoBehaviour
     [Tooltip("Use 0 if model's front is +Z, 180 if it's -Z, 90/-90 if sideways.")]
     public float yawOffsetDegrees = 0f;
 
+    [Header("Audio")]
+    public float audioFadeOutSeconds = 0.6f;   // match AnomalyAudioController.fadeTime
+
+
     // internal
     int spawnsThisRound = 0;
     readonly List<int> order = new List<int>();
@@ -106,6 +110,14 @@ public class AnomalySpawner : MonoBehaviour
     {
         GameObject go = Instantiate(anomalyPrefab, pos, Quaternion.identity);
 
+        // AUDIO: start spawn sting + looping aura
+        var audio = go.GetComponent<AnomalyAudioController>();
+        if (audio != null)
+        {
+            audio.PlaySpawn();      // one-shot sting
+            audio.SetActive(true);  // fade-in loop
+        }
+
         // Ensure the spawned object faces the player continuously (Animator-safe).
         var fp = go.GetComponent<FacePlayerSimple>();
         if (!fp) fp = go.AddComponent<FacePlayerSimple>();
@@ -117,6 +129,7 @@ public class AnomalySpawner : MonoBehaviour
         // Also snap immediately on spawn (in case facePlayerContinuously is off)
         FacePlayerSimple.FaceNow(go.transform, player, true, yawOffsetDegrees);
 
+        // Lifetime handling
         if (!facePlayerContinuously) yield return new WaitForSeconds(lifetimeSeconds);
         else
         {
@@ -124,8 +137,17 @@ public class AnomalySpawner : MonoBehaviour
             while (t < lifetimeSeconds && go) { t += Time.deltaTime; yield return null; }
         }
 
+        // AUDIO: fade the aura out before destroy
+        if (go && audio != null)
+        {
+            audio.SetActive(false);
+            if (audioFadeOutSeconds > 0f)
+                yield return new WaitForSeconds(audioFadeOutSeconds);
+        }
+
         if (go) Destroy(go);
     }
+
 
     // Sample a point within the collider by raycasting down from above its bounds
     bool TryPointOnArea(Collider area, out Vector3 point)
