@@ -1,0 +1,3 @@
+This Game Object contains The map and the camera system
+
+It is currently not in the game object hierarchy, your computer might lag if you put it inside unity scene, I was lagging really bad, so make sure to put it far away from the round 1 and 2 house and the big screen as they are the one causing the lag issues
