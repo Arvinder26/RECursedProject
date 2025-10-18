@@ -27,7 +27,7 @@ public class FirstPersonMover : MonoBehaviour
     private CharacterController cc;
     private Vector3 verticalVelocity;
     private float yaw, pitch;
-
+   
     void Awake()
     {
         cc = GetComponent<CharacterController>();
@@ -90,11 +90,11 @@ public class FirstPersonMover : MonoBehaviour
         // ---- Animator hookup ----
         if (animator)
         {
-            // Use intended horizontal speed (ignores gravity) for clean blending
             float speedValue = horizontal.magnitude;                // units/sec
-            // Normalize to 0..1 so your transitions stay stable at different speeds
             float normalized = speedValue / Mathf.Max(sprintSpeed, moveSpeed);
             animator.SetFloat(speedParam, normalized, animDamp, Time.deltaTime);
         }
-    }
+
+     }
 }
+
