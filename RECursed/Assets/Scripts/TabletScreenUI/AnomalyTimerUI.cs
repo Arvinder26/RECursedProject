@@ -22,6 +22,12 @@ public class AnomalyTimerUI : MonoBehaviour
     [SerializeField] private float notificationDuration = 2f;
     [SerializeField] private Color notificationColor = Color.red;
 
+    [Header("Battery Loss Audio")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip batteryLossSound;
+    [Range(0f, 1f)]
+    [SerializeField] private float audioVolume = 1f;
+
     [Header("Debug")]
     [SerializeField] private bool verboseDebug = true;
 
@@ -64,8 +70,22 @@ public class AnomalyTimerUI : MonoBehaviour
             canvasGroup.interactable = false;
             canvasGroup.blocksRaycasts = false;
         }
+
+        // Auto-find AudioSource if not assigned
+        if (!audioSource)
+        {
+            audioSource = GetComponent<AudioSource>();
+            
+            // If still not found, add one
+            if (!audioSource)
+            {
+                audioSource = gameObject.AddComponent<AudioSource>();
+                audioSource.playOnAwake = false;
+                audioSource.spatialBlend = 0f; // 2D sound
+            }
+        }
         
-        Debug.Log($"[AnomalyTimerUI] Setup - TimerText: {timerText != null}, CanvasGroup: {canvasGroup != null}");
+        Debug.Log($"[AnomalyTimerUI] Setup - TimerText: {timerText != null}, CanvasGroup: {canvasGroup != null}, AudioSource: {audioSource != null}");
         Debug.Log("[AnomalyTimerUI] ===== AWAKE END =====");
     }
 
@@ -215,9 +235,9 @@ public class AnomalyTimerUI : MonoBehaviour
         {
             if (prevAnomaly != null && !currentActiveAnomalies.Contains(prevAnomaly))
             {
-                // An anomaly just expired! Show notification
+                // An anomaly just expired! Show notification and play sound
                 TriggerBatteryLossNotification();
-                Debug.Log("[AnomalyTimerUI] Battery loss detected - showing notification!");
+                Debug.Log("[AnomalyTimerUI] Battery loss detected - showing notification and playing sound!");
                 break; // Only trigger once per frame
             }
         }
@@ -298,6 +318,17 @@ public class AnomalyTimerUI : MonoBehaviour
     {
         showingNotification = true;
         notificationTimer = notificationDuration;
+
+        // Play the battery loss sound
+        if (audioSource && batteryLossSound)
+        {
+            audioSource.PlayOneShot(batteryLossSound, audioVolume);
+            Debug.Log("[AnomalyTimerUI] Playing battery loss sound!");
+        }
+        else if (!batteryLossSound)
+        {
+            Debug.LogWarning("[AnomalyTimerUI] Battery loss sound not assigned!");
+        }
     }
 
     private class AnomalyTimerInfo
