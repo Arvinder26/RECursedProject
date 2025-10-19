@@ -21,18 +21,16 @@ public enum AnomalyType
     ExtraObject
 }
 
-
 public interface IAnomaly
 {
     Room Room { get; }
     AnomalyType Type { get; }
-
     
     bool IsActive { get; }
-
     
     void Trigger();
-
     
     void Revert();
+    
+    float GetTimeRemaining();
 }
