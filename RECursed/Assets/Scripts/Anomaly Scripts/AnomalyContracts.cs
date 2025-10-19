@@ -14,7 +14,6 @@ public enum Room
 public enum AnomalyType
 {
     MovedObject,
-    WritingsOnWalls,
     ObjectDisappeared,
     ShadowEntity,
     LightFlicker,
