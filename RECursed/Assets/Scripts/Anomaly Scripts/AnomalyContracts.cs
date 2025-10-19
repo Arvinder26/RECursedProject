@@ -17,7 +17,7 @@ public enum AnomalyType
     WritingsOnWalls,
     ObjectDisappeared,
     ShadowEntity,
-    LightOrbs,
+    LightFlicker,
     ExtraObject
 }
 

@@ -1,7 +1,11 @@
 using UnityEngine;
 
-public class LightFlickerAnomaly : MonoBehaviour
+public class LightFlickerAnomaly : MonoBehaviour, IAnomaly
 {
+    [Header("Anomaly Info")]
+    [SerializeField] private Room room = Room.Bathroom;
+    [SerializeField] private float deadline = 60f;
+
     [Header("Light Settings")]
     [SerializeField] private Light targetLight;
 
@@ -15,13 +19,23 @@ public class LightFlickerAnomaly : MonoBehaviour
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private bool playAudio = true;
 
-    [Header("Anomaly Control")]
-    [SerializeField] private bool isFlickering = false;
+    [Header("Battery Penalty")]
+    [SerializeField] private SegmentBattery battery;
+    [SerializeField] private int batteryPenalty = 1;
+
+    [Header("Debug")]
+    [SerializeField] private bool debugMode = false;
+
+    // IAnomaly interface implementation
+    public Room Room => room;
+    public AnomalyType Type => AnomalyType.LightFlicker;
+    public bool IsActive { get; private set; }
 
     private float originalIntensity;
     private float nextFlickerTime;
+    private float activationTime;
 
-    private void Start()
+    private void Awake()
     {
         // Get components if not assigned
         if (targetLight == null)
@@ -34,6 +48,11 @@ public class LightFlickerAnomaly : MonoBehaviour
             audioSource = GetComponent<AudioSource>();
         }
 
+        if (!battery)
+        {
+            battery = FindObjectOfType<SegmentBattery>();
+        }
+
         // Store original intensity
         if (targetLight != null)
         {
@@ -41,33 +60,61 @@ public class LightFlickerAnomaly : MonoBehaviour
             maxIntensity = originalIntensity;
         }
 
-        // Start flickering if enabled
-        if (isFlickering)
-        {
-            StartFlickering();
-        }
+        // Make sure it starts inactive
+        IsActive = false;
     }
 
     private void Update()
     {
-        if (isFlickering && targetLight != null)
-        {
-            if (Time.time >= nextFlickerTime)
-            {
-                // Randomly change light intensity
-                targetLight.intensity = Random.Range(minIntensity, maxIntensity);
+        if (!IsActive) return;
 
-                // Set next flicker time
-                nextFlickerTime = Time.time + Random.Range(minFlickerInterval, maxFlickerInterval);
+        // Check if deadline has passed
+        if (Time.time >= activationTime + deadline)
+        {
+            if (debugMode) Debug.Log($"[LightFlicker] DEADLINE EXPIRED! Battery penalty applied.");
+            
+            // Apply battery penalty
+            if (battery)
+            {
+                battery.Consume(batteryPenalty);
             }
+
+            // Auto-revert after deadline
+            Revert();
+            return;
+        }
+
+        // Handle flickering
+        if (targetLight != null && Time.time >= nextFlickerTime)
+        {
+            // Randomly change light intensity
+            targetLight.intensity = Random.Range(minIntensity, maxIntensity);
+
+            // Set next flicker time
+            nextFlickerTime = Time.time + Random.Range(minFlickerInterval, maxFlickerInterval);
         }
     }
 
-    // Call this method to start the anomaly
-    public void StartFlickering()
+    // IAnomaly interface methods
+    public void Trigger()
     {
-        isFlickering = true;
+        if (IsActive)
+        {
+            if (debugMode) Debug.LogWarning($"[LightFlicker] {room} already active!");
+            return;
+        }
+
+        IsActive = true;
+        activationTime = Time.time;
         nextFlickerTime = Time.time;
+
+        if (debugMode) Debug.Log($"[LightFlicker] TRIGGERED in {room}. Deadline: {deadline}s");
+
+        // Start flickering
+        if (targetLight != null)
+        {
+            targetLight.intensity = Random.Range(minIntensity, maxIntensity);
+        }
 
         // Start audio if enabled
         if (playAudio && audioSource != null && !audioSource.isPlaying)
@@ -76,10 +123,17 @@ public class LightFlickerAnomaly : MonoBehaviour
         }
     }
 
-    // Call this method to stop the anomaly
-    public void StopFlickering()
+    public void Revert()
     {
-        isFlickering = false;
+        if (!IsActive)
+        {
+            if (debugMode) Debug.LogWarning($"[LightFlicker] {room} not active, cannot revert!");
+            return;
+        }
+
+        IsActive = false;
+
+        if (debugMode) Debug.Log($"[LightFlicker] REVERTED in {room}");
 
         // Restore original intensity
         if (targetLight != null)
@@ -94,16 +148,25 @@ public class LightFlickerAnomaly : MonoBehaviour
         }
     }
 
-    // Toggle flickering on/off
-    public void ToggleFlickering()
+    public float GetTimeRemaining()
     {
-        if (isFlickering)
-        {
-            StopFlickering();
-        }
-        else
-        {
-            StartFlickering();
-        }
+        if (!IsActive) return 0f;
+
+        float elapsed = Time.time - activationTime;
+        float remaining = deadline - elapsed;
+        return Mathf.Max(0f, remaining);
+    }
+
+    // Optional: Manual control methods (for testing)
+    [ContextMenu("Test Trigger")]
+    private void TestTrigger()
+    {
+        Trigger();
+    }
+
+    [ContextMenu("Test Revert")]
+    private void TestRevert()
+    {
+        Revert();
     }
 }

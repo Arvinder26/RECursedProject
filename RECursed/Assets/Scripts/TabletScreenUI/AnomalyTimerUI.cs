@@ -32,6 +32,7 @@ public class AnomalyTimerUI : MonoBehaviour
     private List<MovedObject> movedObjects = new List<MovedObject>();
     private List<DisappearedObject> disappearedObjects = new List<DisappearedObject>();
     private List<ExtraObject> extraObjects = new List<ExtraObject>();
+    private List<LightFlickerAnomaly> lightFlickerObjects = new List<LightFlickerAnomaly>();
     
     private int updateCount = 0;
     
@@ -46,9 +47,10 @@ public class AnomalyTimerUI : MonoBehaviour
         movedObjects.AddRange(FindObjectsOfType<MovedObject>(true));
         disappearedObjects.AddRange(FindObjectsOfType<DisappearedObject>(true));
         extraObjects.AddRange(FindObjectsOfType<ExtraObject>(true));
+        lightFlickerObjects.AddRange(FindObjectsOfType<LightFlickerAnomaly>(true));
 
-        int totalFound = movedObjects.Count + disappearedObjects.Count + extraObjects.Count;
-        Debug.Log($"[AnomalyTimerUI] Found {totalFound} anomalies ({movedObjects.Count} moved, {disappearedObjects.Count} disappeared, {extraObjects.Count} extra)");
+        int totalFound = movedObjects.Count + disappearedObjects.Count + extraObjects.Count + lightFlickerObjects.Count;
+        Debug.Log($"[AnomalyTimerUI] Found {totalFound} anomalies ({movedObjects.Count} moved, {disappearedObjects.Count} disappeared, {extraObjects.Count} extra, {lightFlickerObjects.Count} light flicker)");
 
         if (!timerText)
             timerText = GetComponentInChildren<TMP_Text>();
@@ -167,6 +169,32 @@ public class AnomalyTimerUI : MonoBehaviour
                 if (verboseDebug && isActive)
                 {
                     Debug.Log($"[AnomalyTimerUI] ExtraObject {obj.Room} - IsActive: {isActive}, Time: {timeRemaining}s");
+                }
+                
+                if (isActive && timeRemaining > 0)
+                {
+                    activeTimers.Add(new AnomalyTimerInfo
+                    {
+                        room = obj.Room,
+                        timeRemaining = timeRemaining,
+                        anomalyObject = obj
+                    });
+                    currentActiveAnomalies.Add(obj);
+                }
+            }
+        }
+
+        // Check LightFlickerAnomalies
+        foreach (var obj in lightFlickerObjects)
+        {
+            if (obj)
+            {
+                bool isActive = obj.IsActive;
+                float timeRemaining = obj.GetTimeRemaining();
+                
+                if (verboseDebug && isActive)
+                {
+                    Debug.Log($"[AnomalyTimerUI] LightFlicker {obj.Room} - IsActive: {isActive}, Time: {timeRemaining}s");
                 }
                 
                 if (isActive && timeRemaining > 0)
