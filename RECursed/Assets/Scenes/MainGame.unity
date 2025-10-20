@@ -50397,9 +50397,33 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 169508566590866262, guid: 1680f30da7db74041a650439887db1fa, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 907499469137178188, guid: 1680f30da7db74041a650439887db1fa, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 968970127353258914, guid: 1680f30da7db74041a650439887db1fa, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1542746062620178946, guid: 1680f30da7db74041a650439887db1fa, type: 3}
       propertyPath: m_Name
       value: CCTV Camera System Variant 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3759658940917662234, guid: 1680f30da7db74041a650439887db1fa, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4936573067464703661, guid: 1680f30da7db74041a650439887db1fa, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6472876406855442012, guid: 1680f30da7db74041a650439887db1fa, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8048958287442127655, guid: 1680f30da7db74041a650439887db1fa, type: 3}
       propertyPath: m_LocalPosition.x
@@ -50447,6 +50471,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8240567605498658978, guid: 1680f30da7db74041a650439887db1fa, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8452237089231673161, guid: 1680f30da7db74041a650439887db1fa, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8795523414682273587, guid: 1680f30da7db74041a650439887db1fa, type: 3}
@@ -60673,7 +60701,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnSource: {fileID: 2056601558}
   auraSource: {fileID: 1312130365}
-  spawnStinger: {fileID: 8300000, guid: 66c69d3a9684d7b4f8c13c9f9907cff6, type: 3}
+  spawnStinger: {fileID: 8300000, guid: 68acf9e319817dd49b5d262c2f583036, type: 3}
   auraLoop: {fileID: 8300000, guid: d6ca3adbc39444e46a7b8f02162180a3, type: 3}
   spawnMixerGroup: {fileID: 0}
   auraMixerGroup: {fileID: 0}
