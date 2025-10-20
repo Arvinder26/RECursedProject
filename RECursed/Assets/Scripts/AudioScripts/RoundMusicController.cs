@@ -9,6 +9,15 @@ public class RoundMusicController : MonoBehaviour
 
     Coroutine fader;
 
+    void Update()
+    {
+        if (!music) return;
+
+        if (PauseMenu.GameIsPaused)
+        {
+            music.pitch = 0.5f;
+        }
+    }
     void Awake()
     {
         if (!music) music = GetComponent<AudioSource>();

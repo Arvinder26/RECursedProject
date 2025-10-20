@@ -43,6 +43,8 @@ public class FirstPersonMover : MonoBehaviour
 
     void Update()
     {
+        if (PauseMenu.GameIsPaused) return;
+
         HandleLook();
         HandleMoveAndAnimate();
     }
