@@ -100454,7 +100454,7 @@ MonoBehaviour:
   audioSource: {fileID: 2099823772}
   batteryLossSound: {fileID: 8300000, guid: dc0c8506fe2620c4285ccc939b5c3ff7, type: 3}
   audioVolume: 1
-  verboseDebug: 1
+  verboseDebug: 0
 --- !u!114 &1869745884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100507,7 +100507,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   subtitlesEnabled: 1
   detectedMsg: '[Anomaly detected in the {room}]'
-  warningMsg: '[Anomaly warningin {room}]'
+  warningMsg: '[Anomaly warning in {room}]'
   criticalMsg: '[ANOMALY CRITICAL in {room}]'
   expiredMsg: "[Battery lost \u2014 anomaly unresolved]"
   detectedSeconds: 1.3
@@ -100520,7 +100520,8 @@ MonoBehaviour:
   roomFormat: '{0}'
   rescanOnInterval: 1
   rescanSeconds: 3
-  verbose: 0
+  forceIncludeType: 1
+  verbose: 1
 --- !u!4 &1870715568 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 471828, guid: 19682540d8a014522a319b1cf788aee2, type: 3}
