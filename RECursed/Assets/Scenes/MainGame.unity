@@ -27261,11 +27261,11 @@ RectTransform:
   - {fileID: 2108330019}
   m_Father: {fileID: 1831716950}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 20}
+  m_SizeDelta: {x: 1100, y: 90}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &518967244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27281,6 +27281,7 @@ MonoBehaviour:
   text: {fileID: 2108330020}
   group: {fileID: 518967245}
   fadeSeconds: 0.15
+  minVisibleSeconds: 0.12
 --- !u!225 &518967245
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -68527,7 +68528,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   source: {fileID: 1298685255}
-  bpm: 72
+  bpm: 5
   showSeconds: 0.25
   caption: '[Heartbeat]'
 --- !u!1001 &1300154389
@@ -91611,7 +91612,7 @@ MonoBehaviour:
   - {fileID: 139261910}
   - {fileID: 1342450003}
   player: {fileID: 339837532}
-  initialDelaySeconds: 0
+  initialDelaySeconds: 15
   spawnIntervalRange: {x: 4, y: 10}
   lifetimeSeconds: 30
   spawnsPerRound: 12
@@ -100390,6 +100391,7 @@ GameObject:
   - component: {fileID: 1869745884}
   - component: {fileID: 1869745883}
   - component: {fileID: 1869745882}
+  - component: {fileID: 1869745886}
   m_Layer: 5
   m_Name: AnomalyTimerPanel
   m_TagString: Untagged
@@ -100491,6 +100493,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1869745880}
   m_CullTransparentMesh: 1
+--- !u!114 &1869745886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1869745880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c711a92722e3e044297b5753e3860752, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  subtitlesEnabled: 1
+  detectedMsg: '[Anomaly detected in the {room}]'
+  warningMsg: '[Anomaly warningin {room}]'
+  criticalMsg: '[ANOMALY CRITICAL in {room}]'
+  expiredMsg: "[Battery lost \u2014 anomaly unresolved]"
+  detectedSeconds: 1.3
+  warningSeconds: 1.2
+  criticalSeconds: 1.2
+  expiredSeconds: 1.6
+  warningThreshold: 10
+  criticalThreshold: 5
+  includeRoomName: 1
+  roomFormat: '{0}'
+  rescanOnInterval: 1
+  rescanSeconds: 3
+  verbose: 0
 --- !u!4 &1870715568 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 471828, guid: 19682540d8a014522a319b1cf788aee2, type: 3}
@@ -105434,11 +105464,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mode: 2
   caption: '[Footsteps]'
-  pulseSeconds: 0.18
+  pulseSeconds: 5
+  cooldownSeconds: 0.5
   autoMatchClip: 1
   beatsPerLoop: 2
-  fixedInterval: 0.5
+  fixedInterval: 0.2
+  requireGrounded: 0
   minAudibleVolume: 0.01
+  otherBufferSeconds: 1.5
 --- !u!1001 &1960577652
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -110037,8 +110070,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   source: {fileID: 2056601558}
-  caption: '[Anomaly manifests]'
-  seconds: 1.2
+  caption: '[Entity Has Spawned]'
+  seconds: 3
 --- !u!1001 &2057023765
 PrefabInstance:
   m_ObjectHideFlags: 0

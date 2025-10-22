@@ -1,90 +1,115 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(AudioSource))]
 public class FootstepSubtitles : MonoBehaviour
 {
-    public enum Mode { Off, WhileMoving, Pulse }
+    public enum Mode { Off, WhileMoving, Pulse, OnPressCooldown }
 
     [Header("Mode")]
-    public Mode mode = Mode.Pulse;
+    public Mode mode = Mode.OnPressCooldown;
 
     [Header("Caption")]
     [TextArea] public string caption = "[Footsteps]";
-    [Tooltip("How long a single pulse subtitle stays visible.")]
     public float pulseSeconds = 0.18f;
 
-    [Header("Pulse Timing")]
-    [Tooltip("Derive the step interval from the clip length / beatsPerLoop.")]
+    [Header("On-press settings (for OnPressCooldown mode)")]
+    public float cooldownSeconds = 0.9f;
+
+    [Header("Pulse timing (for Pulse mode)")]
     public bool autoMatchClip = true;
-    [Tooltip("How many 'steps' per loop of the clip (e.g., 2 for left/right).")]
     public int beatsPerLoop = 2;
-    [Tooltip("Used when autoMatchClip = false.")]
     public float fixedInterval = 0.5f;
 
     [Header("Detection")]
-    [Tooltip("Minimum source volume considered 'audible' (post-fade).")]
+    public bool requireGrounded = false;
     public float minAudibleVolume = 0.01f;
 
-    private AudioSource src;
-    private bool wasAudible;
-    private float timer;
-    private AudioClip lastClip;
+    [Header("Yield to other subtitles")]
+    [Tooltip("Extra buffer after other subtitles finish before footsteps can show again.")]
+    public float otherBufferSeconds = 0.25f;
+
+    AudioSource src;
+    CharacterController cc;
+    bool wasAudible;
+    float timer;
+    float cooldown;
+    float suppressUntil;   // we won't show until Time.unscaledTime >= suppressUntil
+    AudioClip lastClip;
 
     void Awake()
     {
         src = GetComponent<AudioSource>();
+        cc  = GetComponentInParent<CharacterController>();
     }
 
     void Update()
     {
-        if (mode == Mode.Off || SubtitleUI.Instance == null || src == null)
-            return;
+        if (mode == Mode.Off || SubtitleUI.Instance == null || src == null) return;
 
-        // "Audible" means: playing and not effectively silent.
-        bool audibleNow = src.isPlaying && src.volume > minAudibleVolume;
+        bool groundedOK = !requireGrounded || (cc && cc.isGrounded);
+        bool audibleNow = groundedOK && src.isPlaying && src.volume > minAudibleVolume;
 
-        // Handle clip change (e.g., W/A/S/D swap)
-        if (src.clip != lastClip)
+        // If ANY other subtitle is on screen, yield and hide ours if needed.
+        if (SubtitleUI.Instance.IsShowingOther(caption))
         {
-            lastClip = src.clip;
-            timer = 0f; // restart pulse timing on new clip
+            SubtitleUI.Instance.HideIfTextEquals(caption);
+            suppressUntil = Time.unscaledTime + SubtitleUI.Instance.VisibleRemaining + otherBufferSeconds;
+            wasAudible = audibleNow;
+            cooldown -= Time.deltaTime; // still tick down
+            return; // bail early – don't emit footsteps
         }
 
-        // Enter/exit transitions
-        if (!wasAudible && audibleNow)
-        {
-            if (mode == Mode.WhileMoving)
-                SubtitleUI.Instance.Show(caption);
-            timer = 0f; // reset pulse timer
-        }
-        else if (wasAudible && !audibleNow)
-        {
-            if (mode == Mode.WhileMoving)
-                SubtitleUI.Instance.Hide();
-        }
+        // If clip changed (W/A/S/D switch), reset local timing.
+        if (src.clip != lastClip) { lastClip = src.clip; timer = 0f; }
 
-        // Pulse mode – emit short captions at step interval while audible
-        if (mode == Mode.Pulse && audibleNow)
+        // WhileMoving behaviour (rarely used for footsteps, but supported)
+        if (!wasAudible && audibleNow) { if (mode == Mode.WhileMoving) SubtitleUI.Instance.Show(caption); timer = 0f; }
+        else if (wasAudible && !audibleNow) { if (mode == Mode.WhileMoving) SubtitleUI.Instance.Hide(); }
+
+        cooldown -= Time.deltaTime;
+
+        // Respect suppression window set by other subtitles
+        if (Time.unscaledTime < suppressUntil) { wasAudible = audibleNow; return; }
+
+        if (audibleNow)
         {
-            float interval = GetStepInterval();
-            timer -= Time.deltaTime;
-            if (timer <= 0f)
+            if (mode == Mode.Pulse)
             {
-                SubtitleUI.Instance.ShowForSeconds(caption, pulseSeconds);
-                timer = Mathf.Max(0.1f, interval);
+                float interval = GetInterval();
+                timer -= Time.deltaTime;
+                if (timer <= 0f)
+                {
+                    SubtitleUI.Instance.ShowForSeconds(caption, pulseSeconds);
+                    timer = Mathf.Max(0.1f, interval);
+                }
+            }
+            else if (mode == Mode.OnPressCooldown)
+            {
+                if (cooldown <= 0f && MovementPressedThisFrame())
+                {
+                    SubtitleUI.Instance.ShowForSeconds(caption, pulseSeconds);
+                    cooldown = Mathf.Max(0.1f, cooldownSeconds);
+                }
             }
         }
 
         wasAudible = audibleNow;
     }
 
-    float GetStepInterval()
+    float GetInterval()
     {
         if (!autoMatchClip || src.clip == null || beatsPerLoop <= 0)
             return Mathf.Clamp(fixedInterval, 0.1f, 1.5f);
+        return Mathf.Clamp(src.clip.length / Mathf.Max(1, beatsPerLoop), 0.1f, 1.5f);
+    }
 
-        // Derive interval from clip length (one loop == left+right or however many beats you set)
-        float perBeat = src.clip.length / Mathf.Max(1, beatsPerLoop);
-        return Mathf.Clamp(perBeat, 0.1f, 1.5f);
+    bool MovementPressedThisFrame()
+    {
+        var kb = Keyboard.current; if (kb == null) return false;
+        return kb.wKey.wasPressedThisFrame || kb.aKey.wasPressedThisFrame ||
+               kb.sKey.wasPressedThisFrame || kb.dKey.wasPressedThisFrame ||
+               kb.upArrowKey.wasPressedThisFrame || kb.leftArrowKey.wasPressedThisFrame ||
+               kb.downArrowKey.wasPressedThisFrame || kb.rightArrowKey.wasPressedThisFrame;
     }
 }
