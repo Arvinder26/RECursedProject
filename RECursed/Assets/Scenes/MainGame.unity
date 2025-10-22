@@ -100506,10 +100506,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   subtitlesEnabled: 1
-  detectedMsg: '[Anomaly detected in the {room}]'
-  warningMsg: '[Anomaly warning in {room}]'
-  criticalMsg: '[ANOMALY CRITICAL in {room}]'
-  expiredMsg: "[Battery lost \u2014 anomaly unresolved]"
+  detectedMsg: ' Anomaly detected in the {room}]'
+  warningMsg: ' Anomaly warning in {room}]'
+  criticalMsg: ' ANOMALY CRITICAL in {room}]'
+  expiredMsg: " Battery lost \u2014 anomaly unresolved]"
   detectedSeconds: 1.3
   warningSeconds: 1.2
   criticalSeconds: 1.2
