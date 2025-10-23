@@ -32420,7 +32420,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &599318832
 RectTransform:
   m_ObjectHideFlags: 0
@@ -44737,10 +44737,11 @@ MonoBehaviour:
   round5SpawnInterval: 20
   round5StartDelay: 5
   round3SceneName: Round3And4Scene
-  round5SceneName: Round5Map
+  round5SceneName: 
   gameClock: {fileID: 2099823771}
   battery: {fileID: 760420565}
   roundTransitionPanel: {fileID: 2104235131}
+  roundTransitionText: {fileID: 1309163887}
   finalVictoryPanel: {fileID: 613401810}
   playerTransform: {fileID: 0}
   resetRotation: 1
@@ -69789,8 +69790,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.0000076293945, y: 0}
-  m_SizeDelta: {x: 554.2133, y: 87.8206}
+  m_AnchoredPosition: {x: -1.1594, y: -0.6062}
+  m_SizeDelta: {x: 760.575, y: 89.0331}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1309163887
 MonoBehaviour:
@@ -69848,7 +69849,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
