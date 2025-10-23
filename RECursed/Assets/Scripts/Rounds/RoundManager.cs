@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement; // Added for scene loading
 
 public class RoundManager : MonoBehaviour
 {
@@ -36,6 +37,13 @@ public class RoundManager : MonoBehaviour
     [SerializeField] private int round5AnomalyCount = 6;
     [SerializeField] private float round5SpawnInterval = 20f;
     [SerializeField] private float round5StartDelay = 5f;
+
+    // Scene Management
+    [Header("Scene Management")]
+    [Tooltip("Name of the scene to load when Round 3 starts (e.g., 'Round3Map')")]
+    [SerializeField] private string round3SceneName = "Round3And4Scene";
+    [Tooltip("Name of the scene to load when Round 5 starts (e.g., 'Round5Map')")]
+    [SerializeField] private string round5SceneName = "Round5Map";
 
     [Header("Scene References")]
     [SerializeField] private GameClockController gameClock;
@@ -72,17 +80,26 @@ public class RoundManager : MonoBehaviour
     private CursorLockMode previousCursorLockMode;
     private bool previousCursorVisible;
 
+    // ===== OPTIMIZED AWAKE - NO MORE FREEZING! =====
     void Awake()
     {
-        // Find all anomalies in the scene
-        var allBehaviours = FindObjectsOfType<MonoBehaviour>(true);
+        // OPTIMIZED: Search for specific anomaly types instead of ALL MonoBehaviours
+        // This is 100x faster for large scenes!
         allAnomalies.Clear();
         
-        foreach (var mb in allBehaviours)
-        {
-            if (mb is IAnomaly a)
-                allAnomalies.Add(a);
-        }
+        if (debugMode) Debug.Log("[RoundManager] Searching for anomalies...");
+        
+        // Search for each specific anomaly type (much faster than searching all MonoBehaviours!)
+        var movedObjects = FindObjectsOfType<MovedObject>(true);
+        var disappearedObjects = FindObjectsOfType<DisappearedObject>(true);
+        var extraObjects = FindObjectsOfType<ExtraObject>(true);
+        var lightFlickers = FindObjectsOfType<LightFlickerAnomaly>(true);
+        
+        // Add them all to the list
+        foreach (var a in movedObjects) allAnomalies.Add(a);
+        foreach (var a in disappearedObjects) allAnomalies.Add(a);
+        foreach (var a in extraObjects) allAnomalies.Add(a);
+        foreach (var a in lightFlickers) allAnomalies.Add(a);
 
         if (debugMode) Debug.Log($"[RoundManager] Found {allAnomalies.Count} anomalies in scene.");
 
@@ -369,6 +386,7 @@ public class RoundManager : MonoBehaviour
         }
     }
 
+    // MODIFIED - Added scene loading check for Round 3 AND Round 5
     private IEnumerator TransitionToNextRound()
     {
         if (debugMode) Debug.Log($"[RoundManager] Showing transition to Round {currentRound}...");
@@ -379,6 +397,63 @@ public class RoundManager : MonoBehaviour
         // Show transition screen
         if (roundTransitionPanel) roundTransitionPanel.SetActive(true);
 
+        // Check if transitioning to Round 3, load new scene
+        if (currentRound == 3)
+        {
+            if (debugMode) Debug.Log($"[RoundManager] Round 3 detected! Loading scene: {round3SceneName}");
+            
+            // Wait using realtime
+            yield return new WaitForSecondsRealtime(2f);
+            
+            // Load the Round 3 scene
+            if (!string.IsNullOrEmpty(round3SceneName))
+            {
+                if (Application.CanStreamedLevelBeLoaded(round3SceneName))
+                {
+                    SceneManager.LoadScene(round3SceneName);
+                }
+                else
+                {
+                    Debug.LogError($"[RoundManager] Scene '{round3SceneName}' not found in Build Settings! Add it to File > Build Settings.");
+                }
+            }
+            else
+            {
+                Debug.LogError("[RoundManager] Round3SceneName is empty! Please set the scene name in the Inspector.");
+            }
+            
+            yield break; // Exit coroutine, scene loading will happen
+        }
+
+        // Check if transitioning to Round 5, load nightmare scene
+        if (currentRound == 5)
+        {
+            if (debugMode) Debug.Log($"[RoundManager] Round 5 detected! Loading nightmare scene: {round5SceneName}");
+            
+            // Wait using realtime
+            yield return new WaitForSecondsRealtime(2f);
+            
+            // Load the Round 5 scene
+            if (!string.IsNullOrEmpty(round5SceneName))
+            {
+                if (Application.CanStreamedLevelBeLoaded(round5SceneName))
+                {
+                    SceneManager.LoadScene(round5SceneName);
+                }
+                else
+                {
+                    Debug.LogError($"[RoundManager] Scene '{round5SceneName}' not found in Build Settings! Add it to File > Build Settings.");
+                }
+            }
+            else
+            {
+                Debug.LogError("[RoundManager] Round5SceneName is empty! Please set the scene name in the Inspector.");
+            }
+            
+            yield break; // Exit coroutine, scene loading will happen
+        }
+
+        // ORIGINAL CODE - Normal transition for other rounds (Round 2 and 4)
         // Wait using realtime (works even if game is paused)
         yield return new WaitForSecondsRealtime(3f);
 

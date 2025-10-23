@@ -11418,25 +11418,6 @@ MonoBehaviour:
   reportWindow: 30
   battery: {fileID: 760420565}
   hasDisappearedAnomaly: 0
---- !u!114 &202797180
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 202797173}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0146010dfe4c223449214c732ba46e9e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  room: 6
-  extraObjectPrefab: {fileID: 1281686392}
-  spawnPosition: {x: -2.07, y: -6.36, z: 3.1}
-  spawnRotation: {x: -0.0000034150946, y: 325.93777, z: 270}
-  reportWindow: 30
-  battery: {fileID: 0}
-  hasExtraAnomaly: 0
 --- !u!4 &203483337 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 471828, guid: 19682540d8a014522a319b1cf788aee2, type: 3}
@@ -44738,7 +44719,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 791bb48e41ca27e41a544646547686ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalRounds: 5
+  totalRounds: 2
   currentRound: 1
   round1AnomalyCount: 5
   round1SpawnInterval: 20
@@ -44755,6 +44736,8 @@ MonoBehaviour:
   round5AnomalyCount: 20
   round5SpawnInterval: 20
   round5StartDelay: 5
+  round3SceneName: Round3And4Scene
+  round5SceneName: Round5Map
   gameClock: {fileID: 2099823771}
   battery: {fileID: 760420565}
   roundTransitionPanel: {fileID: 2104235131}
@@ -83483,9 +83466,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3288875967481109589, guid: 81aff74e5226cb34d931dd5f35632af8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 202797179}
-    - targetCorrespondingSourceObject: {fileID: 3288875967481109589, guid: 81aff74e5226cb34d931dd5f35632af8, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 202797180}
   m_SourcePrefab: {fileID: 100100000, guid: 81aff74e5226cb34d931dd5f35632af8, type: 3}
 --- !u!1001 &1563913713
 PrefabInstance:
