@@ -68528,9 +68528,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   source: {fileID: 1298685255}
-  bpm: 5
-  showSeconds: 0.25
-  caption: '[Heartbeat]'
+  bpm: 1
+  showSeconds: 2
+  caption: '[Theme Music Playing]'
 --- !u!1001 &1300154389
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -83947,11 +83947,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2437516103898534762, guid: 21196d3ba2351f349b768438bf2ad90e, type: 3}
       propertyPath: moveSpeed
-      value: 3
+      value: 4.5
       objectReference: {fileID: 0}
     - target: {fileID: 2437516103898534762, guid: 21196d3ba2351f349b768438bf2ad90e, type: 3}
       propertyPath: sprintSpeed
-      value: 4.5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2437516103898534762, guid: 21196d3ba2351f349b768438bf2ad90e, type: 3}
       propertyPath: cctvPanelRoot
@@ -100510,10 +100510,10 @@ MonoBehaviour:
   warningMsg: ' Anomaly warning in {room}]'
   criticalMsg: ' ANOMALY CRITICAL in {room}]'
   expiredMsg: " Battery lost \u2014 anomaly unresolved]"
-  detectedSeconds: 1.3
-  warningSeconds: 1.2
-  criticalSeconds: 1.2
-  expiredSeconds: 1.6
+  detectedSeconds: 2
+  warningSeconds: 2
+  criticalSeconds: 2
+  expiredSeconds: 3
   warningThreshold: 10
   criticalThreshold: 5
   includeRoomName: 1
@@ -105465,8 +105465,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mode: 2
   caption: '[Footsteps]'
-  pulseSeconds: 5
-  cooldownSeconds: 0.5
+  pulseSeconds: 1
+  cooldownSeconds: 5
   autoMatchClip: 1
   beatsPerLoop: 2
   fixedInterval: 0.2
