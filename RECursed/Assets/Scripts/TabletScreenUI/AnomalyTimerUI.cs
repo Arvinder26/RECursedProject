@@ -68,10 +68,13 @@ public class AnomalyTimerUI : MonoBehaviour
         
         if (canvasGroup)
         {
-            canvasGroup.alpha = 0f;
+            canvasGroup.alpha = 1f;
             canvasGroup.interactable = false;
             canvasGroup.blocksRaycasts = false;
         }
+
+        if (timerText)
+            timerText.text = "Currently no anomalies...";
 
         // Auto-find AudioSource if not assigned
         if (!audioSource)
@@ -253,22 +256,20 @@ public class AnomalyTimerUI : MonoBehaviour
             Debug.Log($"[AnomalyTimerUI] Active timers detected: {activeTimers.Count}");
         }
 
-        // If no active timers, fade out
         if (activeTimers.Count == 0)
         {
-            timerText.text = "";
-            
-            canvasGroup.alpha = Mathf.Lerp(canvasGroup.alpha, 0f, Time.deltaTime * 5f);
-            if (canvasGroup.alpha < 0.01f)
-            {
-                canvasGroup.interactable = false;
-                canvasGroup.blocksRaycasts = false;
-            }
-            
+            // Show "no anomalies" message
+            timerText.text = "<b>Currently no anomalies...</b>";
+
+            canvasGroup.alpha = Mathf.Lerp(canvasGroup.alpha, 1f, Time.deltaTime * 5f);
+            canvasGroup.interactable = false;
+            canvasGroup.blocksRaycasts = false;
+
             warnedAnomalies.Clear();
             criticalAnomalies.Clear();
             return;
         }
+
 
         // Show the panel by fading in
         Debug.Log($"[AnomalyTimerUI] === PANEL SHOULD BE VISIBLE! {activeTimers.Count} active timers ===");
