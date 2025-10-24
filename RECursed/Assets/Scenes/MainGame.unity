@@ -11418,25 +11418,6 @@ MonoBehaviour:
   reportWindow: 30
   battery: {fileID: 760420565}
   hasDisappearedAnomaly: 0
---- !u!114 &202797180
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 202797173}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0146010dfe4c223449214c732ba46e9e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  room: 6
-  extraObjectPrefab: {fileID: 1281686392}
-  spawnPosition: {x: -2.07, y: -6.36, z: 3.1}
-  spawnRotation: {x: -0.0000034150946, y: 325.93777, z: 270}
-  reportWindow: 30
-  battery: {fileID: 0}
-  hasExtraAnomaly: 0
 --- !u!4 &203483337 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 471828, guid: 19682540d8a014522a319b1cf788aee2, type: 3}
@@ -17903,11 +17884,6 @@ PrefabInstance:
       addedObject: {fileID: 160100783}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 19682540d8a014522a319b1cf788aee2, type: 3}
---- !u!1 &320328342 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6690426779033381855, guid: 23114291690960946b14a5bb259ae6d2, type: 3}
-  m_PrefabInstance: {fileID: 2099327542}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &320394966
 GameObject:
   m_ObjectHideFlags: 0
@@ -81232,7 +81208,7 @@ MonoBehaviour:
   extraObjectPrefab: {fileID: 858770190}
   spawnPosition: {x: -8.31, y: -6.4876804, z: 2.93}
   spawnRotation: {x: -0, y: 89.45184, z: -0}
-  reportWindow: 30
+  reportWindow: 29
   battery: {fileID: 0}
   hasExtraAnomaly: 0
 --- !u!1001 &1511394463
@@ -84123,9 +84099,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3288875967481109589, guid: 81aff74e5226cb34d931dd5f35632af8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 202797179}
-    - targetCorrespondingSourceObject: {fileID: 3288875967481109589, guid: 81aff74e5226cb34d931dd5f35632af8, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 202797180}
   m_SourcePrefab: {fileID: 100100000, guid: 81aff74e5226cb34d931dd5f35632af8, type: 3}
 --- !u!1001 &1563913713
 PrefabInstance:
@@ -115187,35 +115160,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6690426779033381855, guid: 23114291690960946b14a5bb259ae6d2, type: 3}
-      insertIndex: 3
-      addedObject: {fileID: 2099327547}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 23114291690960946b14a5bb259ae6d2, type: 3}
 --- !u!4 &2099327543 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6310382116227772773, guid: 23114291690960946b14a5bb259ae6d2, type: 3}
   m_PrefabInstance: {fileID: 2099327542}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2099327547
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 320328342}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0146010dfe4c223449214c732ba46e9e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  room: 5
-  extraObjectPrefab: {fileID: 621030290}
-  spawnPosition: {x: -2.511, y: -0.93671006, z: -0.14}
-  spawnRotation: {x: -0, y: 90, z: -0}
-  reportWindow: 30
-  battery: {fileID: 0}
-  hasExtraAnomaly: 0
 --- !u!1 &2099823766 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1280187644026957187, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
