@@ -6,6 +6,9 @@ public class SummaryManager
     private int hour;
     private int minute;
 
+    private bool inMainMenu = false;
+    private int currentRound = 1;
+
     public void SetTime(int h, int m)
     {
         // Check negative values
@@ -31,5 +34,64 @@ public class SummaryManager
     public bool ShouldDisplaySummary()
     {
         return hour == 6 && minute == 0;
+    }
+
+    public void ContinueToNextRound()
+    {
+        if(!ShouldDisplaySummary()) return;
+
+        currentRound++;
+        ResetTime();
+    }
+
+    public void ReplayRound()
+    {
+        if (!ShouldDisplaySummary()) return;
+
+        ResetTime();
+    }
+
+    public void ExitToMainMenu()
+    {
+        if (!ShouldDisplaySummary()) return;
+
+        inMainMenu = true;
+        ResetTime();
+    }
+
+    public bool IsInMainMenu()
+    {
+        return inMainMenu;
+    }
+
+    public int GetCurrentRound()
+    {
+        return currentRound;
+    }
+
+    public void SelectOption(String option)
+    {
+        if (!ShouldDisplaySummary()) return;
+
+        switch (option.ToLower())
+        {
+            case "continue":
+                ContinueToNextRound();
+                break;
+            case "replay":
+                ReplayRound();
+                break;
+            case "exit":
+                ExitToMainMenu();
+                break;
+            default:
+                throw new ArgumentException("Invalid option");
+        }
+    }
+
+    private void ResetTime()
+    {
+        hour = 0;
+        minute = 0;
     }
 }
