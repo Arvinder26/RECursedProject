@@ -44,6 +44,10 @@ public class RoundManager : MonoBehaviour
     [SerializeField] private GameObject finalVictoryPanel;    // "YOU WON!" UI
     [SerializeField] private GameObject summaryReportPanel;
     [SerializeField] private GameObject TabletUIRoot;
+    [SerializeField] private GameObject AnomalyTimerPanel;
+    [SerializeField] private SummaryReportManager summaryManager;
+
+
 
     [Header("Player Reset")]
     [Tooltip("Drag your player GameObject here. If empty, will try to find it automatically.")]
@@ -169,6 +173,11 @@ public class RoundManager : MonoBehaviour
             TabletUIRoot.SetActive(false);
         }
 
+        if (AnomalyTimerPanel)
+        {
+            AnomalyTimerPanel.SetActive(false);
+        }
+
         // Show summary panel
         if (summaryReportPanel)
         {
@@ -218,6 +227,11 @@ public class RoundManager : MonoBehaviour
 
         currentRound = roundNumber;
         roundInProgress = true;
+
+        if (summaryManager)
+        {
+            summaryManager.ResetCounts();
+        }
 
         // Re-enable all gameplay controls
         EnableGameplayControls();

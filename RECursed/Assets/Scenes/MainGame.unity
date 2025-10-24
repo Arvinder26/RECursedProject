@@ -25118,6 +25118,7 @@ MonoBehaviour:
   reportButton: {fileID: 1033168290}
   closeMenuButton: {fileID: 0}
   anomalyManager: {fileID: 794639001}
+  summaryManager: {fileID: 1641211112}
   normalColor: {r: 1, g: 1, b: 1, a: 0.65}
   selectedColor: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   selectedScale: 1.05
@@ -39751,8 +39752,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190236
+  m_fontColor: {r: 0.6132076, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -44245,6 +44246,8 @@ MonoBehaviour:
   finalVictoryPanel: {fileID: 613401810}
   summaryReportPanel: {fileID: 1641211108}
   TabletUIRoot: {fileID: 251322020}
+  AnomalyTimerPanel: {fileID: 1869745880}
+  summaryManager: {fileID: 1641211112}
   playerTransform: {fileID: 0}
   resetRotation: 1
   disableDuringTransition: []
@@ -59279,8 +59282,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278677805
+  m_fontColor: {r: 0.17477037, g: 0.4433962, b: 0.027189402, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -86858,6 +86861,7 @@ GameObject:
   - component: {fileID: 1641211109}
   - component: {fileID: 1641211111}
   - component: {fileID: 1641211110}
+  - component: {fileID: 1641211112}
   m_Layer: 5
   m_Name: SummaryPanel
   m_TagString: Untagged
@@ -86926,6 +86930,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1641211108}
   m_CullTransparentMesh: 1
+--- !u!114 &1641211112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1641211108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 769f3b82db47ca44aaaaa705e899ac8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  summaryText: {fileID: 1911603892}
 --- !u!4 &1642318505 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 471828, guid: 19682540d8a014522a319b1cf788aee2, type: 3}
@@ -100778,6 +100795,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timerText: {fileID: 1766856885}
   canvasGroup: {fileID: 1869745882}
+  summaryManager: {fileID: 1641211112}
   normalColor: {r: 1, g: 1, b: 1, a: 1}
   warningColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   criticalColor: {r: 1, g: 0, b: 0, a: 1}
@@ -102888,8 +102906,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278873119
+  m_fontColor: {r: 0.12041881, g: 0.4245283, b: 0.038047336, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

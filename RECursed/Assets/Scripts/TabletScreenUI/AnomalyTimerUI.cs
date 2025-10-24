@@ -11,6 +11,8 @@ public class AnomalyTimerUI : MonoBehaviour
     [Header("UI References")]
     [SerializeField] private TMP_Text timerText;
     [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private SummaryReportManager summaryManager;
+
 
     [Header("Display Settings")]
     [SerializeField] private Color normalColor = Color.white;
@@ -329,6 +331,9 @@ public class AnomalyTimerUI : MonoBehaviour
         {
             Debug.LogWarning("[AnomalyTimerUI] Battery loss sound not assigned!");
         }
+        if (summaryManager)
+            summaryManager.ShowMissed();
+
     }
 
     private class AnomalyTimerInfo
