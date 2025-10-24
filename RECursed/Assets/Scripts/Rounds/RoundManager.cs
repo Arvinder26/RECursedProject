@@ -81,6 +81,8 @@ public class RoundManager : MonoBehaviour
     [SerializeField] private string round3SceneName = "Round 3 and 4 Scene";
     [Tooltip("Leave empty to stay in current scene")]
     [SerializeField] private string round5SceneName = "Round 5 Map";
+    [Tooltip("Name of the main menu scene")]
+    [SerializeField] private string mainMenuSceneName = "MainGame";
 
     [Header("Player Reset")]
     [Tooltip("Drag your player Transform here. If empty, will try to find it automatically.")]
@@ -129,8 +131,13 @@ public class RoundManager : MonoBehaviour
     // 0 references
     void Awake()
     {
+        Debug.Log("[RoundManager] === AWAKE START ===");
+        
         // Find all anomalies in the scene
+        Debug.Log("[RoundManager] Searching for anomalies...");
         var allBehaviours = FindObjectsOfType<MonoBehaviour>(true);
+        Debug.Log($"[RoundManager] Found {allBehaviours.Length} total MonoBehaviours");
+        
         allAnomalies.Clear();
 
         foreach (var mb in allBehaviours)
@@ -141,12 +148,15 @@ public class RoundManager : MonoBehaviour
             }
         }
 
-        if (debugMode) Debug.Log($"[RoundManager] Found {allAnomalies.Count} anomalies in scene.");
+        Debug.Log($"[RoundManager] Found {allAnomalies.Count} anomalies in scene.");
 
+        Debug.Log("[RoundManager] Auto-finding references...");
         // Auto-find references if not set
         if (!gameClock) gameClock = FindObjectOfType<GameClockController>();
         if (!battery) battery = FindObjectOfType<SegmentBattery>();
+        Debug.Log($"[RoundManager] GameClock found: {gameClock != null}, Battery found: {battery != null}");
 
+        Debug.Log("[RoundManager] Looking for player...");
         // Auto-find player if not assigned
         if (!playerTransform)
         {
@@ -167,6 +177,7 @@ public class RoundManager : MonoBehaviour
             }
         }
 
+        Debug.Log("[RoundManager] Storing player position...");
         // Store the player's initial position and rotation
         if (playerTransform)
         {
@@ -175,9 +186,12 @@ public class RoundManager : MonoBehaviour
             if (debugMode) Debug.Log($"[RoundManager] Stored player start position: {playerStartPosition}");
         }
 
+        Debug.Log("[RoundManager] Hiding panels...");
         // Hide panels
         if (roundTransitionPanel) roundTransitionPanel.SetActive(false);
         if (finalVictoryPanel) finalVictoryPanel.SetActive(false);
+        
+        Debug.Log("[RoundManager] === AWAKE COMPLETE ===");
     }
 
     // 0 references
@@ -215,7 +229,9 @@ public class RoundManager : MonoBehaviour
         roundInProgress = false;
 
         // Check if this was the final round
-        if (currentRound >= totalRounds)
+        if (debugMode) Debug.Log($"[RoundManager] Checking victory: currentRound ({currentRound}) > totalRounds ({totalRounds}) = {currentRound > totalRounds}");
+        
+        if (currentRound > totalRounds)
         {
             ShowFinalVictory();
             return;
@@ -236,14 +252,14 @@ public class RoundManager : MonoBehaviour
         {
             summaryReportPanel.SetActive(true);
 
-            // Make it cover everything (in case it�s not already)
+            // Make it cover everything (in case it's not already)
             var canvas = summaryReportPanel.GetComponent<Canvas>();
             if (canvas)
             {
                 canvas.sortingOrder = 999; // Force it above everything
             }
 
-            // Block all raycasts beneath it (so old UI can�t be clicked)
+            // Block all raycasts beneath it (so old UI can't be clicked)
             var group = summaryReportPanel.GetComponent<CanvasGroup>();
             if (!group) group = summaryReportPanel.AddComponent<CanvasGroup>();
             group.blocksRaycasts = true;
@@ -254,6 +270,21 @@ public class RoundManager : MonoBehaviour
             Time.timeScale = 0f;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+        }
+        else
+        {
+            // No summary panel in this scene - auto-transition
+            if (debugMode) Debug.Log("[RoundManager] No summary panel - auto-transitioning to next round");
+            currentRound++;
+            
+            if (currentRound > totalRounds)
+            {
+                ShowFinalVictory();
+            }
+            else
+            {
+                StartCoroutine(TransitionToNextRound());
+            }
         }
     }
 
@@ -267,13 +298,30 @@ public class RoundManager : MonoBehaviour
         Cursor.visible = false;
 
         currentRound++;
+        
+        if (debugMode) Debug.Log($"[RoundManager] After increment: currentRound = {currentRound}, totalRounds = {totalRounds}");
+        
+        // Check if we just finished the final round
+        if (debugMode) Debug.Log($"[RoundManager] Checking victory: currentRound ({currentRound}) > totalRounds ({totalRounds}) = {currentRound > totalRounds}");
+        
+        if (currentRound > totalRounds)
+        {
+            ShowFinalVictory();
+            return;
+        }
+        
+        if (debugMode) Debug.Log($"[RoundManager] Transitioning to Round {currentRound}");
         StartCoroutine(TransitionToNextRound());
     }
 
     // 2 references
     private void StartRound(int roundNumber)
     {
-        summaryReportPanel.SetActive(false);
+        if (summaryReportPanel) summaryReportPanel.SetActive(false);
+        
+        // Ensure all UI panels are hidden when starting a round
+        if (roundTransitionPanel) roundTransitionPanel.SetActive(false);
+        if (finalVictoryPanel) finalVictoryPanel.SetActive(false);
 
         // Ensure game is unpaused
         Time.timeScale = 1f;
@@ -284,6 +332,10 @@ public class RoundManager : MonoBehaviour
         if (summaryManager)
         {
             summaryManager.ResetCounts();
+        }
+        else
+        {
+            if (debugMode) Debug.LogWarning("[RoundManager] Summary Manager not assigned - skipping reset.");
         }
 
         // Re-enable all gameplay controls
@@ -354,6 +406,16 @@ public class RoundManager : MonoBehaviour
         for (int i = 0; i < anomalyCount && i < shuffledOrder.Count; i++)
         {
             activeAnomaliesThisRound.Add(shuffledOrder[i]);
+        }
+
+        // Warn if no anomalies found
+        if (activeAnomaliesThisRound.Count == 0)
+        {
+            Debug.LogWarning($"[RoundManager] No anomalies found in scene! Expected {anomalyCount} but found 0. Add anomaly objects to this scene.");
+        }
+        else if (activeAnomaliesThisRound.Count < anomalyCount)
+        {
+            Debug.LogWarning($"[RoundManager] Only found {activeAnomaliesThisRound.Count} anomalies but round needs {anomalyCount}. Add more anomaly objects to this scene.");
         }
 
         // Start spawning them over time (with initial delay)
@@ -438,6 +500,13 @@ public class RoundManager : MonoBehaviour
     // 1 reference
     private IEnumerator SpawnAnomaliesRoutine(float interval, float startDelay)
     {
+        // Safety check: If no anomalies to spawn, exit early
+        if (activeAnomaliesThisRound.Count == 0)
+        {
+            Debug.LogWarning("[RoundManager] No anomalies found to spawn! Make sure you have anomaly objects in this scene.");
+            yield break;
+        }
+
         // Wait before spawning the first anomaly (gives player time to prepare)
         if (startDelay > 0)
         {
@@ -482,6 +551,13 @@ public class RoundManager : MonoBehaviour
 
                 // Wait before triggering the next one
                 yield return new WaitForSeconds(interval);
+            }
+            
+            // Safety: If list became empty somehow, add a delay to prevent freeze
+            if (shuffledOrder.Count == 0)
+            {
+                if (debugMode) Debug.LogWarning("[RoundManager] No anomalies to cycle - waiting...");
+                yield return new WaitForSeconds(1f);
             }
         }
     }
@@ -569,7 +645,7 @@ public class RoundManager : MonoBehaviour
     // 1 reference
     private void ShowFinalVictory()
     {
-        if (debugMode) Debug.Log("[RoundManager] FINAL VICTORY!");
+        Debug.Log($"[RoundManager] FINAL VICTORY! Current Round: {currentRound}, Total Rounds: {totalRounds}");
 
         if (finalVictoryPanel) finalVictoryPanel.SetActive(true);
 
@@ -582,6 +658,27 @@ public class RoundManager : MonoBehaviour
         // Show cursor for final victory screen
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+    }
+
+    /// <summary>
+    /// Called by Main Menu button on victory screen
+    /// </summary>
+    public void ReturnToMainMenu()
+    {
+        if (debugMode) Debug.Log("[RoundManager] Returning to main menu...");
+
+        // Unpause game
+        Time.timeScale = 1f;
+
+        // Load main menu scene
+        if (!string.IsNullOrEmpty(mainMenuSceneName))
+        {
+            SceneManager.LoadScene(mainMenuSceneName);
+        }
+        else
+        {
+            Debug.LogError("[RoundManager] Main Menu Scene Name is not set! Please set it in the RoundManager Inspector.");
+        }
     }
 
     /// <summary>
