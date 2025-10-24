@@ -28534,6 +28534,7 @@ GameObject:
   - component: {fileID: 1638677489}
   - component: {fileID: 1638677491}
   - component: {fileID: 1638677490}
+  - component: {fileID: 1638677492}
   m_Layer: 0
   m_Name: Point Light
   m_TagString: Untagged
@@ -28644,6 +28645,30 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!114 &1638677492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1638677488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbf389dfbcd69c34baba594d91cb6daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  room: 5
+  deadline: 60
+  targetLight: {fileID: 0}
+  minFlickerInterval: 0.05
+  maxFlickerInterval: 0.3
+  minIntensity: 0
+  maxIntensity: 1
+  audioSource: {fileID: 0}
+  playAudio: 1
+  battery: {fileID: 0}
+  batteryPenalty: 1
+  debugMode: 0
 --- !u!1001 &1639678372
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -36436,7 +36461,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   totalRounds: 5
-  currentRound: 1
+  currentRound: 5
   round1AnomalyCount: 5
   round1SpawnInterval: 20
   round1StartDelay: 10
@@ -36449,7 +36474,7 @@ MonoBehaviour:
   round4AnomalyCount: 16
   round4SpawnInterval: 30
   round4StartDelay: 10
-  round5AnomalyCount: 20
+  round5AnomalyCount: 2
   round5SpawnInterval: 20
   round5StartDelay: 5
   gameClock: {fileID: 72864581}
@@ -52466,6 +52491,7 @@ GameObject:
   - component: {fileID: 6444753993833132350}
   - component: {fileID: 2750404513076586519}
   - component: {fileID: 5635251815978403626}
+  - component: {fileID: 7177006293051701583}
   m_Layer: 0
   m_Name: modern_chair
   m_TagString: Untagged
@@ -56273,6 +56299,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1339645978}
   m_LocalEulerAnglesHint: {x: 0, y: -17.521, z: 0}
+--- !u!114 &7177006293051701583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6028681965337700298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4430c728c2cd7494e9fb28fb8ccb1d34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  room: 1
+  renderersToToggle: []
+  collidersToToggle: []
+  reportWindow: 30
+  battery: {fileID: 0}
+  hasDisappearedAnomaly: 0
 --- !u!64 &7188873849891199277
 MeshCollider:
   m_ObjectHideFlags: 0
