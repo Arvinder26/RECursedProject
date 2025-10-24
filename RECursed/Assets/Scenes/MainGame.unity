@@ -44905,6 +44905,8 @@ MonoBehaviour:
   TabletUIRoot: {fileID: 251322020}
   AnomalyTimerPanel: {fileID: 1869745880}
   summaryManager: {fileID: 1641211112}
+  round3SceneName: Round 3 and 4 Scene
+  round5SceneName: Round 5 Map
   playerTransform: {fileID: 0}
   resetRotation: 1
   disableDuringTransition: []
@@ -54189,11 +54191,6 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 471828, guid: 19682540d8a014522a319b1cf788aee2, type: 3}
   m_PrefabInstance: {fileID: 959101243}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &960691452 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4583202942772794128, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
-  m_PrefabInstance: {fileID: 1782361656}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &960795366
 PrefabInstance:
@@ -85213,7 +85210,7 @@ PrefabInstance:
     - target: {fileID: 2437516103898534762, guid: 21196d3ba2351f349b768438bf2ad90e, type: 3}
       propertyPath: cctvPanelRoot
       value: 
-      objectReference: {fileID: 960691452}
+      objectReference: {fileID: 0}
     - target: {fileID: 2437516103898534762, guid: 21196d3ba2351f349b768438bf2ad90e, type: 3}
       propertyPath: uiOpenGameObjects.Array.size
       value: 0
@@ -85229,7 +85226,7 @@ PrefabInstance:
     - target: {fileID: 2437516103898534762, guid: 21196d3ba2351f349b768438bf2ad90e, type: 3}
       propertyPath: 'uiOpenGameObjects.Array.data[2]'
       value: 
-      objectReference: {fileID: 960691452}
+      objectReference: {fileID: 0}
     - target: {fileID: 2437516103898534762, guid: 21196d3ba2351f349b768438bf2ad90e, type: 3}
       propertyPath: 'uiOpenGameObjects.Array.data[3]'
       value: 
