@@ -42,7 +42,13 @@ public class RoundManager : MonoBehaviour
     [SerializeField] private SegmentBattery battery;
     [SerializeField] private GameObject roundTransitionPanel; // "ROUND 2 STARTING..." UI
     [SerializeField] private GameObject finalVictoryPanel;    // "YOU WON!" UI
-    
+    [SerializeField] private GameObject summaryReportPanel;
+    [SerializeField] private GameObject TabletUIRoot;
+    [SerializeField] private GameObject AnomalyTimerPanel;
+    [SerializeField] private SummaryReportManager summaryManager;
+
+
+
     [Header("Player Reset")]
     [Tooltip("Drag your player GameObject here. If empty, will try to find it automatically.")]
     [SerializeField] private Transform playerTransform;
@@ -63,11 +69,13 @@ public class RoundManager : MonoBehaviour
     private List<IAnomaly> activeAnomaliesThisRound = new List<IAnomaly>();
     private Coroutine spawnRoutine;
     private bool roundInProgress = false;
-    
+    private bool summaryShownThisRound = false;
+
+
     // Store the player's starting position and rotation
     private Vector3 playerStartPosition;
     private Quaternion playerStartRotation;
-    
+
     // Store cursor state before transition
     private CursorLockMode previousCursorLockMode;
     private bool previousCursorVisible;
@@ -77,7 +85,7 @@ public class RoundManager : MonoBehaviour
         // Find all anomalies in the scene
         var allBehaviours = FindObjectsOfType<MonoBehaviour>(true);
         allAnomalies.Clear();
-        
+
         foreach (var mb in allBehaviours)
         {
             if (mb is IAnomaly a)
@@ -98,7 +106,7 @@ public class RoundManager : MonoBehaviour
             if (!player) player = GameObject.Find("FINALPLAYER");
             if (!player) player = GameObject.Find("Player");
             if (!player) player = GameObject.Find("FPSController");
-            
+
             if (player)
             {
                 playerTransform = player.transform;
@@ -157,22 +165,73 @@ public class RoundManager : MonoBehaviour
         if (currentRound >= totalRounds)
         {
             ShowFinalVictory();
+            return;
         }
-        else
+
+        if (TabletUIRoot)
         {
-            // Move to next round
-            currentRound++;
-            StartCoroutine(TransitionToNextRound());
+            TabletUIRoot.SetActive(false);
         }
+
+        if (AnomalyTimerPanel)
+        {
+            AnomalyTimerPanel.SetActive(false);
+        }
+
+        // Show summary panel
+        if (summaryReportPanel)
+        {
+            summaryReportPanel.SetActive(true);
+
+            // Make it cover everything (in case it’s not already)
+            var canvas = summaryReportPanel.GetComponent<Canvas>();
+            if (canvas)
+            {
+                canvas.sortingOrder = 999; // force it above everything
+            }
+
+            // Block all raycasts beneath it (so old UI can’t be clicked)
+            var group = summaryReportPanel.GetComponent<CanvasGroup>();
+            if (!group) group = summaryReportPanel.AddComponent<CanvasGroup>();
+            group.blocksRaycasts = true;
+            group.interactable = true;
+            group.alpha = 1f;
+
+            // Pause the game & unlock cursor
+            Time.timeScale = 0f;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
+
     }
 
+    public void OnContinueFromSummary()
+    {
+        if (summaryReportPanel) summaryReportPanel.SetActive(false);
+
+        Time.timeScale = 1f;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        currentRound++;
+        StartCoroutine(TransitionToNextRound());
+
+    }
     private void StartRound(int roundNumber)
     {
+        summaryReportPanel.SetActive(false);
+
         // Ensure game is unpaused
         Time.timeScale = 1f;
-        
+
         currentRound = roundNumber;
         roundInProgress = true;
+
+        if (summaryManager)
+        {
+            summaryManager.ResetCounts();
+        }
 
         // Re-enable all gameplay controls
         EnableGameplayControls();
@@ -293,7 +352,7 @@ public class RoundManager : MonoBehaviour
         {
             previousCursorLockMode = Cursor.lockState;
             previousCursorVisible = Cursor.visible;
-            
+
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
@@ -402,7 +461,7 @@ public class RoundManager : MonoBehaviour
 
         // Pause game
         Time.timeScale = 0f;
-        
+
         // Show cursor for final victory screen
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -416,4 +475,5 @@ public class RoundManager : MonoBehaviour
     {
         OnRoundTimeComplete();
     }
+
 }

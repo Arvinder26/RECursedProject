@@ -13,6 +13,8 @@ public class ReportMenuController : MonoBehaviour
     [SerializeField] private Button reportButton;       // "Report" in the panel
     [SerializeField] private Button closeMenuButton;    // "Close Anomaly Menu" (optional)
     [SerializeField] private AnomalyManager anomalyManager;
+    [SerializeField] private SummaryReportManager summaryManager;
+
 
     [Header("Selection visuals")]
     [SerializeField] private Color normalColor = new Color(1, 1, 1, 0.65f);
@@ -134,10 +136,19 @@ public class ReportMenuController : MonoBehaviour
         if (ok)
         {
             ShowOverlay(overlaySuccessText, true);
+
+            if (summaryManager)
+                summaryManager.ShowSuccess();
+
         }
         else
         {
             ShowOverlay(overlayFailText, false);
+
+            if (summaryManager)
+                summaryManager.ShowMisreport();
+
+
             if (battery) battery.Consume(wrongReportCost);
             if (battery && battery.Current <= 0 && lossScreen) lossScreen.Show();
         }
