@@ -94,4 +94,45 @@ public class SummaryManager
         hour = 0;
         minute = 0;
     }
+
+    public class AnomalyReport
+    {
+        public int ReportedCorrectly = 0;
+        public int Missed = 0;
+        public int Misreported = 0;
+    }
+
+    private (string type, int count)[] placeholderData;
+
+    public void SetPlaceholderData(params (string type, int count)[] data)
+    {
+        placeholderData = data;
+    }
+
+    public AnomalyReport GetAnomalyReportPlaceholder()
+    {
+        var report = new AnomalyReport();
+
+        if (placeholderData == null) return report;
+
+        foreach (var entry in placeholderData)
+        {
+            int count = Math.Max(0, entry.count);
+
+            switch (entry.type.ToLower())
+            {
+                case "correct":
+                    report.ReportedCorrectly += count;
+                    break;
+                case "missed":
+                    report.Missed += count;
+                    break;
+                case "misreported":
+                    report.Misreported += count;
+                    break;
+            }
+        }
+
+        return report;
+    }
 }
