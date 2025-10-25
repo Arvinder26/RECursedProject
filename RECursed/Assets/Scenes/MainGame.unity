@@ -16164,6 +16164,11 @@ PrefabInstance:
       addedObject: {fileID: 45771921}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 19682540d8a014522a319b1cf788aee2, type: 3}
+--- !u!4 &273141051 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1420025078417209834, guid: 21196d3ba2351f349b768438bf2ad90e, type: 3}
+  m_PrefabInstance: {fileID: 1591506329}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &273319734
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -44956,6 +44961,7 @@ MonoBehaviour:
   summaryManager: {fileID: 1641211112}
   round3SceneName: Round 3 and 4 Scene
   round5SceneName: Round 5 Map
+  mainMenuSceneName: MainGame
   playerTransform: {fileID: 0}
   resetRotation: 1
   disableDuringTransition: []
@@ -80951,6 +80957,71 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 34cb15d97288c974994b6b9830639010, type: 3}
+--- !u!1001 &1503558262
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 389146404773565181, guid: b2a4b4dfad92c464ea0393dab0410957, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -322.5461
+      objectReference: {fileID: 0}
+    - target: {fileID: 389146404773565181, guid: b2a4b4dfad92c464ea0393dab0410957, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.66
+      objectReference: {fileID: 0}
+    - target: {fileID: 389146404773565181, guid: b2a4b4dfad92c464ea0393dab0410957, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -11.44
+      objectReference: {fileID: 0}
+    - target: {fileID: 389146404773565181, guid: b2a4b4dfad92c464ea0393dab0410957, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 389146404773565181, guid: b2a4b4dfad92c464ea0393dab0410957, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 389146404773565181, guid: b2a4b4dfad92c464ea0393dab0410957, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 389146404773565181, guid: b2a4b4dfad92c464ea0393dab0410957, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 389146404773565181, guid: b2a4b4dfad92c464ea0393dab0410957, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 389146404773565181, guid: b2a4b4dfad92c464ea0393dab0410957, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 389146404773565181, guid: b2a4b4dfad92c464ea0393dab0410957, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1021567503976253511, guid: b2a4b4dfad92c464ea0393dab0410957, type: 3}
+      propertyPath: m_Name
+      value: Injured Walk 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4310913207694951161, guid: b2a4b4dfad92c464ea0393dab0410957, type: 3}
+      propertyPath: playerRoot
+      value: 
+      objectReference: {fileID: 339837532}
+    - target: {fileID: 4310913207694951161, guid: b2a4b4dfad92c464ea0393dab0410957, type: 3}
+      propertyPath: playerCamera
+      value: 
+      objectReference: {fileID: 273141051}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b2a4b4dfad92c464ea0393dab0410957, type: 3}
 --- !u!1001 &1503600565
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -117510,3 +117581,4 @@ SceneRoots:
   - {fileID: 1550958370}
   - {fileID: 1298685256}
   - {fileID: 899135817}
+  - {fileID: 1503558262}
