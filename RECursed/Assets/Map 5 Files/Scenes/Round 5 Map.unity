@@ -2765,7 +2765,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 622019126}
   hasDisappearedAnomaly: 0
 --- !u!1001 &90122035
 PrefabInstance:
@@ -3816,7 +3816,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 622019126}
   hasDisappearedAnomaly: 0
 --- !u!1 &132469684
 GameObject:
@@ -9203,7 +9203,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 622019126}
   hasDisappearedAnomaly: 0
 --- !u!1001 &436777633
 PrefabInstance:
@@ -9505,7 +9505,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 622019126}
   hasDisappearedAnomaly: 0
 --- !u!1001 &454813307
 PrefabInstance:
@@ -11808,7 +11808,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 622019126}
   hasDisappearedAnomaly: 0
 --- !u!1 &605963273
 GameObject:
@@ -16849,7 +16849,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 622019126}
   hasDisappearedAnomaly: 0
 --- !u!1001 &929088440
 PrefabInstance:
@@ -23462,7 +23462,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 622019126}
   hasDisappearedAnomaly: 0
 --- !u!1 &1296985911
 GameObject:
@@ -38403,7 +38403,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 622019126}
   hasDisappearedAnomaly: 0
 --- !u!1 &1000010492667878
 GameObject:
@@ -48608,7 +48608,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 622019126}
   hasDisappearedAnomaly: 0
 --- !u!33 &3845943667209099888
 MeshFilter:
@@ -57560,7 +57560,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 622019126}
   hasDisappearedAnomaly: 0
 --- !u!64 &7188873849891199277
 MeshCollider:
@@ -61301,7 +61301,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 622019126}
   hasDisappearedAnomaly: 0
 --- !u!1 &8135754590779799009
 GameObject:
@@ -63816,7 +63816,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 622019126}
   hasDisappearedAnomaly: 0
 --- !u!1 &8952104949684519408
 GameObject:
@@ -63855,7 +63855,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 622019126}
   hasDisappearedAnomaly: 0
 --- !u!1 &8959959971329670327
 GameObject:

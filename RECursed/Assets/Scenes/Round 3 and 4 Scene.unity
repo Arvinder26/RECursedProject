@@ -12034,7 +12034,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 1355179385}
   hasDisappearedAnomaly: 0
 --- !u!4 &237870457 stripped
 Transform:
@@ -18782,7 +18782,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 1355179385}
   hasDisappearedAnomaly: 0
 --- !u!4 &339187690 stripped
 Transform:
@@ -21811,7 +21811,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 1355179385}
   hasDisappearedAnomaly: 0
 --- !u!4 &385930067 stripped
 Transform:
@@ -23344,7 +23344,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 1355179385}
   hasDisappearedAnomaly: 0
 --- !u!1001 &408924658
 PrefabInstance:
@@ -37155,7 +37155,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 1355179385}
   hasDisappearedAnomaly: 0
 --- !u!1001 &665085911
 PrefabInstance:
@@ -40167,7 +40167,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 1355179385}
   hasDisappearedAnomaly: 0
 --- !u!1001 &720470487
 PrefabInstance:
@@ -43647,7 +43647,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 1355179385}
   hasDisappearedAnomaly: 0
 --- !u!1001 &778843410
 PrefabInstance:
@@ -44850,7 +44850,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 1355179385}
   hasDisappearedAnomaly: 0
 --- !u!64 &801490945
 MeshCollider:
@@ -58078,7 +58078,6 @@ MonoBehaviour:
   summaryManager: {fileID: 1122138428}
   round3SceneName: Round 3 and 4 Scene
   round5SceneName: Round 5 Map
-  mainMenuSceneName: MainGame
   playerTransform: {fileID: 0}
   resetRotation: 1
   disableDuringTransition: []
@@ -64160,7 +64159,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 1355179385}
   hasDisappearedAnomaly: 0
 --- !u!64 &1153196034
 MeshCollider:
@@ -78041,7 +78040,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 1355179385}
   hasDisappearedAnomaly: 0
 --- !u!1001 &1417423431
 PrefabInstance:
@@ -84677,7 +84676,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 1355179385}
   hasDisappearedAnomaly: 0
 --- !u!1001 &1534357077
 PrefabInstance:
@@ -87352,7 +87351,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 1355179385}
   hasDisappearedAnomaly: 0
 --- !u!1001 &1594123319
 PrefabInstance:
@@ -98995,7 +98994,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 1355179385}
   hasDisappearedAnomaly: 0
 --- !u!1001 &1810343486
 PrefabInstance:
@@ -112095,7 +112094,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 1355179385}
   hasDisappearedAnomaly: 0
 --- !u!1001 &2028738052
 PrefabInstance:

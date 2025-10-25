@@ -13561,7 +13561,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 760420565}
   hasDisappearedAnomaly: 0
 --- !u!4 &240957623 stripped
 Transform:
@@ -17754,7 +17754,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 760420565}
   hasDisappearedAnomaly: 0
 --- !u!1001 &316090215
 PrefabInstance:
@@ -41287,7 +41287,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 760420565}
   hasDisappearedAnomaly: 0
 --- !u!1001 &755838454
 PrefabInstance:
@@ -57410,7 +57410,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 760420565}
   hasDisappearedAnomaly: 0
 --- !u!114 &1033168290 stripped
 MonoBehaviour:
@@ -59302,7 +59302,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 760420565}
   hasDisappearedAnomaly: 0
 --- !u!4 &1081154607 stripped
 Transform:
@@ -65453,7 +65453,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 760420565}
   hasDisappearedAnomaly: 0
 --- !u!4 &1208527996 stripped
 Transform:
@@ -73066,7 +73066,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 760420565}
   hasDisappearedAnomaly: 0
 --- !u!1001 &1345406263
 PrefabInstance:
@@ -77976,7 +77976,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 760420565}
   hasDisappearedAnomaly: 0
 --- !u!1001 &1441903112
 PrefabInstance:
@@ -84192,7 +84192,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 760420565}
   hasDisappearedAnomaly: 0
 --- !u!4 &1558334480 stripped
 Transform:
@@ -92332,7 +92332,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 760420565}
   hasDisappearedAnomaly: 0
 --- !u!1001 &1708924845
 PrefabInstance:
@@ -95705,7 +95705,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 760420565}
   hasDisappearedAnomaly: 0
 --- !u!1001 &1765162029
 PrefabInstance:
@@ -107563,7 +107563,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 760420565}
   hasDisappearedAnomaly: 0
 --- !u!1001 &1949534704
 PrefabInstance:
@@ -109490,7 +109490,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 760420565}
   hasDisappearedAnomaly: 0
 --- !u!1001 &1989099051
 PrefabInstance:
@@ -114675,7 +114675,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 760420565}
   hasDisappearedAnomaly: 0
 --- !u!1001 &2084215587
 PrefabInstance:
