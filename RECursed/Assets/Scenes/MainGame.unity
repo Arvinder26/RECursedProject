@@ -81584,7 +81584,7 @@ MonoBehaviour:
   extraObjectPrefab: {fileID: 858770190}
   spawnPosition: {x: -8.31, y: -6.4876804, z: 2.93}
   spawnRotation: {x: -0, y: 89.45184, z: -0}
-  reportWindow: 29
+  reportWindow: 30
   battery: {fileID: 0}
   hasExtraAnomaly: 0
 --- !u!1001 &1511394463
