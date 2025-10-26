@@ -2,20 +2,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Subtitles for anomaly lifecycle: detected, warning, critical, expired.
-/// Attach to the same GameObject as AnomalyTimerUI (or anywhere in the scene).
-/// Requires a SubtitleUI instance in the scene.
+/// Subtitles for anomaly lifecycle without showing the anomaly type.
+/// Messages can use {room}.
 /// </summary>
 public class AnomalySubtitles : MonoBehaviour
 {
     [Header("Enable / Disable")]
     [SerializeField] bool subtitlesEnabled = true;
 
-    [Header("Messages (use {type} and {room})")]
-    [SerializeField] string detectedMsg = "[{type} detected in {room}]";
-    [SerializeField] string warningMsg  = "[WARNING: {type} in {room}]";
-    [SerializeField] string criticalMsg = "[CRITICAL: {type} in {room}]";
-    [SerializeField] string expiredMsg  = "[{type} expired — battery lost]";
+    [Header("Messages (use {room})")]
+    [SerializeField] string detectedMsg = "Anomaly detected in {room}";
+    [SerializeField] string warningMsg  = "WARNING in {room}";
+    [SerializeField] string criticalMsg = "CRITICAL in {room}";
+    [SerializeField] string expiredMsg  = "Anomaly expired — battery lost";
 
     [Header("Durations (seconds)")]
     [SerializeField] float detectedSeconds = 1.3f;
@@ -36,10 +35,6 @@ public class AnomalySubtitles : MonoBehaviour
     [SerializeField] bool rescanOnInterval = true;
     [SerializeField] float rescanSeconds = 3f;
 
-    [Header("Safety")]
-    [Tooltip("If any template is missing {type}, it will be injected at runtime so type always shows.")]
-    [SerializeField] bool forceIncludeType = true;
-
     [Header("Debug")]
     [SerializeField] bool verbose = false;
 
@@ -58,8 +53,6 @@ public class AnomalySubtitles : MonoBehaviour
     void Start()
     {
         InitialScan();
-        // Make sure existing serialized values still show type even if user never edits the fields.
-        if (forceIncludeType) PatchTemplatesToIncludeType();
     }
 
     void Update()
@@ -83,7 +76,7 @@ public class AnomalySubtitles : MonoBehaviour
         // Detected (new this frame)
         foreach (var info in infos)
             if (!prevActive.Contains(info.anom))
-                Show(detectedMsg, detectedSeconds, info.type, info.room);
+                Show(detectedMsg, detectedSeconds, info.room);
 
         // Warning / Critical one-offs
         foreach (var info in infos)
@@ -91,12 +84,12 @@ public class AnomalySubtitles : MonoBehaviour
             if (info.t <= criticalThreshold)
             {
                 if (criticalOnce.Add(info.anom))
-                    Show(criticalMsg, criticalSeconds, info.type, info.room);
+                    Show(criticalMsg, criticalSeconds, info.room);
             }
             else if (info.t <= warningThreshold)
             {
                 if (warnedOnce.Add(info.anom))
-                    Show(warningMsg, warningSeconds, info.type, info.room);
+                    Show(warningMsg, warningSeconds, info.room);
             }
         }
 
@@ -105,8 +98,8 @@ public class AnomalySubtitles : MonoBehaviour
         {
             if (prev != null && !activeNow.Contains(prev))
             {
-                var (type, room) = KindAndRoom(prev);
-                Show(expiredMsg, expiredSeconds, type, room);
+                var room = GetRoom(prev);
+                Show(expiredMsg, expiredSeconds, room);
             }
         }
 
@@ -119,7 +112,7 @@ public class AnomalySubtitles : MonoBehaviour
 
     // ---------- helpers ----------
 
-    struct Info { public MonoBehaviour anom; public Room room; public float t; public string type; }
+    struct Info { public MonoBehaviour anom; public Room room; public float t; }
 
     void CollectActive<T>(List<T> list, List<Info> outInfos, HashSet<MonoBehaviour> activeSet) where T : MonoBehaviour
     {
@@ -140,68 +133,44 @@ public class AnomalySubtitles : MonoBehaviour
 
             if (isActive && tRemain > 0f)
             {
-                outInfos.Add(new Info { anom = a, room = room, t = tRemain, type = Kind(a) });
+                outInfos.Add(new Info { anom = a, room = room, t = tRemain });
                 activeSet.Add(a);
-                if (verbose) Debug.Log($"[AnomalySubtitles] Active: {a.name} ({room}) {tRemain:0.0}s, type={Kind(a)}");
+                if (verbose) Debug.Log($"[AnomalySubtitles] Active: {a.name} ({room}) {tRemain:0.0}s");
             }
         }
     }
 
-    string Kind(MonoBehaviour a)
-    {
-        // Friendly names for your anomaly classes
-        if (a is MovedObject)          return "Moved Object";
-        if (a is DisappearedObject)    return "Object Disappeared";
-        if (a is ExtraObject)          return "Extra Object";
-        if (a is LightFlickerAnomaly)  return "Light Flickering";
-        return a.GetType().Name; // fallback
-    }
-
-    (string type, Room room) KindAndRoom(MonoBehaviour a)
-    {
-        if (a is MovedObject m)              return (Kind(a), m.Room);
-        if (a is DisappearedObject d)        return (Kind(a), d.Room);
-        if (a is ExtraObject e)              return (Kind(a), e.Room);
-        if (a is LightFlickerAnomaly f)      return (Kind(a), f.Room);
-        return (Kind(a), default);
-    }
-
-    void Show(string template, float seconds, string type, Room room)
+    void Show(string template, float seconds, Room room)
     {
         if (!subtitlesEnabled || SubtitleUI.Instance == null) return;
 
-        // Build message robustly—even if a template is old and lacks {type} or {room}
-        string msg = BuildMessage(template, type, room);
-
+        string msg = BuildMessage(template, room);
         if (verbose) Debug.Log($"[AnomalySubtitles] SUBTITLE: {msg} ({seconds:0.00}s)");
         SubtitleUI.Instance.ShowForSeconds(msg, seconds);
     }
 
-    string BuildMessage(string template, string type, Room room)
+    string BuildMessage(string template, Room room)
     {
-        // Guarantee {type}
-        if (forceIncludeType && !template.Contains("{type}"))
-            template = $"[{type}] " + template;
-
-        // Room text (optional)
+        // Build room text
         string roomText = includeRoomName ? string.Format(roomFormat, room.ToString()) : "";
-        if (!template.Contains("{room}"))
-        {
-            // If template omitted {room} but room is enabled, append at end nicely
-            template = includeRoomName ? $"{template} — {{room}}" : template;
-        }
 
-        return template.Replace("{type}", type)
-                       .Replace("{room}", roomText);
+        // If the template omitted {room} but rooms are enabled, append nicely
+        if (!template.Contains("{room}"))
+            template = includeRoomName ? $"{template} — {{room}}" : template;
+
+        // In case any legacy template still has {type}, strip it out
+        template = template.Replace("{type}", "");
+
+        return template.Replace("{room}", roomText);
     }
 
-    void PatchTemplatesToIncludeType()
+    Room GetRoom(MonoBehaviour a)
     {
-        // Ensure defaults include {type}; if not, patch them so users with old serialized values still see type.
-        if (!detectedMsg.Contains("{type}")) detectedMsg = "[{type}] " + detectedMsg;
-        if (!warningMsg.Contains("{type}"))  warningMsg  = "[{type}] " + warningMsg;
-        if (!criticalMsg.Contains("{type}")) criticalMsg = "[{type}] " + criticalMsg;
-        if (!expiredMsg.Contains("{type}"))  expiredMsg  = "[{type}] " + expiredMsg;
+        if (a is MovedObject m)              return m.Room;
+        if (a is DisappearedObject d)        return d.Room;
+        if (a is ExtraObject e)              return e.Room;
+        if (a is LightFlickerAnomaly f)      return f.Room;
+        return default;
     }
 
     void InitialScan()

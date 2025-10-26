@@ -5379,7 +5379,7 @@ MonoBehaviour:
   spawnPosition: {x: 7.8773403, y: -6.5, z: -0.98}
   spawnRotation: {x: 0.000002504478, y: -0, z: -0}
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 724391104}
   hasExtraAnomaly: 0
 --- !u!4 &108422739 stripped
 Transform:
@@ -5943,7 +5943,6 @@ Transform:
   - {fileID: 426633915}
   - {fileID: 326872489}
   - {fileID: 1180540213}
-  - {fileID: 1283800378}
   - {fileID: 104628357}
   m_Father: {fileID: 880700396}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8088,7 +8087,6 @@ MonoBehaviour:
   roomFormat: '{0}'
   rescanOnInterval: 1
   rescanSeconds: 3
-  forceIncludeType: 1
   verbose: 1
 --- !u!225 &156571062
 CanvasGroup:
@@ -12158,25 +12156,6 @@ MonoBehaviour:
   reportWindow: 30
   battery: {fileID: 0}
   hasMovedAnomaly: 0
---- !u!114 &256966985
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 256966982}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0146010dfe4c223449214c732ba46e9e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  room: 1
-  extraObjectPrefab: {fileID: 1283800377}
-  spawnPosition: {x: -1.706, y: -4.13867, z: 1.739}
-  spawnRotation: {x: -0, y: 95.51196, z: -0}
-  reportWindow: 30
-  battery: {fileID: 0}
-  hasExtraAnomaly: 0
 --- !u!1001 &257250559
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -36224,12 +36203,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0146010dfe4c223449214c732ba46e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  room: 1
+  room: 0
   extraObjectPrefab: {fileID: 1403685748}
   spawnPosition: {x: 6.4622383, y: 2.4864202, z: -5.423}
   spawnRotation: {x: -0, y: 270, z: 0}
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 724391104}
   hasExtraAnomaly: 0
 --- !u!1001 &668103594
 PrefabInstance:
@@ -65272,12 +65251,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0146010dfe4c223449214c732ba46e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  room: 1
+  room: 3
   extraObjectPrefab: {fileID: 550527773}
   spawnPosition: {x: 3.53, y: 3.02929, z: 0.25189972}
   spawnRotation: {x: -0, y: 270, z: 0}
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 724391104}
   hasExtraAnomaly: 0
 --- !u!1001 &1177294429
 PrefabInstance:
@@ -71428,134 +71407,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 19682540d8a014522a319b1cf788aee2, type: 3}
---- !u!1 &1283800377
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1283800378}
-  - component: {fileID: 1283800382}
-  - component: {fileID: 1283800381}
-  - component: {fileID: 1283800380}
-  - component: {fileID: 1283800379}
-  m_Layer: 0
-  m_Name: Prop_TeddyBear_04_ExtraPrefab
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1283800378
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1283800377}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7402883, z: -0, w: 0.6722895}
-  m_LocalPosition: {x: -1.7059937, y: -4.13867, z: 1.7390003}
-  m_LocalScale: {x: 1.1856, y: 1.1856, z: -1.1856}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 125043190}
-  m_LocalEulerAnglesHint: {x: 0, y: 95.512, z: 0}
---- !u!114 &1283800379
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1283800377}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b6e978b91abc4843b0ad9a4ad5ca2e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  room: 1
-  newPosition: {x: -0.18, y: -5.21, z: 8.98}
-  newRotation: {x: 0, y: 0, z: 0}
-  reportWindow: 30
-  battery: {fileID: 0}
-  hasMovedAnomaly: 0
---- !u!64 &1283800380
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1283800377}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4108983400281840599, guid: 5b2ec9ccce360334aafcfa3ff103e7d9, type: 3}
---- !u!23 &1283800381
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1283800377}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 293fedf4ae72d0f42a326f700888b9f9, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &1283800382
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1283800377}
-  m_Mesh: {fileID: -4108983400281840599, guid: 5b2ec9ccce360334aafcfa3ff103e7d9, type: 3}
 --- !u!1001 &1284576901
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -73060,7 +72911,7 @@ MonoBehaviour:
   spawnPosition: {x: 3.43, y: -5.034, z: 3.22}
   spawnRotation: {x: -0, y: 90, z: -0}
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 724391104}
   hasExtraAnomaly: 0
 --- !u!4 &1304779074 stripped
 Transform:
@@ -73211,7 +73062,7 @@ MonoBehaviour:
   spawnPosition: {x: 6.373, y: -1.23258, z: -3.54}
   spawnRotation: {x: -0, y: 0, z: 0}
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 724391104}
   hasExtraAnomaly: 0
 --- !u!1001 &1306613441
 PrefabInstance:
@@ -87271,9 +87122,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7794579719072261618, guid: 625b27705cf415242913c2cd454718e8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 256966984}
-    - targetCorrespondingSourceObject: {fileID: 7794579719072261618, guid: 625b27705cf415242913c2cd454718e8, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 256966985}
   m_SourcePrefab: {fileID: 100100000, guid: 625b27705cf415242913c2cd454718e8, type: 3}
 --- !u!1001 &1594110412
 PrefabInstance:
@@ -89389,7 +89237,7 @@ MonoBehaviour:
   spawnPosition: {x: -7.73, y: -6.58, z: -0.818}
   spawnRotation: {x: 0.000002504478, y: -0, z: -0}
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 724391104}
   hasExtraAnomaly: 0
 --- !u!4 &1627643809 stripped
 Transform:
@@ -103850,7 +103698,7 @@ MonoBehaviour:
   spawnPosition: {x: 6.825611, y: -4.6806703, z: 4.92}
   spawnRotation: {x: -0, y: 270, z: 0}
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 724391104}
   hasExtraAnomaly: 0
 --- !u!1001 &1903281464
 PrefabInstance:
@@ -117978,7 +117826,7 @@ MonoBehaviour:
   spawnPosition: {x: -0.59677505, y: 0.996, z: 4.5214014}
   spawnRotation: {x: -0, y: 0, z: 0}
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 724391104}
   hasExtraAnomaly: 0
 --- !u!1001 &8491552915394666476
 PrefabInstance:
