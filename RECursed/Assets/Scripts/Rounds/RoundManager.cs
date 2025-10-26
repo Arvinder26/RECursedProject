@@ -81,6 +81,8 @@ public class RoundManager : MonoBehaviour
     [SerializeField] private string round3SceneName = "Round 3 and 4 Scene";
     [Tooltip("Leave empty to stay in current scene")]
     [SerializeField] private string round5SceneName = "Round 5 Map";
+    [Tooltip("Name of the main menu scene")]
+    [SerializeField] private string mainMenuSceneName = "MainGame";
 
     [Header("Player Reset")]
     [Tooltip("Drag your player Transform here. If empty, will try to find it automatically.")]
@@ -113,6 +115,8 @@ public class RoundManager : MonoBehaviour
     private bool roundInProgress = false;
     // 5 references
     private bool summaryShownThisRound = false;
+    // Track if currently transitioning between rounds
+    private bool isTransitioning = false;
 
     // Store the player's starting position and rotation
     // 5 references
@@ -214,8 +218,8 @@ public class RoundManager : MonoBehaviour
 
         roundInProgress = false;
 
-        // Check if this was the final round
-        if (currentRound >= totalRounds)
+        // Check if this was the final round (and not currently transitioning)
+        if (currentRound >= totalRounds && !isTransitioning)
         {
             ShowFinalVictory();
             return;
@@ -267,6 +271,7 @@ public class RoundManager : MonoBehaviour
         Cursor.visible = false;
 
         currentRound++;
+        isTransitioning = true;
         StartCoroutine(TransitionToNextRound());
     }
 
@@ -280,6 +285,7 @@ public class RoundManager : MonoBehaviour
 
         currentRound = roundNumber;
         roundInProgress = true;
+        isTransitioning = false; // Round has started, no longer transitioning
 
         if (summaryManager)
         {
@@ -513,6 +519,8 @@ public class RoundManager : MonoBehaviour
 
         // DISABLE ALL GAMEPLAY CONTROLS
         DisableGameplayControls();
+        // CRITICAL: Hide victory panel during transition (prevents it from showing when entering Round 5)
+        if (finalVictoryPanel) finalVictoryPanel.SetActive(false);
 
         // CHECK IF SCENE SWITCHING IS NEEDED
         string targetScene = GetSceneForRound(currentRound);
@@ -571,6 +579,9 @@ public class RoundManager : MonoBehaviour
     {
         if (debugMode) Debug.Log("[RoundManager] FINAL VICTORY!");
 
+        // Hide transition panel (prevents "ROUND 5 STARTING..." from showing behind victory screen)
+        if (roundTransitionPanel) roundTransitionPanel.SetActive(false);
+
         if (finalVictoryPanel) finalVictoryPanel.SetActive(true);
 
         // Disable gameplay controls
@@ -592,5 +603,26 @@ public class RoundManager : MonoBehaviour
     public void DebugSkipToNextRound()
     {
         OnRoundTimeComplete();
+    }
+
+    /// <summary>
+    /// Called by Main Menu button on victory screen
+    /// </summary>
+    public void ReturnToMainMenu()
+    {
+        if (debugMode) Debug.Log("[RoundManager] Returning to main menu...");
+
+        // Unpause game
+        Time.timeScale = 1f;
+
+        // Load main menu scene
+        if (!string.IsNullOrEmpty(mainMenuSceneName))
+        {
+            SceneManager.LoadScene(mainMenuSceneName);
+        }
+        else
+        {
+            Debug.LogError("[RoundManager] Main Menu Scene Name is not set! Please set it in the RoundManager Inspector.");
+        }
     }
 }

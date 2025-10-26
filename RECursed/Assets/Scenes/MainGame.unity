@@ -44796,6 +44796,7 @@ MonoBehaviour:
   summaryManager: {fileID: 1641211112}
   round3SceneName: Round 3 and 4 Scene
   round5SceneName: Round 5 Map
+  mainMenuSceneName: MainMenu
   playerTransform: {fileID: 0}
   resetRotation: 1
   disableDuringTransition: []

@@ -15433,15 +15433,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 72275943523513038, guid: 21196d3ba2351f349b768438bf2ad90e, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.8314842
+      value: 1.0936257
       objectReference: {fileID: 0}
     - target: {fileID: 72275943523513038, guid: 21196d3ba2351f349b768438bf2ad90e, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.8314842
+      value: 1.0936257
       objectReference: {fileID: 0}
     - target: {fileID: 72275943523513038, guid: 21196d3ba2351f349b768438bf2ad90e, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.8314842
+      value: 1.0936257
       objectReference: {fileID: 0}
     - target: {fileID: 72275943523513038, guid: 21196d3ba2351f349b768438bf2ad90e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -15449,7 +15449,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 72275943523513038, guid: 21196d3ba2351f349b768438bf2ad90e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.23
+      value: 0.632
       objectReference: {fileID: 0}
     - target: {fileID: 72275943523513038, guid: 21196d3ba2351f349b768438bf2ad90e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -18213,6 +18213,7 @@ MonoBehaviour:
   summaryManager: {fileID: 600797539}
   round3SceneName: Round 3 and 4 Scene
   round5SceneName: Round 5 Map
+  mainMenuSceneName: MainMenu
   playerTransform: {fileID: 0}
   resetRotation: 1
   disableDuringTransition: []
@@ -20341,7 +20342,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clockText: {fileID: 1833852173}
-  timeMultiplier: 60
+  timeMultiplier: 3500
   startHour: 0
   startMinute: 0
   endHour: 6
@@ -44319,7 +44320,7 @@ PrefabInstance:
     - target: {fileID: 7395558221232980216, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
       propertyPath: 'disableWhileOpen.Array.data[0]'
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1126144630}
     - target: {fileID: 7781895770456564574, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
       propertyPath: m_IsActive
       value: 1
