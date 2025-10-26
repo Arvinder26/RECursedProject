@@ -4573,6 +4573,7 @@ GameObject:
   - component: {fileID: 265994085}
   - component: {fileID: 265994084}
   - component: {fileID: 265994083}
+  - component: {fileID: 265994086}
   m_Layer: 0
   m_Name: Point Light (8)
   m_TagString: Untagged
@@ -4683,6 +4684,30 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2065352560}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &265994086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265994082}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbf389dfbcd69c34baba594d91cb6daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  room: 5
+  deadline: 60
+  targetLight: {fileID: 0}
+  minFlickerInterval: 0.05
+  maxFlickerInterval: 0.3
+  minIntensity: 0
+  maxIntensity: 1
+  audioSource: {fileID: 0}
+  playAudio: 1
+  battery: {fileID: 1900041332}
+  batteryPenalty: 1
+  debugMode: 0
 --- !u!4 &271537560 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5657245294536460163, guid: d9456855733aaff4bb6718472a06b765, type: 3}
@@ -8548,15 +8573,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2108851947980638130, guid: 018043cfabdde774ba9cce7ebdbca091, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2108851947980638130, guid: 018043cfabdde774ba9cce7ebdbca091, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2108851947980638130, guid: 018043cfabdde774ba9cce7ebdbca091, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2108851947980638130, guid: 018043cfabdde774ba9cce7ebdbca091, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -8573,7 +8598,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1589758577893350664, guid: 018043cfabdde774ba9cce7ebdbca091, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1527387021}
   m_SourcePrefab: {fileID: 100100000, guid: 018043cfabdde774ba9cce7ebdbca091, type: 3}
 --- !u!1001 &478110249
 PrefabInstance:
@@ -9390,6 +9418,7 @@ GameObject:
   - component: {fileID: 524584908}
   - component: {fileID: 524584907}
   - component: {fileID: 524584906}
+  - component: {fileID: 524584909}
   m_Layer: 0
   m_Name: Point Light (6)
   m_TagString: Untagged
@@ -9500,6 +9529,30 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2065352560}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &524584909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 524584905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbf389dfbcd69c34baba594d91cb6daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  room: 1
+  deadline: 60
+  targetLight: {fileID: 0}
+  minFlickerInterval: 0.05
+  maxFlickerInterval: 0.3
+  minIntensity: 0
+  maxIntensity: 1
+  audioSource: {fileID: 0}
+  playAudio: 1
+  battery: {fileID: 1900041332}
+  batteryPenalty: 1
+  debugMode: 0
 --- !u!1 &526544215
 GameObject:
   m_ObjectHideFlags: 0
@@ -10483,7 +10536,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 1900041332}
   hasDisappearedAnomaly: 0
 --- !u!1 &605963273
 GameObject:
@@ -10751,11 +10804,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5947003855204047955, guid: 2685fec46257f6c408369e580a246a2b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.58906984
+      value: 0.596
       objectReference: {fileID: 0}
     - target: {fileID: 5947003855204047955, guid: 2685fec46257f6c408369e580a246a2b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.9111328
+      value: -2.888
       objectReference: {fileID: 0}
     - target: {fileID: 5947003855204047955, guid: 2685fec46257f6c408369e580a246a2b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -11963,7 +12016,7 @@ MonoBehaviour:
   spawnPosition: {x: 2.783277, y: -0.053529978, z: -1.585}
   spawnRotation: {x: -0, y: 0, z: 0}
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 1900041332}
   hasExtraAnomaly: 0
 --- !u!23 &679168972
 MeshRenderer:
@@ -12719,7 +12772,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6789497805659212298, guid: d54f30e32b931eb4c94f7b6c229366e4, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.87146
+      value: -2.869
       objectReference: {fileID: 0}
     - target: {fileID: 6789497805659212298, guid: d54f30e32b931eb4c94f7b6c229366e4, type: 3}
       propertyPath: m_LocalRotation.w
@@ -17812,7 +17865,7 @@ MonoBehaviour:
   spawnPosition: {x: 1.0636101, y: 1.339, z: -2.1034622}
   spawnRotation: {x: -0, y: 0, z: 0}
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 1900041332}
   hasExtraAnomaly: 0
 --- !u!1 &985924644
 GameObject:
@@ -17825,6 +17878,7 @@ GameObject:
   - component: {fileID: 985924645}
   - component: {fileID: 985924647}
   - component: {fileID: 985924646}
+  - component: {fileID: 985924648}
   m_Layer: 0
   m_Name: Point Light
   m_TagString: Untagged
@@ -17935,6 +17989,30 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!114 &985924648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 985924644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbf389dfbcd69c34baba594d91cb6daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  room: 0
+  deadline: 60
+  targetLight: {fileID: 0}
+  minFlickerInterval: 0.05
+  maxFlickerInterval: 0.3
+  minIntensity: 0
+  maxIntensity: 1
+  audioSource: {fileID: 0}
+  playAudio: 1
+  battery: {fileID: 1900041332}
+  batteryPenalty: 1
+  debugMode: 0
 --- !u!1 &996420385
 GameObject:
   m_ObjectHideFlags: 0
@@ -19099,6 +19177,7 @@ GameObject:
   - component: {fileID: 1064621690}
   - component: {fileID: 1064621692}
   - component: {fileID: 1064621691}
+  - component: {fileID: 1064621693}
   m_Layer: 0
   m_Name: Point Light
   m_TagString: Untagged
@@ -19209,6 +19288,30 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!114 &1064621693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1064621689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbf389dfbcd69c34baba594d91cb6daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  room: 5
+  deadline: 60
+  targetLight: {fileID: 0}
+  minFlickerInterval: 0.05
+  maxFlickerInterval: 0.3
+  minIntensity: 0
+  maxIntensity: 1
+  audioSource: {fileID: 0}
+  playAudio: 1
+  battery: {fileID: 1900041332}
+  batteryPenalty: 1
+  debugMode: 0
 --- !u!1001 &1066031886
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19792,6 +19895,11 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 6357168607906105207, guid: 30b106200cab0de4d9c57ef79607d454, type: 3}
   m_PrefabInstance: {fileID: 1106535968}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1109312589 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2468312258021884094, guid: f7795ef49a32a1f448876d068cee1ab1, type: 3}
+  m_PrefabInstance: {fileID: 1262522055}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1111304938
 PrefabInstance:
@@ -21140,7 +21248,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6657885744878398192, guid: 053fef6cc17b11f4485e27a5d11ffafe, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6657885744878398192, guid: 053fef6cc17b11f4485e27a5d11ffafe, type: 3}
       propertyPath: m_LocalRotation.y
@@ -21148,7 +21256,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6657885744878398192, guid: 053fef6cc17b11f4485e27a5d11ffafe, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6657885744878398192, guid: 053fef6cc17b11f4485e27a5d11ffafe, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -21169,6 +21277,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6282063412259024970, guid: 053fef6cc17b11f4485e27a5d11ffafe, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1197751243}
+    - targetCorrespondingSourceObject: {fileID: 6282063412259024970, guid: 053fef6cc17b11f4485e27a5d11ffafe, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1197751247}
   m_SourcePrefab: {fileID: 100100000, guid: 053fef6cc17b11f4485e27a5d11ffafe, type: 3}
 --- !u!4 &1197751241 stripped
 Transform:
@@ -21202,6 +21313,24 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -2131277950519408810, guid: c4b1dca2cbae4d64e88870c00448afaa, type: 3}
+--- !u!114 &1197751247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1197751242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b6e978b91abc4843b0ad9a4ad5ca2e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  room: 1
+  newPosition: {x: 2.17, y: -0.13773537, z: -0.432}
+  newRotation: {x: -0, y: 90, z: -0}
+  reportWindow: 30
+  battery: {fileID: 1900041332}
+  hasMovedAnomaly: 0
 --- !u!1001 &1203104456
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21290,7 +21419,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1463132305271326887, guid: 81b267ad895a32f45a8d623e008cf25f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1463132305271326887, guid: 81b267ad895a32f45a8d623e008cf25f, type: 3}
       propertyPath: m_LocalRotation.y
@@ -21298,7 +21427,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1463132305271326887, guid: 81b267ad895a32f45a8d623e008cf25f, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1463132305271326887, guid: 81b267ad895a32f45a8d623e008cf25f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -21323,6 +21452,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4579709949592407995, guid: 81b267ad895a32f45a8d623e008cf25f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1204421545}
+    - targetCorrespondingSourceObject: {fileID: 4579709949592407995, guid: 81b267ad895a32f45a8d623e008cf25f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1204421551}
   m_SourcePrefab: {fileID: 100100000, guid: 81b267ad895a32f45a8d623e008cf25f, type: 3}
 --- !u!1 &1204421544 stripped
 GameObject:
@@ -21356,6 +21488,24 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1463132305271326887, guid: 81b267ad895a32f45a8d623e008cf25f, type: 3}
   m_PrefabInstance: {fileID: 1204421543}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1204421551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1204421544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b6e978b91abc4843b0ad9a4ad5ca2e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  room: 6
+  newPosition: {x: 1.68, y: -0.722, z: 1.121}
+  newRotation: {x: -0, y: 90, z: -0}
+  reportWindow: 30
+  battery: {fileID: 1900041332}
+  hasMovedAnomaly: 0
 --- !u!1 &1205581422
 GameObject:
   m_ObjectHideFlags: 0
@@ -22610,19 +22760,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2957427100469123588, guid: f7795ef49a32a1f448876d068cee1ab1, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9078108
+      value: -0.9078108
       objectReference: {fileID: 0}
     - target: {fileID: 2957427100469123588, guid: f7795ef49a32a1f448876d068cee1ab1, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2957427100469123588, guid: f7795ef49a32a1f448876d068cee1ab1, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.4193801
+      value: 0.41938007
       objectReference: {fileID: 0}
     - target: {fileID: 2957427100469123588, guid: f7795ef49a32a1f448876d068cee1ab1, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2957427100469123588, guid: f7795ef49a32a1f448876d068cee1ab1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -22643,13 +22793,34 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2468312258021884094, guid: f7795ef49a32a1f448876d068cee1ab1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1262522060}
   m_SourcePrefab: {fileID: 100100000, guid: f7795ef49a32a1f448876d068cee1ab1, type: 3}
 --- !u!4 &1262522056 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2957427100469123588, guid: f7795ef49a32a1f448876d068cee1ab1, type: 3}
   m_PrefabInstance: {fileID: 1262522055}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1262522060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1109312589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b6e978b91abc4843b0ad9a4ad5ca2e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  room: 2
+  newPosition: {x: 4.724, y: -0.791, z: -1.928}
+  newRotation: {x: -0, y: 310.4091, z: 0}
+  reportWindow: 30
+  battery: {fileID: 1900041332}
+  hasMovedAnomaly: 0
 --- !u!1001 &1265607559
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22819,15 +22990,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7175587400550600618, guid: f76b38a89acf9134ea391ff11d86fe8e, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7175587400550600618, guid: f76b38a89acf9134ea391ff11d86fe8e, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7175587400550600618, guid: f76b38a89acf9134ea391ff11d86fe8e, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7175587400550600618, guid: f76b38a89acf9134ea391ff11d86fe8e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -22851,40 +23022,36 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7556791777611879696, guid: f76b38a89acf9134ea391ff11d86fe8e, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1274686867}
+      addedObject: {fileID: 1274686872}
   m_SourcePrefab: {fileID: 100100000, guid: f76b38a89acf9134ea391ff11d86fe8e, type: 3}
 --- !u!1 &1274686866 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7556791777611879696, guid: f76b38a89acf9134ea391ff11d86fe8e, type: 3}
   m_PrefabInstance: {fileID: 1274686865}
   m_PrefabAsset: {fileID: 0}
---- !u!64 &1274686867
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1274686866}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -6291649955768221947, guid: a849af36f4559544585d81fa553c1e1f, type: 3}
 --- !u!4 &1274686868 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7175587400550600618, guid: f76b38a89acf9134ea391ff11d86fe8e, type: 3}
   m_PrefabInstance: {fileID: 1274686865}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1274686872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1274686866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b6e978b91abc4843b0ad9a4ad5ca2e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  room: 3
+  newPosition: {x: 0.965, y: 1.8601339, z: -8.905422}
+  newRotation: {x: -0, y: 0, z: 0}
+  reportWindow: 30
+  battery: {fileID: 0}
+  hasMovedAnomaly: 0
 --- !u!1001 &1277318854
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23083,6 +23250,7 @@ GameObject:
   - component: {fileID: 1282681704}
   - component: {fileID: 1282681706}
   - component: {fileID: 1282681705}
+  - component: {fileID: 1282681707}
   m_Layer: 0
   m_Name: Point Light
   m_TagString: Untagged
@@ -23193,6 +23361,30 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!114 &1282681707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1282681703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbf389dfbcd69c34baba594d91cb6daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  room: 6
+  deadline: 60
+  targetLight: {fileID: 0}
+  minFlickerInterval: 0.05
+  maxFlickerInterval: 0.3
+  minIntensity: 0
+  maxIntensity: 1
+  audioSource: {fileID: 0}
+  playAudio: 1
+  battery: {fileID: 1900041332}
+  batteryPenalty: 1
+  debugMode: 0
 --- !u!1001 &1282962366
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23594,7 +23786,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 1900041332}
   hasDisappearedAnomaly: 0
 --- !u!1 &1296985911
 GameObject:
@@ -23877,13 +24069,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1309664166}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
   m_LocalPosition: {x: 2.1743197, y: 0.40100002, z: -9.16835}
   m_LocalScale: {x: 1.4154, y: 1.4154, z: 1.4154}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1820777964}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: -86.371}
 --- !u!1 &1309664166
 GameObject:
   m_ObjectHideFlags: 0
@@ -23895,6 +24087,7 @@ GameObject:
   - component: {fileID: 1309179782}
   - component: {fileID: 1312571302}
   - component: {fileID: 1311604070}
+  - component: {fileID: 1312571303}
   m_Layer: 0
   m_Name: toaster
   m_TagString: Untagged
@@ -23960,6 +24153,24 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1309664166}
   m_Mesh: {fileID: 4300000, guid: 2faafd7c39cf18b4d83d3d729c4f9a04, type: 3}
+--- !u!114 &1312571303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1309664166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b6e978b91abc4843b0ad9a4ad5ca2e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  room: 0
+  newPosition: {x: 1.232, y: -0.612, z: -9.16835}
+  newRotation: {x: -0, y: 180, z: 273.62946}
+  reportWindow: 30
+  battery: {fileID: 1900041332}
+  hasMovedAnomaly: 0
 --- !u!1 &1312668946
 GameObject:
   m_ObjectHideFlags: 0
@@ -25232,7 +25443,7 @@ MonoBehaviour:
   spawnPosition: {x: 2.227, y: 0.41947007, z: -7.708}
   spawnRotation: {x: -0, y: 0, z: 0}
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 1900041332}
   hasExtraAnomaly: 0
 --- !u!1001 &1392317934
 PrefabInstance:
@@ -25745,6 +25956,7 @@ GameObject:
   - component: {fileID: 1417322194}
   - component: {fileID: 1417322196}
   - component: {fileID: 1417322195}
+  - component: {fileID: 1417322197}
   m_Layer: 0
   m_Name: Point Light
   m_TagString: Untagged
@@ -25855,6 +26067,30 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!114 &1417322197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1417322193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbf389dfbcd69c34baba594d91cb6daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  room: 3
+  deadline: 60
+  targetLight: {fileID: 0}
+  minFlickerInterval: 0.05
+  maxFlickerInterval: 0.3
+  minIntensity: 0
+  maxIntensity: 1
+  audioSource: {fileID: 0}
+  playAudio: 1
+  battery: {fileID: 1900041332}
+  batteryPenalty: 1
+  debugMode: 0
 --- !u!1 &1422246538
 GameObject:
   m_ObjectHideFlags: 0
@@ -26686,6 +26922,7 @@ GameObject:
   - component: {fileID: 1514975047}
   - component: {fileID: 1514975046}
   - component: {fileID: 1514975045}
+  - component: {fileID: 1514975048}
   m_Layer: 0
   m_Name: Point Light (10)
   m_TagString: Untagged
@@ -26796,6 +27033,30 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2065352560}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1514975048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1514975044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbf389dfbcd69c34baba594d91cb6daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  room: 1
+  deadline: 60
+  targetLight: {fileID: 0}
+  minFlickerInterval: 0.05
+  maxFlickerInterval: 0.3
+  minIntensity: 0
+  maxIntensity: 1
+  audioSource: {fileID: 0}
+  playAudio: 1
+  battery: {fileID: 1900041332}
+  batteryPenalty: 1
+  debugMode: 0
 --- !u!1001 &1517602086
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26870,6 +27131,29 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6310382116227772773, guid: 23114291690960946b14a5bb259ae6d2, type: 3}
   m_PrefabInstance: {fileID: 1517602086}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1527387017 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1589758577893350664, guid: 018043cfabdde774ba9cce7ebdbca091, type: 3}
+  m_PrefabInstance: {fileID: 475394300}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1527387021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1527387017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b6e978b91abc4843b0ad9a4ad5ca2e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  room: 5
+  newPosition: {x: 2.034, y: -0.96914864, z: 1.683}
+  newRotation: {x: -0, y: 0, z: 0}
+  reportWindow: 30
+  battery: {fileID: 1900041332}
+  hasMovedAnomaly: 0
 --- !u!1001 &1527400150
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28319,6 +28603,24 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4299286095319114, guid: b10fed84dcd24c34ea1d8d9f6368ddde, type: 3}
   m_PrefabInstance: {fileID: 1704362649}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1606276161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1606276156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b6e978b91abc4843b0ad9a4ad5ca2e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  room: 2
+  newPosition: {x: 4.17, y: -0.732, z: -4.0328903}
+  newRotation: {x: -0, y: 0, z: 0}
+  reportWindow: 30
+  battery: {fileID: 1900041332}
+  hasMovedAnomaly: 0
 --- !u!1001 &1627688736
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28712,7 +29014,7 @@ MonoBehaviour:
   maxIntensity: 1
   audioSource: {fileID: 0}
   playAudio: 1
-  battery: {fileID: 0}
+  battery: {fileID: 1900041332}
   batteryPenalty: 1
   debugMode: 0
 --- !u!1001 &1639678372
@@ -29717,15 +30019,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4299286095319114, guid: b10fed84dcd24c34ea1d8d9f6368ddde, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4299286095319114, guid: b10fed84dcd24c34ea1d8d9f6368ddde, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4299286095319114, guid: b10fed84dcd24c34ea1d8d9f6368ddde, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4299286095319114, guid: b10fed84dcd24c34ea1d8d9f6368ddde, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -29746,6 +30048,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1121856416761872, guid: b10fed84dcd24c34ea1d8d9f6368ddde, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1606276157}
+    - targetCorrespondingSourceObject: {fileID: 1121856416761872, guid: b10fed84dcd24c34ea1d8d9f6368ddde, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1606276161}
   m_SourcePrefab: {fileID: 100100000, guid: b10fed84dcd24c34ea1d8d9f6368ddde, type: 3}
 --- !u!1001 &1704394223
 PrefabInstance:
@@ -32127,7 +32432,7 @@ MonoBehaviour:
   spawnPosition: {x: 2.493, y: -0.27, z: 1.099}
   spawnRotation: {x: -0, y: 180, z: 0}
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 1900041332}
   hasExtraAnomaly: 0
 --- !u!1 &1820777963
 GameObject:
@@ -32831,6 +33136,7 @@ GameObject:
   - component: {fileID: 1847988064}
   - component: {fileID: 1847988063}
   - component: {fileID: 1847988062}
+  - component: {fileID: 1847988065}
   m_Layer: 0
   m_Name: Point Light (1)
   m_TagString: Untagged
@@ -32941,6 +33247,30 @@ Transform:
   m_Children: []
   m_Father: {fileID: 132469685}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1847988065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1847988061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbf389dfbcd69c34baba594d91cb6daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  room: 2
+  deadline: 60
+  targetLight: {fileID: 0}
+  minFlickerInterval: 0.05
+  maxFlickerInterval: 0.3
+  minIntensity: 0
+  maxIntensity: 1
+  audioSource: {fileID: 0}
+  playAudio: 1
+  battery: {fileID: 1900041332}
+  batteryPenalty: 1
+  debugMode: 0
 --- !u!1 &1856070677
 GameObject:
   m_ObjectHideFlags: 0
@@ -33194,7 +33524,7 @@ MonoBehaviour:
   spawnPosition: {x: 1.097, y: -0.13393307, z: -4.432}
   spawnRotation: {x: 0, y: 315, z: 0}
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 1900041332}
   hasExtraAnomaly: 0
 --- !u!1001 &1863705394
 PrefabInstance:
@@ -34413,6 +34743,7 @@ GameObject:
   - component: {fileID: 1928055521}
   - component: {fileID: 1928055523}
   - component: {fileID: 1928055522}
+  - component: {fileID: 1928055524}
   m_Layer: 0
   m_Name: Point Light
   m_TagString: Untagged
@@ -34523,6 +34854,30 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!114 &1928055524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1928055520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbf389dfbcd69c34baba594d91cb6daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  room: 1
+  deadline: 60
+  targetLight: {fileID: 0}
+  minFlickerInterval: 0.05
+  maxFlickerInterval: 0.3
+  minIntensity: 0
+  maxIntensity: 1
+  audioSource: {fileID: 0}
+  playAudio: 1
+  battery: {fileID: 1900041332}
+  batteryPenalty: 1
+  debugMode: 0
 --- !u!64 &1928862735
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -35884,6 +36239,7 @@ GameObject:
   - component: {fileID: 1967671353}
   - component: {fileID: 1967671355}
   - component: {fileID: 1967671354}
+  - component: {fileID: 1967671356}
   m_Layer: 0
   m_Name: Point Light
   m_TagString: Untagged
@@ -35994,6 +36350,30 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!114 &1967671356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1967671352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbf389dfbcd69c34baba594d91cb6daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  room: 2
+  deadline: 60
+  targetLight: {fileID: 0}
+  minFlickerInterval: 0.05
+  maxFlickerInterval: 0.3
+  minIntensity: 0
+  maxIntensity: 1
+  audioSource: {fileID: 0}
+  playAudio: 1
+  battery: {fileID: 1900041332}
+  batteryPenalty: 1
+  debugMode: 0
 --- !u!1001 &1970349719
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -38598,7 +38978,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 1900041332}
   hasDisappearedAnomaly: 0
 --- !u!1 &1000010492667878
 GameObject:
@@ -53951,6 +54331,7 @@ GameObject:
   - component: {fileID: 6444753994370000810}
   - component: {fileID: 2750404513613463171}
   - component: {fileID: 5635251815441535422}
+  - component: {fileID: 7177006292514828251}
   m_Layer: 0
   m_Name: modern_chair (1)
   m_TagString: Untagged
@@ -57717,13 +58098,31 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6028681965874573662}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.19738095, z: -0, w: 0.98032695}
+  m_LocalRotation: {x: 0, y: 0.19738095, z: 0, w: 0.9803269}
   m_LocalPosition: {x: -2.0549297, y: 0, z: 1.4754715}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1339645978}
   m_LocalEulerAnglesHint: {x: 0, y: 22.768, z: 0}
+--- !u!114 &7177006292514828251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6028681965874573662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b6e978b91abc4843b0ad9a4ad5ca2e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  room: 1
+  newPosition: {x: -3.163, y: 0, z: 1.94}
+  newRotation: {x: -0, y: 22.76769, z: -0}
+  reportWindow: 30
+  battery: {fileID: 1900041332}
+  hasMovedAnomaly: 0
 --- !u!4 &7177006293051701582
 Transform:
   m_ObjectHideFlags: 0
@@ -57755,7 +58154,7 @@ MonoBehaviour:
   renderersToToggle: []
   collidersToToggle: []
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 1900041332}
   hasDisappearedAnomaly: 0
 --- !u!64 &7188873849891199277
 MeshCollider:
