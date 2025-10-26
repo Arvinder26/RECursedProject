@@ -8,7 +8,9 @@ public enum Room
     EnsuiteBedroom,
     WalkinWardrobe,
     Bathroom,
-    Garage
+    Garage,
+    Office,        // NEW ROOM FOR ROUND 5
+    DiningRoom     // NEW ROOM FOR ROUND 5
 }
 
 public enum AnomalyType
