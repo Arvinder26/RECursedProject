@@ -98527,7 +98527,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0146010dfe4c223449214c732ba46e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  room: 3
+  room: 5
   extraObjectPrefab: {fileID: 31706476}
   spawnPosition: {x: 1.3954296, y: -0.92871004, z: -0.08}
   spawnRotation: {x: -0, y: 270, z: 0}
