@@ -40,9 +40,17 @@ public class SubtitleUI : MonoBehaviour
         group.alpha = Mathf.MoveTowards(group.alpha, target, FadeVel * Time.unscaledDeltaTime);
     }
 
-    public void Show(string msg) { SetMsg(msg); hardShow = true; holdUntil = float.MaxValue; }
+    public void Show(string msg) {
+        if (!PlayerPrefs.HasKey("SubtitlesEnabled") || PlayerPrefs.GetInt("SubtitlesEnabled") == 0) return;
+
+        SetMsg(msg); 
+        hardShow = true; 
+        holdUntil = float.MaxValue; 
+    }
     public void ShowForSeconds(string msg, float seconds)
     {
+        if (!PlayerPrefs.HasKey("SubtitlesEnabled") || PlayerPrefs.GetInt("SubtitlesEnabled") == 0) return;
+
         SetMsg(msg); hardShow = true;
         float reqEnd = Time.unscaledTime + Mathf.Max(seconds, minVisibleSeconds);
         if (reqEnd > holdUntil) holdUntil = reqEnd;
