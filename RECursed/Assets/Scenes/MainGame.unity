@@ -27383,7 +27383,7 @@ GameObject:
   - component: {fileID: 517692732}
   m_Layer: 0
   m_Name: Point Light
-  m_TagString: Untagged
+  m_TagString: SFX
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30040,7 +30040,7 @@ GameObject:
   - component: {fileID: 557941530}
   m_Layer: 0
   m_Name: Proximity Scare
-  m_TagString: Untagged
+  m_TagString: SFX
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -42377,7 +42377,7 @@ GameObject:
   - component: {fileID: 777183937}
   m_Layer: 0
   m_Name: Point Light
-  m_TagString: Untagged
+  m_TagString: SFX
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -42823,7 +42823,7 @@ GameObject:
   - component: {fileID: 780767223}
   m_Layer: 0
   m_Name: Point Light
-  m_TagString: Untagged
+  m_TagString: SFX
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -43841,7 +43841,7 @@ GameObject:
   - component: {fileID: 789427787}
   m_Layer: 0
   m_Name: Point Light
-  m_TagString: Untagged
+  m_TagString: SFX
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -49177,7 +49177,7 @@ GameObject:
   - component: {fileID: 879931457}
   m_Layer: 0
   m_Name: Point Light
-  m_TagString: Untagged
+  m_TagString: SFX
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -50662,7 +50662,7 @@ GameObject:
   - component: {fileID: 902932777}
   m_Layer: 0
   m_Name: Point Light
-  m_TagString: Untagged
+  m_TagString: SFX
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -63509,7 +63509,7 @@ GameObject:
   - component: {fileID: 1180005859}
   m_Layer: 0
   m_Name: Point Light
-  m_TagString: Untagged
+  m_TagString: SFX
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -66024,7 +66024,7 @@ GameObject:
   - component: {fileID: 1227314274}
   m_Layer: 0
   m_Name: Point Light
-  m_TagString: Untagged
+  m_TagString: SFX
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -69808,7 +69808,7 @@ GameObject:
   - component: {fileID: 1298685257}
   m_Layer: 0
   m_Name: BGM
-  m_TagString: Untagged
+  m_TagString: Music
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -70644,7 +70644,7 @@ GameObject:
   - component: {fileID: 1312130365}
   m_Layer: 0
   m_Name: Theme Loop
-  m_TagString: Untagged
+  m_TagString: Music
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -71707,7 +71707,7 @@ GameObject:
   - component: {fileID: 1332886448}
   m_Layer: 0
   m_Name: Point Light
-  m_TagString: Untagged
+  m_TagString: SFX
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -79385,7 +79385,7 @@ GameObject:
   - component: {fileID: 1483932468}
   m_Layer: 0
   m_Name: Point Light
-  m_TagString: Untagged
+  m_TagString: SFX
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -80878,6 +80878,10 @@ PrefabInstance:
     - target: {fileID: 1021567503976253511, guid: b2a4b4dfad92c464ea0393dab0410957, type: 3}
       propertyPath: m_Name
       value: Injured Walk 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1021567503976253511, guid: b2a4b4dfad92c464ea0393dab0410957, type: 3}
+      propertyPath: m_TagString
+      value: SFX
       objectReference: {fileID: 0}
     - target: {fileID: 4310913207694951161, guid: b2a4b4dfad92c464ea0393dab0410957, type: 3}
       propertyPath: playerRoot
@@ -85541,6 +85545,10 @@ PrefabInstance:
     - target: {fileID: 741711005909133428, guid: 21196d3ba2351f349b768438bf2ad90e, type: 3}
       propertyPath: m_Name
       value: FINALPLAYER
+      objectReference: {fileID: 0}
+    - target: {fileID: 741711005909133428, guid: 21196d3ba2351f349b768438bf2ad90e, type: 3}
+      propertyPath: m_TagString
+      value: SFX
       objectReference: {fileID: 0}
     - target: {fileID: 1420025078417209834, guid: 21196d3ba2351f349b768438bf2ad90e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -90207,7 +90215,7 @@ GameObject:
   - component: {fileID: 1675398266}
   m_Layer: 0
   m_Name: Point Light
-  m_TagString: Untagged
+  m_TagString: SFX
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -96491,6 +96499,10 @@ PrefabInstance:
     - target: {fileID: 1280187644026957187, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1280187644026957187, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
+      propertyPath: m_TagString
+      value: SFX
       objectReference: {fileID: 0}
     - target: {fileID: 1716177652313088595, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
       propertyPath: m_AnchorMax.y
@@ -112513,7 +112525,7 @@ GameObject:
   - component: {fileID: 2056601560}
   m_Layer: 0
   m_Name: Spawn Audio
-  m_TagString: Untagged
+  m_TagString: SFX
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -115101,7 +115113,7 @@ GameObject:
   - component: {fileID: 2098421397}
   m_Layer: 0
   m_Name: Point Light
-  m_TagString: Untagged
+  m_TagString: SFX
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
