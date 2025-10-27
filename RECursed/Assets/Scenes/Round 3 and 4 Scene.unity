@@ -18195,21 +18195,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   totalRounds: 5
   currentRound: 3
-  round1AnomalyCount: 5
-  round1SpawnInterval: 20
-  round1StartDelay: 10
-  round2AnomalyCount: 8
+  round1AnomalyCount: 3
+  round1SpawnInterval: 67
+  round1StartDelay: 120
+  round2AnomalyCount: 5
   round2SpawnInterval: 45
-  round2StartDelay: 20
-  round3AnomalyCount: 12
-  round3SpawnInterval: 30
-  round3StartDelay: 15
-  round4AnomalyCount: 16
-  round4SpawnInterval: 30
-  round4StartDelay: 10
-  round5AnomalyCount: 20
-  round5SpawnInterval: 20
-  round5StartDelay: 5
+  round2StartDelay: 120
+  round3AnomalyCount: 8
+  round3SpawnInterval: 25
+  round3StartDelay: 120
+  round4AnomalyCount: 12
+  round4SpawnInterval: 18
+  round4StartDelay: 120
+  round5AnomalyCount: 15
+  round5SpawnInterval: 15
+  round5StartDelay: 120
   gameClock: {fileID: 387921625}
   battery: {fileID: 724391104}
   roundTransitionPanel: {fileID: 1840981277}
@@ -118065,6 +118065,10 @@ PrefabInstance:
     - target: {fileID: 4310913207694951161, guid: b2a4b4dfad92c464ea0393dab0410957, type: 3}
       propertyPath: spawnAfterSeconds
       value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 4310913207694951161, guid: b2a4b4dfad92c464ea0393dab0410957, type: 3}
+      propertyPath: jumpscareDurationOverride
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

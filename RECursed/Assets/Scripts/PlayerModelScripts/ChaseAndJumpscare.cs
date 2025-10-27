@@ -9,6 +9,8 @@ public class ChaseAndJumpscare : MonoBehaviour
     public Transform playerRoot;
     public Transform playerCamera;
 
+    public float jumpscareDurationOverride = 0f;
+
     [Header("Chase")]
     public float moveSpeed = 2.3f;
     public float rotateSpeed = 8f;
@@ -245,10 +247,14 @@ public class ChaseAndJumpscare : MonoBehaviour
         if (freezeTimeOnScare) Time.timeScale = 0f;
         if (unlockCursorOnScare) { Cursor.lockState = CursorLockMode.None; Cursor.visible = true; }
 
-        // 6) Hold until audio finishes (+ small extra)
-        float t0 = Time.unscaledTime;
-        while (Time.unscaledTime - t0 < screamLen + extraDespawnDelay)
-            yield return null;
+        // 6) Hold until audio finishes (+ small extra) OR the override caps it sooner
+    float hold = screamLen + extraDespawnDelay;
+    if (jumpscareDurationOverride > 0f)
+        hold = Mathf.Min(hold, jumpscareDurationOverride);
+
+    float t0 = Time.unscaledTime;
+    while (Time.unscaledTime - t0 < hold)
+        yield return null;
 
         // --- RESTORE STATE ---
 
