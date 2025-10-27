@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 614cf8d2c9b8ea34da68a7cc45461836
+timeCreated: 1430218493
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35718
+  packageName: Next-gen Electronics Pack
+  packageVersion: 1.0
+  assetPath: Assets/Next-gen Electronics Pack/Prefabs/tv.prefab
+  uploadId: 61333

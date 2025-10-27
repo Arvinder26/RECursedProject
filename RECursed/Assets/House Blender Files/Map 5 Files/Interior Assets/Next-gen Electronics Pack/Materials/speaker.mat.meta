@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 60b9b36544ba8534889001130fab9925
+timeCreated: 1430218361
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35718
+  packageName: Next-gen Electronics Pack
+  packageVersion: 1.0
+  assetPath: Assets/Next-gen Electronics Pack/Materials/speaker.mat
+  uploadId: 61333

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a80d324eb0abdce4db12c0ec618383bf
+timeCreated: 1430218489
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35718
+  packageName: Next-gen Electronics Pack
+  packageVersion: 1.0
+  assetPath: Assets/Next-gen Electronics Pack/Prefabs/mouse.prefab
+  uploadId: 61333
