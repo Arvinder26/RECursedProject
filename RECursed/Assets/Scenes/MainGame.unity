@@ -8712,7 +8712,7 @@ MonoBehaviour:
   newPosition: {x: 5.01, y: -1.11071, z: 7.04}
   newRotation: {x: 0, y: 0, z: 0}
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 760420565}
   hasMovedAnomaly: 0
 --- !u!1001 &165477133
 PrefabInstance:
@@ -23330,7 +23330,7 @@ MonoBehaviour:
   newPosition: {x: 13.16, y: -1.22558, z: -5.75}
   newRotation: {x: 0, y: 313.1687, z: 0}
   reportWindow: 30
-  battery: {fileID: 0}
+  battery: {fileID: 760420565}
   hasMovedAnomaly: 0
 --- !u!4 &427376284 stripped
 Transform:
@@ -107151,39 +107151,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3751186182042389369, guid: 48f270c9ce58e894f8655ac4d8853941, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1949106919}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 48f270c9ce58e894f8655ac4d8853941, type: 3}
 --- !u!4 &1949106917 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4559106657817055683, guid: 48f270c9ce58e894f8655ac4d8853941, type: 3}
   m_PrefabInstance: {fileID: 1949106916}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1949106918 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3751186182042389369, guid: 48f270c9ce58e894f8655ac4d8853941, type: 3}
-  m_PrefabInstance: {fileID: 1949106916}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1949106919
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1949106918}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4430c728c2cd7494e9fb28fb8ccb1d34, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  room: 2
-  renderersToToggle: []
-  collidersToToggle: []
-  reportWindow: 30
-  battery: {fileID: 760420565}
-  hasDisappearedAnomaly: 0
 --- !u!1001 &1949534704
 PrefabInstance:
   m_ObjectHideFlags: 0
