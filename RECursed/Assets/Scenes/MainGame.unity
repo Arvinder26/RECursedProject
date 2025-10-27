@@ -49306,7 +49306,7 @@ MonoBehaviour:
   maxIntensity: 1
   audioSource: {fileID: 0}
   playAudio: 1
-  battery: {fileID: 0}
+  battery: {fileID: 760420565}
   batteryPenalty: 1
   debugMode: 0
 --- !u!82 &879931458
