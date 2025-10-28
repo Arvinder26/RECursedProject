@@ -298,7 +298,7 @@ RECursed/
 │   │   │   ├── BatteryLossScreen.cs     # Battery depletion UI
 │   │   │   ├── LossScreen.cs            # Game over screen
 │   │   │   ├── PauseGameScript.cs       # Pause functionality
-│   │   │   └── SimpleTimer.cs           # Basic timer utility
+│   │   │ 
 │   │   │
 │   │   ├── PlayerModelScripts/          # Player controller scripts
 │   │   │   ├── AnamolySpawner.cs        # Anomaly spawning system
@@ -376,13 +376,10 @@ RECursed/
 │   ├── AnomalyModels/                   # Anomaly-specific models
 │   ├── House Blender/                   # House 3D models
 │   ├── Prefabs/                         # General prefabs
-│   ├── New Prefabs/                     # Updated prefabs
-│   ├── Map 5 Files/                     # Round 5 specific assets
 │   ├── Images/                          # Textures and sprites
 │   ├── Fonts/                           # Typography assets
 │   ├── TextMesh Pro/                    # TMP resources
 │   ├── Settings/                        # Unity project settings
-│   ├── Resources/                       # Runtime-loaded assets
 │   ├── IngameTime/                      # Clock system assets
 │   ├── UnitTesting/                     # Unit test files
 │   ├── FootstepPro/                     # Footstep sound system

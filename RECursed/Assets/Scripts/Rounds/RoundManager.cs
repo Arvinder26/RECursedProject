@@ -2,81 +2,55 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement; // ADDED FOR SCENE SWITCHING
-using TMPro; // ADDED FOR TEXTMESHPRO SUPPORT
+using UnityEngine.SceneManagement; // For loading different scene maps per round
+using TMPro; // For updating TextMeshPro UI elements
 
-// references
+// Manages the entire round progression system, anomaly spawning, and scene transitions
 public class RoundManager : MonoBehaviour
 {
     [Header("Round Configuration")]
-    // reference
     [SerializeField] private int totalRounds = 5;
-    // reference
     [SerializeField] private int currentRound = 1;
 
     [Header("Round 1: Easy")]
-    // reference
     [Tooltip("Number of anomalies to activate in Round 1")]
-    // reference
     [SerializeField] private int round1AnomalyCount = 2;
     [Tooltip("Seconds between each anomaly spawn")]
-    // reference
     [SerializeField] private float round1SpawnInterval = 60f;
     [Tooltip("Delay before first anomaly spawns (gives player time to prepare)")]
-    // reference
     [SerializeField] private float round1StartDelay = 30f;
 
     [Header("Round 2: Medium")]
-    // reference
     [SerializeField] private int round2AnomalyCount = 3;
-    // reference
     [SerializeField] private float round2SpawnInterval = 50f;
-    // reference
     [SerializeField] private float round2StartDelay = 20f;
 
     [Header("Round 3: Hard")]
-    // reference
     [SerializeField] private int round3AnomalyCount = 4;
-    // reference
     [SerializeField] private float round3SpawnInterval = 40f;
-    // reference
     [SerializeField] private float round3StartDelay = 15f;
 
     [Header("Round 4: Very Hard")]
-    // reference
     [SerializeField] private int round4AnomalyCount = 5;
-    // reference
     [SerializeField] private float round4SpawnInterval = 30f;
-    // reference
     [SerializeField] private float round4StartDelay = 10f;
 
     [Header("Round 5: Nightmare")]
-    // reference
     [SerializeField] private int round5AnomalyCount = 6;
-    // reference
     [SerializeField] private float round5SpawnInterval = 20f;
-    // reference
     [SerializeField] private float round5StartDelay = 5f;
 
     [Header("Scene References")]
-    // 4 references
     [SerializeField] private GameClockController gameClock;
-    // 5 references
     [SerializeField] private SegmentBattery battery;
-    // 6 references
     [SerializeField] private GameObject roundTransitionPanel;  // "ROUND 2 STARTING..." UI
-    // 4 references
     [SerializeField] private GameObject finalVictoryPanel;     // "YOU WON!" UI
-    // 5 references
     [SerializeField] private GameObject summaryReportPanel;
-    // 3 references
     [SerializeField] private GameObject TabletUIRoot;
-    // 6 references
     [SerializeField] private GameObject AnomalyTimerPanel;
-    // 2 references
     [SerializeField] private SummaryReportManager summaryManager;
 
-    [Header("Scene Names")] // NEW SECTION FOR SCENE SWITCHING
+    [Header("Scene Names")]
     [Tooltip("Leave empty to stay in current scene")]
     [SerializeField] private string round3SceneName = "Round 3 and 4 Scene";
     [Tooltip("Leave empty to stay in current scene")]
@@ -86,54 +60,39 @@ public class RoundManager : MonoBehaviour
 
     [Header("Player Reset")]
     [Tooltip("Drag your player Transform here. If empty, will try to find it automatically.")]
-    // 11 references
     [SerializeField] private Transform playerTransform;
     [Tooltip("Should the player's rotation also reset between rounds?")]
-    // 2 references
     [SerializeField] private bool resetRotation = true;
 
     [Header("Disable During Transition")]
     [Tooltip("Drag scripts that should be disabled during round transition (e.g., FirstPersonMover, MouseLook, TabletPanelController)")]
-    // 4 references
     [SerializeField] private Behaviour[] disableDuringTransition;
     [Tooltip("Should the cursor be locked and hidden during transition?")]
-    // 2 references
     [SerializeField] private bool lockCursorDuringTransition = true;
 
     [Header("Debug")]
-    // 1 reference
     [SerializeField] private bool debugMode = false;
 
-    // Internal state
-    // 6 references
+    // Internal state tracking for round management
     private List<IAnomaly> allAnomalies = new List<IAnomaly>();
-    // 4 references
     private List<IAnomaly> activeAnomaliesThisRound = new List<IAnomaly>();
-    // 5 references
     private Coroutine spawnRoutine;
-    // 0 references
     private bool roundInProgress = false;
-    // 5 references
     private bool summaryShownThisRound = false;
-    // Track if currently transitioning between rounds
-    private bool isTransitioning = false;
+    private bool isTransitioning = false; // Track if currently transitioning between rounds
 
-    // Store the player's starting position and rotation
-    // 5 references
+    // Store the player's starting position and rotation for resetting between rounds
     private Vector3 playerStartPosition;
-    // 3 references
     private Quaternion playerStartRotation;
 
-    // Store cursor state before transition
-    // 2 references
+    // Store cursor state before transition so we can restore it later
     private CursorLockMode previousCursorLockMode;
-    // 2 references
     private bool previousCursorVisible;
 
-    // 0 references
+    // Called before Start() - used for finding all anomalies and setting up references
     void Awake()
     {
-        // Find all anomalies in the scene
+        // Find all anomalies in the scene (including disabled ones)
         var allBehaviours = FindObjectsOfType<MonoBehaviour>(true);
         allAnomalies.Clear();
 
@@ -147,14 +106,14 @@ public class RoundManager : MonoBehaviour
 
         if (debugMode) Debug.Log($"[RoundManager] Found {allAnomalies.Count} anomalies in scene.");
 
-        // Auto-find references if not set
+        // Auto-find important references if they weren't set in the Inspector
         if (!gameClock) gameClock = FindObjectOfType<GameClockController>();
         if (!battery) battery = FindObjectOfType<SegmentBattery>();
 
-        // Auto-find player if not assigned
+        // Try to find the player GameObject automatically if not assigned
         if (!playerTransform)
         {
-            // Try to find by common player names or tags
+            // Try multiple common player names and tags
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             if (!player) player = GameObject.Find("FINALPLAYER");
             if (!player) player = GameObject.Find("Player");
@@ -171,7 +130,7 @@ public class RoundManager : MonoBehaviour
             }
         }
 
-        // Store the player's initial position and rotation
+        // Save the player's starting position so we can teleport them back each round
         if (playerTransform)
         {
             playerStartPosition = playerTransform.position;
@@ -179,12 +138,12 @@ public class RoundManager : MonoBehaviour
             if (debugMode) Debug.Log($"[RoundManager] Stored player start position: {playerStartPosition}");
         }
 
-        // Hide panels
+        // Make sure UI panels are hidden at the start
         if (roundTransitionPanel) roundTransitionPanel.SetActive(false);
         if (finalVictoryPanel) finalVictoryPanel.SetActive(false);
     }
 
-    // 0 references
+    // Called after Awake() - kicks off the first round
     void Start()
     {
         // Start at the current round (respects Inspector setting for each scene)
@@ -192,21 +151,21 @@ public class RoundManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Called by GameClockController when time reaches 6:00 AM
+    /// Called by GameClockController when the in-game time reaches 6:00 AM.
+    /// This handles round completion, anomaly cleanup, and progression to next round or victory.
     /// </summary>
-    // 1 reference
     public void OnRoundTimeComplete()
     {
         if (debugMode) Debug.Log($"[RoundManager] Round {currentRound} time complete!");
 
-        // Stop spawning anomalies
+        // Stop spawning any more anomalies for this round
         if (spawnRoutine != null)
         {
             StopCoroutine(spawnRoutine);
             spawnRoutine = null;
         }
 
-        // Revert all active anomalies
+        // Clean up any active anomalies by reverting them back to normal
         foreach (var anomaly in activeAnomaliesThisRound)
         {
             if (anomaly.IsActive)
@@ -218,13 +177,14 @@ public class RoundManager : MonoBehaviour
 
         roundInProgress = false;
 
-        // Check if this was the final round (and not currently transitioning)
+        // If this was the last round, show the victory screen instead of continuing
         if (currentRound >= totalRounds && !isTransitioning)
         {
             ShowFinalVictory();
             return;
         }
 
+        // Hide the UI elements before showing the summary
         if (TabletUIRoot)
         {
             TabletUIRoot.SetActive(false);
@@ -261,7 +221,6 @@ public class RoundManager : MonoBehaviour
         }
     }
 
-    // 2 references
     public void OnContinueFromSummary()
     {
         if (summaryReportPanel) summaryReportPanel.SetActive(false);
@@ -275,32 +234,36 @@ public class RoundManager : MonoBehaviour
         StartCoroutine(TransitionToNextRound());
     }
 
-    // 2 references
+    /// <summary>
+    /// Initializes and starts a new round with the specified difficulty settings.
+    /// Resets all game state, selects random anomalies, and begins spawning them.
+    /// </summary>
     private void StartRound(int roundNumber)
     {
         summaryReportPanel.SetActive(false);
 
         AnomalyTimerPanel.SetActive(true);
 
-        // Ensure game is unpaused
+        // Make sure the game isn't paused
         Time.timeScale = 1f;
 
         currentRound = roundNumber;
         roundInProgress = true;
-        isTransitioning = false; // Round has started, no longer transitioning
+        isTransitioning = false; // Round has started, we're no longer in transition
 
+        // Reset the summary manager's anomaly counters
         if (summaryManager)
         {
             summaryManager.ResetCounts();
         }
 
-        // Re-enable all gameplay controls
+        // Turn all gameplay controls back on
         EnableGameplayControls();
 
-        // Reset player position to starting position
+        // Teleport the player back to their starting position
         ResetPlayerPosition();
 
-        // Get settings for this round
+        // Get the difficulty settings for this specific round
         int anomalyCount;
         float spawnInterval;
         float startDelay;
@@ -339,24 +302,24 @@ public class RoundManager : MonoBehaviour
                 break;
         }
 
-        // Clear to available anomalies
+        // Clear out the list of active anomalies from the previous round
         activeAnomaliesThisRound.Clear();
 
         if (debugMode) Debug.Log($"[RoundManager] Starting Round {currentRound} - {anomalyCount} anomalies, {spawnInterval}s interval.");
 
-        // Reset battery to full
+        // Give the player full battery to start the round
         if (battery)
         {
             battery.Refill(battery.Total);
         }
 
-        // Reset game clock to 12:00 AM
+        // Reset the clock back to midnight (12:00 AM)
         if (gameClock)
         {
             gameClock.SetTime(0, 0);  // 12:00 AM
         }
 
-        // Pick random anomalies for this round
+        // Randomly select which anomalies will be active this round
         activeAnomaliesThisRound.Clear();
         var shuffledOrder = allAnomalies.OrderBy(x => Random.value).ToList();
         for (int i = 0; i < anomalyCount && i < shuffledOrder.Count; i++)
@@ -364,11 +327,14 @@ public class RoundManager : MonoBehaviour
             activeAnomaliesThisRound.Add(shuffledOrder[i]);
         }
 
-        // Start spawning them over time (with initial delay)
+        // Start the coroutine that spawns anomalies over time
         spawnRoutine = StartCoroutine(SpawnAnomaliesRoutine(spawnInterval, startDelay));
     }
 
-    // 2 references
+    /// <summary>
+    /// Teleports the player back to their starting position and rotation.
+    /// Handles CharacterController components properly by disabling them first.
+    /// </summary>
     private void ResetPlayerPosition()
     {
         if (!playerTransform)
@@ -377,7 +343,7 @@ public class RoundManager : MonoBehaviour
             return;
         }
 
-        // Check if player has a CharacterController (need to disable it to teleport)
+        // CharacterControllers need to be disabled before teleporting, otherwise they fight the position change
         CharacterController cc = playerTransform.GetComponent<CharacterController>();
         if (cc)
         {
@@ -388,7 +354,7 @@ public class RoundManager : MonoBehaviour
         }
         else
         {
-            // No CharacterController, just set position directly
+            // No CharacterController, so we can just set position directly
             playerTransform.position = playerStartPosition;
             if (resetRotation) playerTransform.rotation = playerStartRotation;
         }
@@ -396,12 +362,15 @@ public class RoundManager : MonoBehaviour
         if (debugMode) Debug.Log($"[RoundManager] Reset player to starting position: {playerStartPosition}");
     }
 
-    // 2 references
+    /// <summary>
+    /// Disables player movement and interaction during round transitions.
+    /// Stores the current cursor state so we can restore it later.
+    /// </summary>
     private void DisableGameplayControls()
     {
         if (debugMode) Debug.Log("[RoundManager] Disabling gameplay controls during transition...");
 
-        // Disable all gameplay scripts
+        // Turn off all the gameplay scripts (movement, tablet controls, etc.)
         if (disableDuringTransition != null)
         {
             foreach (var b in disableDuringTransition)
@@ -410,7 +379,7 @@ public class RoundManager : MonoBehaviour
             }
         }
 
-        // Store current cursor state and lock it
+        // Save the current cursor settings and lock it during the transition
         if (lockCursorDuringTransition)
         {
             previousCursorLockMode = Cursor.lockState;
@@ -421,12 +390,15 @@ public class RoundManager : MonoBehaviour
         }
     }
 
-    // 1 reference
+    /// <summary>
+    /// Re-enables all gameplay controls after a round transition completes.
+    /// Restores the cursor to its previous state.
+    /// </summary>
     private void EnableGameplayControls()
     {
         if (debugMode) Debug.Log("[RoundManager] Re-enabling gameplay controls...");
 
-        // Re-enable all gameplay scripts
+        // Turn all the gameplay scripts back on
         if (disableDuringTransition != null)
         {
             foreach (var b in disableDuringTransition)
@@ -435,7 +407,7 @@ public class RoundManager : MonoBehaviour
             }
         }
 
-        // Restore previous cursor state
+        // Restore the cursor to however it was before the transition
         if (lockCursorDuringTransition)
         {
             Cursor.lockState = previousCursorLockMode;
@@ -443,10 +415,13 @@ public class RoundManager : MonoBehaviour
         }
     }
 
-    // 1 reference
+    /// <summary>
+    /// Coroutine that spawns anomalies at regular intervals throughout the round.
+    /// Shuffles the order each cycle to keep things unpredictable.
+    /// </summary>
     private IEnumerator SpawnAnomaliesRoutine(float interval, float startDelay)
     {
-        // Wait before spawning the first anomaly (gives player time to prepare)
+        // Give the player some time to get ready before the first anomaly appears
         if (startDelay > 0)
         {
             if (debugMode) Debug.Log($"[RoundManager] Waiting {startDelay}s before spawning first anomaly...");
@@ -455,51 +430,54 @@ public class RoundManager : MonoBehaviour
 
         if (debugMode) Debug.Log($"[RoundManager] Starting anomaly spawns now!");
 
-        // Shuffle the order
+        // Randomize the order so anomalies don't appear in the same sequence every time
         var shuffledOrder = activeAnomaliesThisRound.OrderBy(x => Random.value).ToList();
 
+        // Trigger each anomaly once with delays between them
         foreach (var anomaly in shuffledOrder)
         {
-            if (!roundInProgress) yield break; // Stop if round ended
+            if (!roundInProgress) yield break; // Stop if round ended early
 
-            // Trigger the anomaly
             anomaly.Trigger();
 
             if (debugMode) Debug.Log($"[RoundManager] Triggered {anomaly.Room} - {anomaly.Type}");
 
-            // Wait before triggering the next one
+            // Wait before triggering the next anomaly
             yield return new WaitForSeconds(interval);
         }
 
-        // After all anomalies are triggered once, keep cycling
+        // After all anomalies have been triggered once, keep cycling through them
         while (roundInProgress)
         {
-            // Re-shuffle and trigger again
+            // Re-shuffle for variety
             shuffledOrder = activeAnomaliesThisRound.OrderBy(x => Random.value).ToList();
 
             foreach (var anomaly in shuffledOrder)
             {
                 if (!roundInProgress) yield break; // Stop if round ended
 
-                // Only trigger if not already active
+                // Only trigger if it's not already active (player might not have reported it yet)
                 if (!anomaly.IsActive)
                 {
                     anomaly.Trigger();
                     if (debugMode) Debug.Log($"[RoundManager] Re-triggered {anomaly.Room} - {anomaly.Type}");
                 }
 
-                // Wait before triggering the next one
+                // Wait before the next one
                 yield return new WaitForSeconds(interval);
             }
         }
     }
 
-    // Helper method to update transition panel text
+    /// <summary>
+    /// Updates the transition panel's text to show the current round number.
+    /// Supports both TextMeshPro and legacy Unity Text components.
+    /// </summary>
     private void UpdateTransitionText()
     {
         if (!roundTransitionPanel) return;
 
-        // Try to find Text or TextMeshPro component
+        // Try TextMeshPro first (newer UI system)
         var tmpText = roundTransitionPanel.GetComponentInChildren<TextMeshProUGUI>();
         if (tmpText)
         {
@@ -507,6 +485,7 @@ public class RoundManager : MonoBehaviour
             return;
         }
 
+        // Fall back to legacy Text component if TextMeshPro isn't found
         var legacyText = roundTransitionPanel.GetComponentInChildren<UnityEngine.UI.Text>();
         if (legacyText)
         {
@@ -514,85 +493,92 @@ public class RoundManager : MonoBehaviour
         }
     }
 
-    // 1 reference
+    /// <summary>
+    /// Coroutine that handles the transition between rounds.
+    /// Shows a transition screen, optionally loads a new scene, then starts the next round.
+    /// </summary>
     private IEnumerator TransitionToNextRound()
     {
         if (debugMode) Debug.Log($"[RoundManager] Showing transition to Round {currentRound}...");
 
-        // DISABLE ALL GAMEPLAY CONTROLS
+        // Disable player controls during the transition
         DisableGameplayControls();
-        // CRITICAL: Hide victory panel during transition (prevents it from showing when entering Round 5)
+        
+        // CRITICAL: Hide victory panel during transition to prevent it showing when entering Round 5
         if (finalVictoryPanel) finalVictoryPanel.SetActive(false);
 
-        // CHECK IF SCENE SWITCHING IS NEEDED
+        // Check if we need to load a different scene for this round
         string targetScene = GetSceneForRound(currentRound);
         if (!string.IsNullOrEmpty(targetScene) && targetScene != SceneManager.GetActiveScene().name)
         {
             if (debugMode) Debug.Log($"[RoundManager] Loading scene: {targetScene}");
             
-            // Update transition text before showing
+            // Update and show the transition text
             UpdateTransitionText();
-            
-            // Show transition screen
             if (roundTransitionPanel) roundTransitionPanel.SetActive(true);
 
-            // Wait using realtime (works even if game is paused)
+            // Wait 3 seconds (uses realtime so it works even if game is paused)
             yield return new WaitForSecondsRealtime(3f);
 
-            // Load the new scene
+            // Load the new scene (this will reset everything)
             SceneManager.LoadScene(targetScene);
-            yield break; // Exit coroutine as scene will reload
+            yield break; // Exit coroutine since the scene is reloading
         }
 
-        // Update transition text before showing
+        // If not changing scenes, just show the transition screen
         UpdateTransitionText();
-        
-        // Show transition screen
         if (roundTransitionPanel) roundTransitionPanel.SetActive(true);
 
-        // Wait using realtime (works even if game is paused)
+        // Wait 3 seconds for the player to see the transition
         yield return new WaitForSecondsRealtime(3f);
 
-        // Hide transition
+        // Hide the transition and start the round
         if (roundTransitionPanel) roundTransitionPanel.SetActive(false);
 
         if (debugMode) Debug.Log($"[RoundManager] Starting Round {currentRound} now!");
 
-        // Start next round (this will re-enable controls)
+        // Start the actual round (this will re-enable controls)
         StartRound(currentRound);
     }
 
-    // NEW METHOD FOR SCENE SWITCHING
+    /// <summary>
+    /// Returns the scene name that should be loaded for a specific round number.
+    /// Returns empty string if the round should stay in the current scene.
+    /// </summary>
     private string GetSceneForRound(int round)
     {
         switch (round)
         {
             case 3:
-                return round3SceneName;
+                return round3SceneName;  // Rounds 3-4 use the same scene
             case 5:
-                return round5SceneName;
+                return round5SceneName;  // Round 5 has its own special map
             default:
-                return string.Empty; // Stay in current scene
+                return string.Empty; // All other rounds stay in the current scene
         }
     }
 
-    // 1 reference
+    /// <summary>
+    /// Shows the final victory screen after completing all rounds.
+    /// Pauses the game and shows the cursor so player can click buttons.
+    /// </summary>
     private void ShowFinalVictory()
     {
         if (debugMode) Debug.Log("[RoundManager] FINAL VICTORY!");
 
-        // Hide transition panel (prevents "ROUND 5 STARTING..." from showing behind victory screen)
+        // Make sure the transition panel doesn't show behind the victory screen
         if (roundTransitionPanel) roundTransitionPanel.SetActive(false);
 
+        // Show the victory panel
         if (finalVictoryPanel) finalVictoryPanel.SetActive(true);
 
-        // Disable gameplay controls
+        // Disable gameplay controls so player can't move around
         DisableGameplayControls();
 
-        // Pause game
+        // Freeze the game
         Time.timeScale = 0f;
 
-        // Show cursor for final victory screen
+        // Show cursor so player can click the Main Menu button
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
@@ -601,23 +587,23 @@ public class RoundManager : MonoBehaviour
     /// For debugging - manually advance to next round
     /// </summary>
     [ContextMenu("Skip to Next Round")]
-    // 0 references
     public void DebugSkipToNextRound()
     {
         OnRoundTimeComplete();
     }
 
     /// <summary>
-    /// Called by Main Menu button on victory screen
+    /// Called by the Main Menu button on the victory screen.
+    /// Unpauses the game and loads the main menu scene.
     /// </summary>
     public void ReturnToMainMenu()
     {
         if (debugMode) Debug.Log("[RoundManager] Returning to main menu...");
 
-        // Unpause game
+        // Unpause the game before changing scenes
         Time.timeScale = 1f;
 
-        // Load main menu scene
+        // Load the main menu scene
         if (!string.IsNullOrEmpty(mainMenuSceneName))
         {
             SceneManager.LoadScene(mainMenuSceneName);
