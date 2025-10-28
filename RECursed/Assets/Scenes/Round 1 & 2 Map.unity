@@ -44773,7 +44773,7 @@ MonoBehaviour:
   currentRound: 1
   round1AnomalyCount: 3
   round1SpawnInterval: 67
-  round1StartDelay: 5
+  round1StartDelay: 120
   round2AnomalyCount: 5
   round2SpawnInterval: 45
   round2StartDelay: 120
