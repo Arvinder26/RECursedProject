@@ -283,114 +283,110 @@ Each anomaly type has unique behavior and visual characteristics:
 
 ## 📁 Project Structure
 
-```
-RECursed/
-├── Assets/
-│   ├── Scenes/                          # Game scenes
-│   │   ├── MainGame.unity
-│   │   ├── Round 3 and 4 Scene.unity
-│   │   └── Round 5 Map.unity
-│   │
-│   ├── Scripts/                         # C# game scripts (organized by category)
-│   │   │
-│   │   ├── TabletScreenUI/              # Tablet interface scripts
-│   │   │   ├── AnomalyTimerUI.cs        # Timer bars and battery drain
-│   │   │   ├── BatteryLossScreen.cs     # Battery depletion UI
-│   │   │   ├── LossScreen.cs            # Game over screen
-│   │   │   ├── PauseGameScript.cs       # Pause functionality
-│   │   │ 
-│   │   │
-│   │   ├── PlayerModelScripts/          # Player controller scripts
-│   │   │   ├── AnamolySpawner.cs        # Anomaly spawning system
-│   │   │   ├── ChaseAndJumpscare.cs     # Chase mechanic and jumpscares
-│   │   │   ├── DirectionalFootstepLooper.cs  # Directional footstep audio
-│   │   │   ├── ProximityScare.cs        # Proximity-based scares
-│   │   │   ├── Round2Script.cs          # Round 2 specific logic
-│   │   │   └── SimpleMove.cs            # Simple movement script
-│   │   │
-│   │   ├── Anomaly Scripts/             # Anomaly behavior scripts
-│   │   │   ├── DisappearanceAnomaly.cs  # Disappeared object logic
-│   │   │   ├── ExtraObject.cs           # Extra object spawning
-│   │   │   ├── LightFlickerAnomaly.cs   # Light flicker behavior
-│   │   │   ├── MovedObject.cs           # Moved object anomaly logic
-│   │   │   └── WriteOnWalls.cs          # Wall writing anomaly
-│   │   │
-│   │   ├── AudioScripts/                # Audio management scripts
-│   │   │   ├── CaptureWhenPlayed.cs     # Audio capture system
-│   │   │   ├── FootstepSubtitles.cs     # Footstep sound controller
-│   │   │   ├── RoundMusicController.cs  # Background music per round
-│   │   │   ├── SubtitleHeartbeatSync.cs # Subtitle display logic
-│   │   │   └── Subtitles.cs             # Subtitle data
-│   │   │
-│   │   ├── Rounds/                      # Round management
-│   │   │   └── RoundManager.cs          # Round progression & scene management
-│   │   │
-│   │   ├── ReportMenu/                  # Anomaly reporting system
-│   │   │   ├── AnomalyChoiceButton.cs   # Validates anomaly reports
-│   │   │   ├── AnomalyLog.cs            # Logs reported anomalies
-│   │   │   ├── AnomalyManager.cs        # Manages active anomalies
-│   │   │   ├── AnomalyMenuController.cs # Difficulty scaling
-│   │   │   ├── ReportFeedOverlay.cs     # Report panel UI logic
-│   │   │   ├── ReportMenuController.cs  # Main reporting interface
-│   │   │   └── SummaryReportManager.cs  # End-of-round statistics
-│   │   │
-│   │   ├── MainMenuScripts/             # Main menu and UI
-│   │   │   ├── BrightnessManager.cs     # Brightness settings manager
-│   │   │   ├── BrightnessSlider.cs      # Brightness slider control
-│   │   │   ├── GameClockController.cs   # In-game clock system
-│   │   │   ├── MainMenuHandler.cs       # Main menu controller
-│   │   │   └── PlayerMovement.cs        # Menu navigation
-│   │   │
-│   │   ├── CCTV System/                 # Camera system scripts
-│   │   │   ├── CCTVFeedController.cs    # Manages camera feeds
-│   │   │   ├── CCTVScanline.cs          # Camera scanning logic
-│   │   │   ├── PanelOpener.cs           # Camera panel controls
-│   │   │   └── TabletPanelController.cs # Tablet camera interface
-│   │   │
-│   │   ├── ButtonSounds/                # UI sound effects
-│   │   │   └── ButtonSfx.cs             # Button click sounds
-│   │   │
-│   │   ├── PauseMenu/                   # Pause functionality
-│   │   │   └── PauseMenu.cs             # Pause screen controller
-│   │   │
-│   │   └── Subtitles/                   # Subtitle system
-│   │       ├── AnamolySubtitles.cs      # Anomaly notification subtitles
-│   │       └── SubtitleUI.cs            # Subtitle display manager
-│   │
-│   ├── Interior Prefabs/                # Furnished room prefabs
-│   │   ├── Bathroom/
-│   │   ├── Bedroom/
-│   │   ├── DiningRoom/
-│   │   ├── Hallway/
-│   │   ├── Kitchen/
-│   │   ├── LivingRoom/
-│   │   ├── Office/
-│   │   ├── Study/
-│   │   └── Laundry/
-│   │
-│   ├── Animation/                       # Animation files
-│   ├── Audio/                           # Audio clips
-│   ├── Sounds/                          # Sound effects
-│   ├── CCTV Camera/                     # Camera assets and prefabs
-│   ├── PlayerModel/                     # Player character assets
-│   ├── AnomalyModels/                   # Anomaly-specific models
-│   ├── House Blender/                   # House 3D models
-│   ├── Prefabs/                         # General prefabs
-│   ├── Images/                          # Textures and sprites
-│   ├── Fonts/                           # Typography assets
-│   ├── TextMesh Pro/                    # TMP resources
-│   ├── Settings/                        # Unity project settings
-│   ├── IngameTime/                      # Clock system assets
-│   ├── UnitTesting/                     # Unit test files
-│   ├── FootstepPro/                     # Footstep sound system
-│   └── InputSystem/                     # New Input System setup
-│
-├── Packages/                            # Unity package dependencies
-├── ProjectSettings/                     # Unity project configuration
-├── README.md                            # This file
-└── .gitignore                           # Git ignore rules
-```
+...
 
+RECursed/
+├─ Assets/
+│  ├─ Scenes/                          # Game scenes
+│  │  ├─ MainGame.unity
+│  │  ├─ Round 3 and 4 Scene.unity
+│  │  └─ Round 5 Map.unity
+│  │
+│  ├─ Scripts/                         # C# game scripts (organized by category)
+│  │  │
+│  │  ├─ TabletScreenUI/               # Tablet interface scripts
+│  │  │  ├─ AnomalyTimerUI.cs         # Timer bars and battery drain
+│  │  │  ├─ BatteryLossScreen.cs      # Battery depletion UI
+│  │  │  ├─ LossScreen.cs             # Game over screen
+│  │  │  └─ PauseGameScript.cs        # Pause functionality
+│  │  │
+│  │  ├─ PlayerModelScripts/           # Player controller scripts
+│  │  │  ├─ AnamolySpawner.cs         # Anomaly spawning system
+│  │  │  ├─ ChaseAndJumpscare.cs      # Chase mechanic and jumpscares
+│  │  │  ├─ DirectionalFootstepLooper.cs # Directional footstep audio
+│  │  │  ├─ ProximityScare.cs         # Proximity-based scares
+│  │  │  ├─ Round2Script.cs           # Round 2 specific logic
+│  │  │  └─ SimpleMove.cs             # Simple movement script
+│  │  │
+│  │  ├─ Anomaly Scripts/              # Anomaly behavior scripts
+│  │  │  ├─ DisappearedAnomaly.cs     # Disappeared object logic
+│  │  │  ├─ ExtraObject.cs            # Extra object spawning
+│  │  │  ├─ LightFlickerAnomaly.cs    # Light flicker behavior
+│  │  │  ├─ MovedObject.cs            # Moved object anomaly logic
+│  │  │  └─ WritesOnWalls.cs          # Wall writing anomaly
+│  │  │
+│  │  ├─ AudioScripts/                 # Audio management scripts
+│  │  │  ├─ CaptureAudioPlayed.cs     # Audio capture system
+│  │  │  ├─ FootstepSubtitles.cs      # Footstep sound controller
+│  │  │  └─ SubtitleUI.cs             # Subtitle data
+│  │  │
+│  │  ├─ Rounds/                       # Round management
+│  │  │  └─ RoundManager.cs           # Round progression & scene management
+│  │  │
+│  │  ├─ ReportMenu/                   # Anomaly reporting system
+│  │  │  ├─ AnomalyCicleButton.cs     # Validates anomaly reports
+│  │  │  ├─ AnomalyLog.cs             # Logs reported anomalies
+│  │  │  ├─ AnomalyManager.cs         # Manages active anomalies
+│  │  │  ├─ AnomalyMenuController.cs  # Difficulty scaling
+│  │  │  ├─ ReportBadAnomaly.cs       # Report panel UI logic
+│  │  │  ├─ ReportMenuController.cs   # Main reporting interface
+│  │  │  └─ SummaryReportManager.cs   # End-of-round statistics
+│  │  │
+│  │  ├─ MainMenuScripts/              # Main menu and UI
+│  │  │  ├─ BrightnessManager.cs      # Brightness settings manager
+│  │  │  ├─ BrightnessSlider.cs       # Brightness slider control
+│  │  │  ├─ GameClockController.cs    # In-game clock system
+│  │  │  ├─ MainMenuHandler.cs        # Main menu controller
+│  │  │  └─ PlayerMovement.cs         # Menu navigation
+│  │  │
+│  │  ├─ CCTV System/                  # Camera system scripts
+│  │  │  ├─ CCTVFeedController.cs     # Manages camera feeds
+│  │  │  ├─ CCTVScanline.cs           # Camera scanning logic
+│  │  │  ├─ PanelOpener.cs            # Camera panel controls
+│  │  │  └─ TabletPanelController.cs  # Tablet camera interface
+│  │  │
+│  │  ├─ ButtonSounds/                 # UI sound effects
+│  │  │  └─ ButtonSfx.cs              # Button click sounds
+│  │  │
+│  │  ├─ PauseMenu/                    # Pause functionality
+│  │  │  └─ PauseMenu.cs              # Pause screen controller
+│  │  │
+│  │  └─ Subtitles/                    # Subtitle system
+│  │     ├─ AnomalySubtitles.cs       # Anomaly notification subtitles
+│  │     └─ SubtitleUI.cs             # Subtitle display manager
+│  │
+│  ├─ Interior Prefabs/                # Furnished room prefabs
+│  │  ├─ Bathroom/
+│  │  ├─ Bedroom/
+│  │  ├─ DiningRoom/
+│  │  ├─ Hallway/
+│  │  ├─ Kitchen/
+│  │  ├─ LivingRoom/
+│  │  ├─ Office/
+│  │  ├─ Study/
+│  │  └─ Laundry/
+│  │
+│  ├─ Animation/                       # Animation files
+│  ├─ Audio/                           # Audio clips
+│  ├─ Sounds/                          # Sound effects
+│  ├─ CCTV Camera/                     # Camera assets and prefabs
+│  ├─ PlayerModel/                     # Player character assets
+│  ├─ AnomalyModels/                   # Anomaly-specific models
+│  ├─ House Blender/                   # House 3D models
+│  ├─ Prefabs/                         # General prefabs
+│  ├─ Images/                          # Textures and sprites
+│  ├─ Fonts/                           # Typography assets
+│  ├─ TextMesh Pro/                    # TMP resources
+│  ├─ Settings/                        # Unity project settings
+│  ├─ IngameTime/                      # Clock system assets
+│  ├─ UnitTesting/                     # Unit test files
+│  ├─ FootstepPro/                     # Footstep sound system
+│  └─ InputSystem/                     # New Input System setup
+│
+├─ Packages/                           # Unity package dependencies
+├─ ProjectSettings/                    # Unity project configuration
+├─ README.md                           # This file
+└─ .gitignore                          # Git ignore rules
 ---
 
 ## 🛠️ Development

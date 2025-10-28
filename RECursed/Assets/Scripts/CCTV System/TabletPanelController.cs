@@ -2,6 +2,10 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using TMPro;
 
+/// <summary>
+/// Controls the tablet UI panel opening/closing with keyboard input.
+/// Handles cursor visibility, disabling player controls, and playing audio feedback.
+/// </summary>
 public class TabletPanelController : MonoBehaviour
 {
     [Header("UI")]
@@ -28,6 +32,10 @@ public class TabletPanelController : MonoBehaviour
 
     public bool IsOpen { get; private set; }
 
+    /// <summary>
+    /// Initialize the tablet panel and audio source settings.
+    /// Ensures the panel starts closed.
+    /// </summary>
     void Awake()
     {
         if (panelRoot) panelRoot.SetActive(false);
@@ -40,6 +48,9 @@ public class TabletPanelController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Lock the cursor at the start of the game.
+    /// </summary>
     void Start()
     {
         
@@ -47,17 +58,24 @@ public class TabletPanelController : MonoBehaviour
         Cursor.visible = false;
     }
 
+    /// <summary>
+    /// Check for keyboard input to open/close the tablet.
+    /// Respects UI hover detection if enabled.
+    /// </summary>
     void Update()
     {
+        // Don't process input if mouse is hovering over UI elements
         if (ignoreKeyWhenPointerOverUI && IsPointerOverUI())
             return;
 
+        // Handle dedicated close key if one is assigned
         if (closeKey != KeyCode.None && Input.GetKeyDown(closeKey))
         {
             Close();
             return;
         }
 
+        // Handle open key (either toggles or just opens depending on closeKey setting)
         if (Input.GetKeyDown(openKey))
         {
             if (closeKey == KeyCode.None)
@@ -67,19 +85,25 @@ public class TabletPanelController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Toggle the tablet open or closed.
+    /// </summary>
     public void Toggle()
     {
         if (IsOpen) Close();
         else Open();
     }
 
+    /// <summary>
+    /// Open the tablet panel, show cursor, and disable player controls.
+    /// </summary>
     public void Open()
     {
         if (IsOpen || panelRoot == null) return;
 
         panelRoot.SetActive(true);
         
-        
+        // Show cursor so player can interact with the tablet UI
         Cursor.visible   = true;
         Cursor.lockState = CursorLockMode.None;
 
@@ -89,13 +113,16 @@ public class TabletPanelController : MonoBehaviour
         PlayOneShot(openSfx);
     }
 
+    /// <summary>
+    /// Close the tablet panel, hide cursor, and re-enable player controls.
+    /// </summary>
     public void Close()
     {
         if (!IsOpen || panelRoot == null) return;
 
         panelRoot.SetActive(false);
 
-        
+        // Hide cursor and lock it for first-person gameplay
         Cursor.visible   = false;
         Cursor.lockState = CursorLockMode.Locked;
 
@@ -105,8 +132,14 @@ public class TabletPanelController : MonoBehaviour
         PlayOneShot(closeSfx);
     }
 
+    /// <summary>
+    /// Called by UI button to close the tablet.
+    /// </summary>
     public void CloseFromUI() => Close();
 
+    /// <summary>
+    /// Enable or disable the player control scripts (movement, camera, etc.)
+    /// </summary>
     void SetBehavioursEnabled(bool enabled)
     {
         if (disableWhileOpen == null) return;
@@ -114,12 +147,18 @@ public class TabletPanelController : MonoBehaviour
             if (b) b.enabled = enabled;
     }
 
+    /// <summary>
+    /// Play a sound effect at the specified volume.
+    /// </summary>
     void PlayOneShot(AudioClip clip)
     {
         if (sfxSource && clip)
             sfxSource.PlayOneShot(clip, sfxVolume);
     }
 
+    /// <summary>
+    /// Check if the mouse cursor is currently over any UI element.
+    /// </summary>
     bool IsPointerOverUI()
     {
         if (EventSystem.current == null) return false;
