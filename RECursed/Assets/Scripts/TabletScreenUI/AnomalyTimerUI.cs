@@ -8,6 +8,14 @@ using TMPro;
 /// </summary>
 public class AnomalyTimerUI : MonoBehaviour
 {
+    // Constants for magic numbers (Coding Standards: Replace hardcoded values with named constants)
+    private const int FRAMES_PER_LOG = 60;
+    private const int LONG_INTERVAL_FRAMES = 300;
+    private const float CRITICAL_TIME_THRESHOLD = 5f;
+    private const float WARNING_TIME_THRESHOLD = 10f;
+    private const float FADE_IN_SPEED = 5f;
+    private const float FAST_FADE_IN_SPEED = 10f;
+
     [Header("UI References")]
     [SerializeField] private TMP_Text timerText;
     [SerializeField] private CanvasGroup canvasGroup;
@@ -48,10 +56,16 @@ public class AnomalyTimerUI : MonoBehaviour
     private float notificationTimer = 0f;
     private bool showingNotification = false;
 
+    /// <summary>
+    /// Initializes the anomaly timer UI system.
+    /// Finds all anomaly objects in the scene and sets up UI references.
+    /// Auto-finds missing components and validates setup.
+    /// </summary>
     void Awake()
     {
         Debug.Log("[AnomalyTimerUI] ===== AWAKE START =====");
         
+        // Find all anomaly objects in the scene (including inactive ones)
         movedObjects.AddRange(FindObjectsOfType<MovedObject>(true));
         disappearedObjects.AddRange(FindObjectsOfType<DisappearedObject>(true));
         extraObjects.AddRange(FindObjectsOfType<ExtraObject>(true));
@@ -60,12 +74,19 @@ public class AnomalyTimerUI : MonoBehaviour
         int totalFound = movedObjects.Count + disappearedObjects.Count + extraObjects.Count + lightFlickerObjects.Count;
         Debug.Log($"[AnomalyTimerUI] Found {totalFound} anomalies ({movedObjects.Count} moved, {disappearedObjects.Count} disappeared, {extraObjects.Count} extra, {lightFlickerObjects.Count} light flicker)");
 
+        // Auto-find TMP_Text if not assigned in Inspector
         if (!timerText)
+        {
             timerText = GetComponentInChildren<TMP_Text>();
+        }
         
+        // Auto-find CanvasGroup if not assigned in Inspector
         if (!canvasGroup)
+        {
             canvasGroup = GetComponent<CanvasGroup>();
+        }
         
+        // Configure canvas group for proper UI display
         if (canvasGroup)
         {
             canvasGroup.alpha = 1f;
@@ -73,15 +94,18 @@ public class AnomalyTimerUI : MonoBehaviour
             canvasGroup.blocksRaycasts = false;
         }
 
+        // Set initial text state
         if (timerText)
+        {
             timerText.text = "Currently no anomalies...";
+        }
 
         // Auto-find AudioSource if not assigned
         if (!audioSource)
         {
             audioSource = GetComponent<AudioSource>();
             
-            // If still not found, add one
+            // If still not found, create one dynamically
             if (!audioSource)
             {
                 audioSource = gameObject.AddComponent<AudioSource>();
@@ -89,22 +113,70 @@ public class AnomalyTimerUI : MonoBehaviour
                 audioSource.spatialBlend = 0f; // 2D sound
             }
         }
+
+        // Input Validation (Coding Standards: Validate Inspector-assigned values)
+        ValidateSetup();
         
         Debug.Log($"[AnomalyTimerUI] Setup - TimerText: {timerText != null}, CanvasGroup: {canvasGroup != null}, AudioSource: {audioSource != null}");
         Debug.Log("[AnomalyTimerUI] ===== AWAKE END =====");
     }
 
+    /// <summary>
+    /// Validates the component setup and logs warnings for missing references.
+    /// Ensures the UI can function properly before gameplay begins.
+    /// </summary>
+    private void ValidateSetup()
+    {
+        // Validate critical UI components
+        if (!timerText)
+        {
+            Debug.LogError("[AnomalyTimerUI] VALIDATION FAILED: TimerText is missing! UI will not display properly.");
+        }
+
+        if (!canvasGroup)
+        {
+            Debug.LogWarning("[AnomalyTimerUI] VALIDATION WARNING: CanvasGroup is missing. UI fading will not work.");
+        }
+
+        if (!audioSource)
+        {
+            Debug.LogWarning("[AnomalyTimerUI] VALIDATION WARNING: AudioSource is missing. Battery loss sound will not play.");
+        }
+
+        if (!batteryLossSound)
+        {
+            Debug.LogWarning("[AnomalyTimerUI] VALIDATION WARNING: Battery loss sound clip is not assigned.");
+        }
+
+        // Validate notification settings
+        if (notificationDuration <= 0f)
+        {
+            Debug.LogWarning($"[AnomalyTimerUI] VALIDATION WARNING: Notification duration is {notificationDuration}. Should be > 0. Using default 2s.");
+            notificationDuration = 2f;
+        }
+
+        if (audioVolume < 0f || audioVolume > 1f)
+        {
+            Debug.LogWarning($"[AnomalyTimerUI] VALIDATION WARNING: Audio volume is {audioVolume}. Clamping to 0-1 range.");
+            audioVolume = Mathf.Clamp01(audioVolume);
+        }
+    }
+
+    /// <summary>
+    /// Updates the timer display every frame.
+    /// Handles notification timing and triggers the main display update logic.
+    /// </summary>
     void Update()
     {
         updateCount++;
         
-        // Only log every 60 frames to avoid spam
-        if (verboseDebug && updateCount % 60 == 0)
+        // Only log every FRAMES_PER_LOG frames to avoid console spam
+        if (verboseDebug && updateCount % FRAMES_PER_LOG == 0)
         {
             Debug.Log($"[AnomalyTimerUI] Update() is running (frame {updateCount})");
         }
         
-        // Update notification timer
+        // Update notification timer countdown
         if (showingNotification)
         {
             notificationTimer -= Time.deltaTime;
@@ -114,14 +186,21 @@ public class AnomalyTimerUI : MonoBehaviour
             }
         }
         
+        // Update the main timer display
         UpdateTimerDisplay();
     }
 
+    /// <summary>
+    /// Updates the timer display with all active anomaly countdowns.
+    /// Collects active anomalies, detects expirations, and formats the UI text.
+    /// Handles color coding based on time remaining and shows battery loss notifications.
+    /// </summary>
     private void UpdateTimerDisplay()
     {
+        // Coding Standards: Always use braces for if statements
         if (!timerText || !canvasGroup)
         {
-            if (verboseDebug && updateCount % 300 == 0)
+            if (verboseDebug && updateCount % LONG_INTERVAL_FRAMES == 0)
             {
                 Debug.LogWarning($"[AnomalyTimerUI] Missing references - TimerText: {timerText != null}, CanvasGroup: {canvasGroup != null}");
             }
@@ -131,7 +210,7 @@ public class AnomalyTimerUI : MonoBehaviour
         var activeTimers = new List<AnomalyTimerInfo>();
         var currentActiveAnomalies = new HashSet<MonoBehaviour>();
 
-        // Check MovedObjects
+        // Check MovedObjects for active anomalies
         foreach (var obj in movedObjects)
         {
             if (obj)
@@ -157,7 +236,7 @@ public class AnomalyTimerUI : MonoBehaviour
             }
         }
 
-        // Check DisappearedObjects
+        // Check DisappearedObjects for active anomalies
         foreach (var obj in disappearedObjects)
         {
             if (obj)
@@ -183,7 +262,7 @@ public class AnomalyTimerUI : MonoBehaviour
             }
         }
 
-        // Check ExtraObjects
+        // Check ExtraObjects for active anomalies
         foreach (var obj in extraObjects)
         {
             if (obj)
@@ -209,7 +288,7 @@ public class AnomalyTimerUI : MonoBehaviour
             }
         }
 
-        // Check LightFlickerAnomalies
+        // Check LightFlickerAnomalies for active anomalies
         foreach (var obj in lightFlickerObjects)
         {
             if (obj)
@@ -247,21 +326,22 @@ public class AnomalyTimerUI : MonoBehaviour
             }
         }
 
-        // Update the previous active list
+        // Update the previous active list for next frame comparison
         previousActiveAnomalies = currentActiveAnomalies;
 
-        // Log active timer count
-        if (verboseDebug && (activeTimers.Count > 0 || updateCount % 300 == 0))
+        // Log active timer count periodically
+        if (verboseDebug && (activeTimers.Count > 0 || updateCount % LONG_INTERVAL_FRAMES == 0))
         {
             Debug.Log($"[AnomalyTimerUI] Active timers detected: {activeTimers.Count}");
         }
 
+        // Handle case when no anomalies are active
         if (activeTimers.Count == 0)
         {
             // Show "no anomalies" message
             timerText.text = "<b>Currently no anomalies...</b>";
 
-            canvasGroup.alpha = Mathf.Lerp(canvasGroup.alpha, 1f, Time.deltaTime * 5f);
+            canvasGroup.alpha = Mathf.Lerp(canvasGroup.alpha, 1f, Time.deltaTime * FADE_IN_SPEED);
             canvasGroup.interactable = false;
             canvasGroup.blocksRaycasts = false;
 
@@ -274,12 +354,13 @@ public class AnomalyTimerUI : MonoBehaviour
         // Show the panel by fading in
         Debug.Log($"[AnomalyTimerUI] === PANEL SHOULD BE VISIBLE! {activeTimers.Count} active timers ===");
         
-        canvasGroup.alpha = Mathf.Lerp(canvasGroup.alpha, 1f, Time.deltaTime * 10f);
+        canvasGroup.alpha = Mathf.Lerp(canvasGroup.alpha, 1f, Time.deltaTime * FAST_FADE_IN_SPEED);
         canvasGroup.interactable = true;
         canvasGroup.blocksRaycasts = true;
         
         Debug.Log($"[AnomalyTimerUI] CanvasGroup alpha: {canvasGroup.alpha}");
 
+        // Sort timers by time remaining (most urgent first)
         activeTimers.Sort((a, b) => a.timeRemaining.CompareTo(b.timeRemaining));
 
         // Build display text with optional notification
@@ -292,20 +373,28 @@ public class AnomalyTimerUI : MonoBehaviour
 
         string displayText = $"<b>ACTIVE ANOMALIES:</b>{notificationText}\n";
 
+        // Build the timer list with color coding based on urgency
         foreach (var info in activeTimers)
         {
             string roomName = info.room.ToString();
             int seconds = Mathf.CeilToInt(info.timeRemaining);
             
+            // Determine color based on time remaining (Coding Standards: Named constants for thresholds)
             string colorHex;
-            if (info.timeRemaining <= 5f)
+            if (info.timeRemaining <= CRITICAL_TIME_THRESHOLD)
+            {
                 colorHex = ColorUtility.ToHtmlStringRGB(criticalColor);
-            else if (info.timeRemaining <= 10f)
+            }
+            else if (info.timeRemaining <= WARNING_TIME_THRESHOLD)
+            {
                 colorHex = ColorUtility.ToHtmlStringRGB(warningColor);
+            }
             else
+            {
                 colorHex = ColorUtility.ToHtmlStringRGB(normalColor);
+            }
 
-            string warningIcon = info.timeRemaining <= 5f ? " [!]" : "";
+            string warningIcon = info.timeRemaining <= CRITICAL_TIME_THRESHOLD ? " [!]" : "";
             
             displayText += $"<color=#{colorHex}>• {roomName} - {seconds}s remaining{warningIcon}</color>\n";
         }
@@ -313,16 +402,21 @@ public class AnomalyTimerUI : MonoBehaviour
         timerText.text = displayText;
         Debug.Log($"[AnomalyTimerUI] Text set to: {displayText}");
 
+        // Clean up null references from tracking sets
         warnedAnomalies.RemoveWhere(a => a == null);
         criticalAnomalies.RemoveWhere(a => a == null);
     }
 
+    /// <summary>
+    /// Triggers the battery loss notification and plays the associated sound effect.
+    /// Shows a visual notification for the configured duration and updates the summary manager.
+    /// </summary>
     private void TriggerBatteryLossNotification()
     {
         showingNotification = true;
         notificationTimer = notificationDuration;
 
-        // Play the battery loss sound
+        // Play the battery loss sound effect
         if (audioSource && batteryLossSound)
         {
             audioSource.PlayOneShot(batteryLossSound, audioVolume);
@@ -332,11 +426,18 @@ public class AnomalyTimerUI : MonoBehaviour
         {
             Debug.LogWarning("[AnomalyTimerUI] Battery loss sound not assigned!");
         }
-        if (summaryManager)
-            summaryManager.ShowMissed();
 
+        // Update summary manager with missed anomaly
+        if (summaryManager)
+        {
+            summaryManager.ShowMissed();
+        }
     }
 
+    /// <summary>
+    /// Data structure to hold information about an active anomaly timer.
+    /// Used internally for sorting and displaying anomaly countdowns.
+    /// </summary>
     private class AnomalyTimerInfo
     {
         public Room room;

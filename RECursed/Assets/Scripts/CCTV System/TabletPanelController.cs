@@ -42,7 +42,7 @@ public class TabletPanelController : MonoBehaviour
 
     void Start()
     {
-        // Lock cursor at game start
+        
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -79,7 +79,7 @@ public class TabletPanelController : MonoBehaviour
 
         panelRoot.SetActive(true);
         
-        // Unlock cursor when tablet opens
+        
         Cursor.visible   = true;
         Cursor.lockState = CursorLockMode.None;
 
@@ -95,7 +95,7 @@ public class TabletPanelController : MonoBehaviour
 
         panelRoot.SetActive(false);
 
-        // Lock cursor when tablet closes
+        
         Cursor.visible   = false;
         Cursor.lockState = CursorLockMode.Locked;
 

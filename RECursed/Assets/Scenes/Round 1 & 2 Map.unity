@@ -44773,7 +44773,7 @@ MonoBehaviour:
   currentRound: 1
   round1AnomalyCount: 3
   round1SpawnInterval: 67
-  round1StartDelay: 120
+  round1StartDelay: 5
   round2AnomalyCount: 5
   round2SpawnInterval: 45
   round2StartDelay: 120
@@ -96392,6 +96392,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -45
       objectReference: {fileID: 0}
+    - target: {fileID: 652706326194478297, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2099823774}
+    - target: {fileID: 652706326194478297, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Close
+      objectReference: {fileID: 0}
     - target: {fileID: 1280187644026957187, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -115337,7 +115345,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clockText: {fileID: 1954168356}
-  timeMultiplier: 60
+  timeMultiplier: 1500
   startHour: 0
   startMinute: 0
   endHour: 6
@@ -115355,6 +115363,17 @@ AudioSource:
   m_CorrespondingSourceObject: {fileID: 9084284571315949835, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
   m_PrefabInstance: {fileID: 1782361656}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2099823774 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7395558221232980216, guid: 04009bf5a9a1bc341adc5ad136a775e1, type: 3}
+  m_PrefabInstance: {fileID: 1782361656}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2099823766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f452352ed6f429e49bf224037d7cdbce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2099953629
 PrefabInstance:
   m_ObjectHideFlags: 0
