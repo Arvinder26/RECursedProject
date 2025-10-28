@@ -280,6 +280,8 @@ public class RoundManager : MonoBehaviour
     {
         summaryReportPanel.SetActive(false);
 
+        AnomalyTimerPanel.SetActive(true);
+
         // Ensure game is unpaused
         Time.timeScale = 1f;
 
