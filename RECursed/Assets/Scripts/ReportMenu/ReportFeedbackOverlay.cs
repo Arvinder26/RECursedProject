@@ -31,9 +31,7 @@ public class ReportFeedbackOverlay : MonoBehaviour
         if (root) root.SetActive(false);
     }
 
-    /// <summary>
-    /// Central place to toggle visibility + input blocking.
-    /// </summary>
+    // Central place to toggle visibility + input blocking.
     public void SetVisible(bool v)
     {
         if (group)
@@ -46,10 +44,7 @@ public class ReportFeedbackOverlay : MonoBehaviour
         if (root) root.SetActive(v);
     }
 
-    /// <summary>
-    /// Show the overlay with a message (and optional custom duration).
-    /// If duration is null, uses the default showSeconds.
-    /// </summary>
+    // Show the overlay with a message.
     public void Show(string message, float? duration = null)
     {
         if (label) label.text = message;
@@ -63,9 +58,7 @@ public class ReportFeedbackOverlay : MonoBehaviour
         if (sfx && showClip) sfx.PlayOneShot(showClip);
     }
 
-    /// <summary>
-    /// Update the message text while already visible (no timer changes).
-    /// </summary>
+    // Update the message text while already visible.
     public void SetText(string message)
     {
         if (label) label.text = message;
@@ -73,14 +66,13 @@ public class ReportFeedbackOverlay : MonoBehaviour
 
     private IEnumerator HideAfter(float t)
     {
-        // Wait in real time so it still hides even if Time.timeScale == 0
+        // Waits in real time so overlay still hides even if gameplay is paused.
         yield return new WaitForSecondsRealtime(Mathf.Max(0f, t));
 
-        // Then make the overlay go away
         SetVisible(false);
         if (root) root.SetActive(false);
 
-        // Play hide SFX (optional)
+        // Play disappear SFX.
         if (sfx && hideClip) sfx.PlayOneShot(hideClip);
 
         hideRoutine = null;

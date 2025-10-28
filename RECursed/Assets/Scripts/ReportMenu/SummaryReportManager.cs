@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using TMPro;
 
+// Tiny results tracker for the current session/round
 public class SummaryReportManager : MonoBehaviour
 {
-    [SerializeField] private TMP_Text summaryText;
+    [SerializeField] private TMP_Text summaryText; // Assigned in Inspector (auto-finds if missing)
 
     // Counters for each result type
     private int correctCount = 0;
@@ -13,9 +14,9 @@ public class SummaryReportManager : MonoBehaviour
     private void Awake()
     {
         if (!summaryText)
-            summaryText = GetComponentInChildren<TMP_Text>();
+            summaryText = GetComponentInChildren<TMP_Text>(); // Fallback for convenience
 
-        RefreshText();
+        RefreshText(); // Ensure UI isn't blank on load
     }
 
     // Called when player correctly reports an anomaly

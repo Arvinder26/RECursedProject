@@ -1,28 +1,29 @@
 using UnityEngine;
 
+// Moves this object to a new local transform for a limited time window.
 public class MovedObject : MonoBehaviour, IAnomaly
 {
     [Header("Setup")]
-    [SerializeField] private Room room = Room.Bedroom1;
+    [SerializeField] private Room room = Room.Bedroom1; // Room this belongs to.
     
     [Header("New Transform")]
     [Tooltip("Local position to move to when the anomaly triggers.")]
-    public Vector3 newPosition;
+    public Vector3 newPosition; // Target local position.
     [Tooltip("Local rotation (Euler angles) when the anomaly triggers.")]
-    public Vector3 newRotation;
+    public Vector3 newRotation; // Target local rotation.
 
     [Header("Timer Settings")]
     [Tooltip("How many seconds the player has to report this anomaly.")]
-    [SerializeField] private float reportWindow = 30f;
-    [SerializeField] private SegmentBattery battery;
+    [SerializeField] private float reportWindow = 30f; // Seconds to report.
+    [SerializeField] private SegmentBattery battery; // Battery to drain on miss.
 
     [Header("Debug/State")]
-    public bool hasMovedAnomaly = false;
+    public bool hasMovedAnomaly = false; // True while anomaly is active.
 
     private Vector3 originalLocalPosition;
     private Quaternion originalLocalRotation;
-    private float deadlineTimer = 0f;
-    private bool isTimerActive = false;
+    private float deadlineTimer = 0f; // Countdown timer.
+    private bool isTimerActive = false; // Guards countdown.
 
     // Stored original transform for easy setup workflow
     private Vector3 savedOriginalPosition;
@@ -45,26 +46,26 @@ public class MovedObject : MonoBehaviour, IAnomaly
     {
         if (isTimerActive && hasMovedAnomaly)
         {
-            deadlineTimer -= Time.deltaTime;
+            deadlineTimer -= Time.deltaTime; // Tick down.
             
             if (deadlineTimer <= 0f)
             {
-                OnDeadlineExpired();
+                OnDeadlineExpired(); // Apply penalty and reset.
             }
         }
     }
 
     public void TriggerMovedAnomaly()
     {
-        if (hasMovedAnomaly) return;
+        if (hasMovedAnomaly) return; // Ignore if already active.
 
         // Apply new position and rotation
         transform.localPosition = newPosition;
         transform.localRotation = Quaternion.Euler(newRotation);
         
-        hasMovedAnomaly = true;
-        isTimerActive = true;
-        deadlineTimer = reportWindow;
+        hasMovedAnomaly = true; // Mark active.
+        isTimerActive = true; // Start timer.
+        deadlineTimer = reportWindow; // Reset window.
         
         Debug.Log($"[MovedObject] {room} anomaly triggered! Player has {reportWindow}s to report. New position: {newPosition}, rotation: {newRotation}");
     }
@@ -73,8 +74,8 @@ public class MovedObject : MonoBehaviour, IAnomaly
 
     public void Revert()
     {
-        isTimerActive = false;
-        deadlineTimer = 0f;
+        isTimerActive = false; // Stop timer.
+        deadlineTimer = 0f; // Clear countdown.
         
         // Restore original position and rotation
         transform.localPosition = originalLocalPosition;
@@ -89,10 +90,10 @@ public class MovedObject : MonoBehaviour, IAnomaly
     {
         Debug.LogWarning($"[MovedObject] DEADLINE EXPIRED! {room} - Battery drained.");
         
-        isTimerActive = false;
-        deadlineTimer = 0f;
+        isTimerActive = false; // Stop timer.
+        deadlineTimer = 0f; // Clear countdown.
         
-        if (battery) battery.Consume(1);
+        if (battery) battery.Consume(1); // Apply penalty.
         
         // Restore original position and rotation
         transform.localPosition = originalLocalPosition;
@@ -103,7 +104,7 @@ public class MovedObject : MonoBehaviour, IAnomaly
 
     public float GetTimeRemaining() => isTimerActive ? Mathf.Max(0f, deadlineTimer) : 0f;
 
-    // ========== EASY SETUP WORKFLOW ==========
+    // EASY SETUP WORKFLOW
 
     [ContextMenu("STEP 1: Save Original Transform (Starting Position)")]
     private void SaveOriginalTransform()
@@ -143,42 +144,42 @@ public class MovedObject : MonoBehaviour, IAnomaly
     }
 
     [ContextMenu("--- TESTING ---")]
-    private void Separator1() { }
+    private void Separator1() { } // Context menu spacer.
 
     [ContextMenu("Test Trigger (Move Object)")]
     private void TestTrigger()
     {
-        Trigger();
-    }
+        Trigger(); // Manual trigger.
+    } 
 
     [ContextMenu("Test Revert (Return to Original)")]
     private void TestRevert()
     {
-        Revert();
+        Revert(); // Manual revert.
     }
 
     [ContextMenu("--- ADVANCED ---")]
-    private void Separator2() { }
+    private void Separator2() { } // Context menu spacer.
 
     [ContextMenu("Copy Current Position Only")]
-    private void CopyCurrentPosition()
+    private void CopyCurrentPosition() 
     {
-        newPosition = transform.localPosition;
+        newPosition = transform.localPosition; // Record only pos.
         Debug.Log($"[MovedObject] ✓ Copied position: {newPosition}");
     }
 
     [ContextMenu("Copy Current Rotation Only")]
     private void CopyCurrentRotation()
     {
-        newRotation = transform.localEulerAngles;
+        newRotation = transform.localEulerAngles; // Record only rot.
         Debug.Log($"[MovedObject] ✓ Copied rotation: {newRotation}");
     }
 
     [ContextMenu("Preview Anomaly Transform")]
     private void PreviewNewTransform()
     {
-        transform.localPosition = newPosition;
-        transform.localRotation = Quaternion.Euler(newRotation);
+        transform.localPosition = newPosition; // Preview pos. 
+        transform.localRotation = Quaternion.Euler(newRotation); // Preview rot.
         Debug.Log($"[MovedObject] Preview: Position {newPosition}, Rotation {newRotation}");
     }
 
@@ -199,14 +200,14 @@ public class MovedObject : MonoBehaviour, IAnomaly
     [ContextMenu("Swap Original and Moved Positions")]
     private void SwapPositions()
     {
-        Vector3 tempPos = savedOriginalPosition;
-        Vector3 tempRot = savedOriginalRotation;
+        Vector3 tempPos = savedOriginalPosition; // Temp store pos.
+        Vector3 tempRot = savedOriginalRotation; // Temp store rot.
         
-        savedOriginalPosition = newPosition;
-        savedOriginalRotation = newRotation;
+        savedOriginalPosition = newPosition; // Swap pos.
+        savedOriginalRotation = newRotation; // Swap rot.
         
-        newPosition = tempPos;
-        newRotation = tempRot;
+        newPosition = tempPos; // Complete swap.
+        newRotation = tempRot; // Complete swap.
         
         Debug.Log($"[MovedObject] ✓ Swapped positions! Original and Moved positions have been exchanged.");
     }
@@ -214,9 +215,9 @@ public class MovedObject : MonoBehaviour, IAnomaly
     [ContextMenu("Clear Stored Original")]
     private void ClearStoredOriginal()
     {
-        hasStoredOriginal = false;
-        savedOriginalPosition = Vector3.zero;
-        savedOriginalRotation = Vector3.zero;
+        hasStoredOriginal = false; // Forget snapshot.
+        savedOriginalPosition = Vector3.zero; // Reset pos.
+        savedOriginalRotation = Vector3.zero; // Reset rot.
         Debug.Log("[MovedObject] Cleared stored original transform.");
     }
 }

@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// Rooms you can report anomalies in.
 public enum Room
 {
     Kitchen,
@@ -9,10 +10,11 @@ public enum Room
     WalkinWardrobe,
     Bathroom,
     Garage,
-    Office,        // NEW ROOM FOR ROUND 5
-    DiningRoom     // NEW ROOM FOR ROUND 5
+    Office,        // Round 5 room.
+    DiningRoom     // Round 5 room.
 }
 
+// All supported anomaly categories.
 public enum AnomalyType
 {
     MovedObject,
@@ -22,16 +24,17 @@ public enum AnomalyType
     ExtraObject
 }
 
+// Minimal contract every anomaly implements.
 public interface IAnomaly
 {
-    Room Room { get; }
-    AnomalyType Type { get; }
+    Room Room { get; }		// Which room this anomaly belongs to.
+    AnomalyType Type { get; }   // What kind of anomaly this is.
     
-    bool IsActive { get; }
+    bool IsActive { get; }	// True while the anomaly is live.
     
-    void Trigger();
+    void Trigger();		// Turn the anomaly on.
     
-    void Revert();
+    void Revert();		// Turn the anomaly off.
     
-    float GetTimeRemaining();
+    float GetTimeRemaining();   // Seconds left to report, or 0 if inactive.
 }

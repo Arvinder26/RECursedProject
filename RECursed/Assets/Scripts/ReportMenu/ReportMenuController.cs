@@ -7,11 +7,11 @@ using TMPro;
 public class ReportMenuController : MonoBehaviour
 {
     [Header("Scene refs")]
-    [SerializeField] private Transform roomsParent;     // Left column (buttons in enum order)
+    [SerializeField] private Transform roomsParent;     // Left column
     [SerializeField] private Transform typesParent;     // Right column
     [SerializeField] private Button cancelButton;       // "Cancel" in the panel
     [SerializeField] private Button reportButton;       // "Report" in the panel
-    [SerializeField] private Button closeMenuButton;    // "Close Anomaly Menu" (optional)
+    [SerializeField] private Button closeMenuButton;    // "Close Anomaly Menu"
     [SerializeField] private AnomalyManager anomalyManager;
     [SerializeField] private SummaryReportManager summaryManager;
 
@@ -22,24 +22,24 @@ public class ReportMenuController : MonoBehaviour
     [SerializeField, Min(1f)] private float selectedScale = 1.05f;
 
     [Header("Feedback overlay")]
-    [SerializeField] private CanvasGroup overlay;     // CanvasGroup on your ReportOverlay object
-    [SerializeField] private TMP_Text overlayLabel;   // TMP child of the overlay
+    [SerializeField] private CanvasGroup overlay;     // CanvasGroup on the ReportOverlay object.
+    [SerializeField] private TMP_Text overlayLabel;   // TMP child of the overlay.
     [SerializeField, Min(0f)] private float overlaySeconds = 2f;
     [SerializeField] private string overlaySuccessText = "ANOMALY REPORTED";
     [SerializeField] private string overlayFailText = "NO ANOMALY MATCH";
 
     [Header("Overlay SFX")]
-    [SerializeField] private AudioSource sfxSource;       // <- drag an AudioSource (UI) here
-    [SerializeField] private AudioClip overlaySuccessSfx; // <- clip for success
-    [SerializeField] private AudioClip overlayFailSfx;    // <- clip for fail
+    [SerializeField] private AudioSource sfxSource;       
+    [SerializeField] private AudioClip overlaySuccessSfx; 
+    [SerializeField] private AudioClip overlayFailSfx;    
     [SerializeField, Range(0f, 1f)] private float overlaySfxVolume = 1f;
 
     [Header("Battery / Loss")]
-    [SerializeField] private SegmentBattery battery; // your BatteryUI (SegmentBattery)
+    [SerializeField] private SegmentBattery battery; 
     [SerializeField, Min(1)] private int wrongReportCost = 1;
-    [SerializeField] private LossScreen lossScreen;   // drag your LossScreen here (optional but recommended)
+    [SerializeField] private LossScreen lossScreen;   
 
-    // runtime
+    // Internals: the two flat lists of buttons and the selected indices (-1 = none).
     private readonly List<Button> _roomButtons = new();
     private readonly List<Button> _typeButtons = new();
     private int _selectedRoom = -1;
@@ -48,15 +48,19 @@ public class ReportMenuController : MonoBehaviour
 
     void Awake()
     {
+	// Build click handlers from each column's children.
         BuildButtons(roomsParent, _roomButtons, OnRoomClicked);
         BuildButtons(typesParent, _typeButtons, OnTypeClicked);
 
+	// Wire top-level actions.
         if (cancelButton)  cancelButton.onClick.AddListener(Cancel);
         if (reportButton)  reportButton.onClick.AddListener(Report);
 
+	// Ensure a clean visual state at start.
         ResetButtonVisuals(_roomButtons);
         ResetButtonVisuals(_typeButtons);
 
+	// Prepare the overlay if present.
         if (overlay)
         {
             if (!overlayLabel) overlayLabel = overlay.GetComponentInChildren<TMP_Text>(true);
@@ -67,7 +71,7 @@ public class ReportMenuController : MonoBehaviour
         }
     }
 
-    // ---------- UI building / selection ----------
+    // UI building / selection.
     private void BuildButtons(Transform parent, List<Button> list, System.Action<int> onClick)
     {
         list.Clear();
@@ -76,7 +80,7 @@ public class ReportMenuController : MonoBehaviour
         {
             var b = parent.GetChild(i).GetComponent<Button>();
             if (!b) continue;
-            int idx = i;
+            int idx = i; // Capture for closure
             b.onClick.AddListener(() => onClick(idx));
             list.Add(b);
         }
@@ -85,6 +89,7 @@ public class ReportMenuController : MonoBehaviour
     private void OnRoomClicked(int idx) { _selectedRoom = idx; SetHighlight(_roomButtons, idx); }
     private void OnTypeClicked(int idx) { _selectedType = idx; SetHighlight(_typeButtons, idx); }
 
+    // Apply selection color + scale to the chosen index and reset others.
     private void SetHighlight(List<Button> list, int index)
     {
         for (int i = 0; i < list.Count; i++)
@@ -97,6 +102,7 @@ public class ReportMenuController : MonoBehaviour
         }
     }
 
+    // Reset a column back to its “unselected” visuals.
     private void ResetButtonVisuals(List<Button> list)
     {
         foreach (var b in list)
@@ -107,6 +113,7 @@ public class ReportMenuController : MonoBehaviour
         }
     }
 
+    // Clear both selections and restore default visuals.
     public void Cancel()
     {
         _selectedRoom = -1;
@@ -115,10 +122,10 @@ public class ReportMenuController : MonoBehaviour
         ResetButtonVisuals(_typeButtons);
     }
 
-    // ---------- Report flow ----------
+    // Report flow.
     public void Report()
     {
-        // Ignore reports if battery is dead; also show loss if wired
+        // Ignore reports if battery is dead, also show loss if wired
         if (battery && battery.Current <= 0)
         {
             if (lossScreen) lossScreen.Show();
@@ -157,12 +164,13 @@ public class ReportMenuController : MonoBehaviour
         Cancel();
     }
 
-    // ---------- Overlay ----------
+    // Overlay.
+    // Pops the overlay to the front, locks UI briefly, and auto-hides after a delay.
     private void ShowOverlay(string text, bool success)
     {
         if (!overlay) return;
 
-        overlay.transform.SetAsLastSibling(); // draw above other UI
+        overlay.transform.SetAsLastSibling(); // Render above other UI
 
         if (_overlayCo != null) StopCoroutine(_overlayCo);
         if (overlayLabel) overlayLabel.text = text;
@@ -195,6 +203,7 @@ public class ReportMenuController : MonoBehaviour
         _overlayCo = null;
     }
 
+    // Enable/disable the key buttons as a group.
     private void SetButtonsInteractable(bool v)
     {
         if (reportButton)    reportButton.interactable = v;

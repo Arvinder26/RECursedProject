@@ -1,22 +1,17 @@
 using UnityEngine;
 using TMPro;
 
-/// <summary>
-/// Simple controller for the small “open/close anomaly menu” panel:
-/// - Toggles the panel on/off and updates the button label
-/// - Shows current selections (room/type) in the tiny header labels
-/// - Exposes SelectRoom/SelectType that my buttons call
-/// - OnCancel clears the selections and restores header text
-/// </summary>
+// Simple controller for the small “open/close anomaly menu” panel:
+
 public class AnomalyMenuController : MonoBehaviour
 {
     [Header("Panel")]
-    [SerializeField] RectTransform panelRoot;    // root rect for the panel (so I can SetActive on/off)
-    [SerializeField] CanvasGroup panelGroup;     // lets me fade/disable raycasts when needed
+    [SerializeField] RectTransform panelRoot;    // The root panel  rect for the panel. 
+    [SerializeField] CanvasGroup panelGroup;     // Controls alpha & raycasts.
 
     [Header("Open/Close button")]
-    [SerializeField] UnityEngine.UI.Button openCloseButton; // the button the player clicks to open/close
-    [SerializeField] TMP_Text openCloseLabel;               // the text element that says OPEN/CLOSE
+    [SerializeField] UnityEngine.UI.Button openCloseButton; // The big toggle button
+    [SerializeField] TMP_Text openCloseLabel;               // the button label OPEN/CLOSE
     [SerializeField] string openText  = "OPEN ANOMALY MENU";
     [SerializeField] string closeText = "CLOSE ANOMALY MENU";
 
@@ -29,17 +24,17 @@ public class AnomalyMenuController : MonoBehaviour
     string selectedRoom;
     string selectedType;
 
-    // cached defaults for the header text so I can restore after Cancel/Close
+    // Runtime state of the mini-panel and current selections.
     string _roomHeaderDefault;
     string _typeHeaderDefault;
 
     void Awake()
     {
-        // remember what the labels said in the editor (likely the static headers)
+        // Capture default header text from the labels set in the editor.
         _roomHeaderDefault = roomLabel  ? roomLabel.text  : "";
         _typeHeaderDefault = typeLabel ? typeLabel.text : "";
 
-        HideMenuImmediate();
+        HideMenuImmediate(); // No flash on scene load
     }
 
     /// <summary>Bound to the big button: flips between open and close.</summary>
@@ -49,7 +44,7 @@ public class AnomalyMenuController : MonoBehaviour
         else        OpenMenu();
     }
 
-    /// <summary>Show the panel and swap the button label to CLOSE.</summary>
+    // Show the panel and swap the button label to CLOSE.
     public void OpenMenu()
     {
         isOpen = true;
@@ -61,7 +56,7 @@ public class AnomalyMenuController : MonoBehaviour
         if (typeLabel) typeLabel.text = string.IsNullOrEmpty(selectedType) ? _typeHeaderDefault : selectedType;
     }
 
-    /// <summary>Hide the panel and swap the button label back to OPEN.</summary>
+    // Hide the panel and swap the button label back to OPEN.
     public void CloseMenu()
     {
         isOpen = false;
@@ -69,7 +64,7 @@ public class AnomalyMenuController : MonoBehaviour
         if (openCloseLabel) openCloseLabel.text = openText;
     }
 
-    /// <summary>Hard-hide with no transition; used on Awake to avoid flashes on load.</summary>
+    // Hard-hide with no transition, used on Awake to avoid flashes.
     void HideMenuImmediate()
     {
         isOpen = false;
@@ -77,42 +72,34 @@ public class AnomalyMenuController : MonoBehaviour
         if (openCloseLabel) openCloseLabel.text = openText;
     }
 
-    /// <summary>
-    /// Core show/hide for the panel. I update:
-    /// - GameObject active (fast on/off)
-    /// - CanvasGroup flags (so it blocks clicks only when visible)
-    /// - Alpha (0/1) so the intent is obvious in the editor
-    /// </summary>
+    // Core show/hide logic. Keeps GameObject active state
     void SetPanelVisible(bool show, bool instant = false)
     {
         if (panelRoot) panelRoot.gameObject.SetActive(show);
 
         if (panelGroup)
         {
-            panelGroup.interactable   = show;
-            panelGroup.blocksRaycasts = show;
+            panelGroup.interactable   = show;  // enable focus / nav when visible
+            panelGroup.blocksRaycasts = show;  // block clicks behind the panel
             panelGroup.alpha          = show ? 1f : 0f;
         }
     }
 
-    /// <summary>Called by room buttons. Stores the text and reflects it in the label.</summary>
+    // Called by a room button (via AnomalyChoiceButton).
     public void SelectRoom(string room)
     {
         selectedRoom = room;
         if (roomLabel) roomLabel.text = room;
     }
 
-    /// <summary>Called by anomaly-type buttons. Stores the text and reflects it in the label.</summary>
+    // Called by a type button (via AnomalyChoiceButton)
     public void SelectType(string type)
     {
         selectedType = type;
         if (typeLabel) typeLabel.text = type;
     }
 
-    /// <summary>
-    /// Clear both selections and close the mini-panel.
-    /// Important: restore the header text instead of blanking the labels.
-    /// </summary>
+    // Clear both selections and close the mini-panel.
     public void OnCancel()
     {
         selectedRoom = null;
@@ -124,10 +111,8 @@ public class AnomalyMenuController : MonoBehaviour
         CloseMenu();
     }
 
-    /// <summary>
-    /// For this small controller I just log the selection. The actual
-    /// report/validation happens in the main ReportMenuController.
-    /// </summary>
+   
+    // Clear both selections and close the panel.
     public void OnReport()
     {
         if (string.IsNullOrEmpty(selectedRoom) || string.IsNullOrEmpty(selectedType))

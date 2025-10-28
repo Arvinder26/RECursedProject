@@ -1,28 +1,29 @@
 using UnityEngine;
 
+// Spawns an extra copy/prefab for a limited time window.
 public class ExtraObject : MonoBehaviour, IAnomaly
 {
     [Header("Setup")]
-    [SerializeField] private Room room = Room.Bedroom1;
+    [SerializeField] private Room room = Room.Bedroom1; // Room this belongs to.
     
     [Header("Extra Object Settings")]
     [Tooltip("The prefab that will be spawned as the extra object (auto-created).")]
-    public GameObject extraObjectPrefab;
+    public GameObject extraObjectPrefab; // Prefab to instantiate.
     [Tooltip("Local position where the extra object will spawn.")]
-    public Vector3 spawnPosition;
+    public Vector3 spawnPosition; // Local spawn position.
     [Tooltip("Local rotation (Euler angles) for the spawned object.")]
-    public Vector3 spawnRotation;
+    public Vector3 spawnRotation; // Local spawn rotation.
 
     [Header("Timer Settings")]
-    [SerializeField] private float reportWindow = 30f;
-    [SerializeField] private SegmentBattery battery;
+    [SerializeField] private float reportWindow = 30f; // Seconds to report before penalty.
+    [SerializeField] private SegmentBattery battery; // Battery to drain on miss.
 
     [Header("Debug/State")]
-    public bool hasExtraAnomaly = false;
+    public bool hasExtraAnomaly = false; // True while anomaly is active.
 
-    private GameObject spawnedInstance;
-    private float deadlineTimer = 0f;
-    private bool isTimerActive = false;
+    private GameObject spawnedInstance; // Active spawned object.
+    private float deadlineTimer = 0f; // Countdown timer.
+    private bool isTimerActive = false; // Guards countdown.
 
     // Stored original transform for easy setup workflow
     private Vector3 savedOriginalPosition;
@@ -42,11 +43,11 @@ public class ExtraObject : MonoBehaviour, IAnomaly
     {
         if (isTimerActive && hasExtraAnomaly)
         {
-            deadlineTimer -= Time.deltaTime;
+            deadlineTimer -= Time.deltaTime; // Tick down.
             
             if (deadlineTimer <= 0f)
             {
-                OnDeadlineExpired();
+                OnDeadlineExpired(); // Apply penalty and reset.
             }
         }
     }
@@ -152,7 +153,7 @@ public class ExtraObject : MonoBehaviour, IAnomaly
 
     public float GetTimeRemaining() => isTimerActive ? Mathf.Max(0f, deadlineTimer) : 0f;
 
-    // ========== SUPER EASY SETUP WORKFLOW ==========
+    // SUPER EASY SETUP WORKFLOW 
 
     [ContextMenu("STEP 1: Save Original Transform (Starting Position)")]
     private void SaveOriginalTransform()

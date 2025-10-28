@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// Small, resusable button used by the anomaly report UI.
 public class AnomalyChoiceButton : MonoBehaviour
 {
     public enum Kind { Room, Type }
@@ -9,8 +10,10 @@ public class AnomalyChoiceButton : MonoBehaviour
 
     public void Choose()
     {
-        if (!menu) return;
-        if (kind == Kind.Room) menu.SelectRoom(value);
+        if (!menu) return; // Acts as a safety
+
+	//Route the value into the correct selection bucket.
+        if (kind == Kind.Room) menu.SelectRoom(value); 
         else                   menu.SelectType(value);
     }
 }

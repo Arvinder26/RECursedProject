@@ -1,13 +1,14 @@
 using UnityEngine;
 
+// Randomly flickers a light for a limited time windo
 public class LightFlickerAnomaly : MonoBehaviour, IAnomaly
 {
     [Header("Anomaly Info")]
-    [SerializeField] private Room room = Room.Bathroom;
-    [SerializeField] private float deadline = 60f;
+    [SerializeField] private Room room = Room.Bathroom; // Room this belongs to.
+    [SerializeField] private float deadline = 60f; // Seconds to report before auto-revert.
 
     [Header("Light Settings")]
-    [SerializeField] private Light targetLight;
+    [SerializeField] private Light targetLight; // Light to flicker.
 
     [Header("Flicker Settings")]
     [SerializeField] private float minFlickerInterval = 0.05f;
@@ -16,8 +17,8 @@ public class LightFlickerAnomaly : MonoBehaviour, IAnomaly
     [SerializeField] private float maxIntensity = 1.0f;
 
     [Header("Audio Settings")]
-    [SerializeField] private AudioSource audioSource;
-    [SerializeField] private bool playAudio = true;
+    [SerializeField] private AudioSource audioSource; 
+    [SerializeField] private bool playAudio = true; // Toggle audio.
 
     [Header("Battery Penalty")]
     [SerializeField] private SegmentBattery battery;
@@ -157,7 +158,7 @@ public class LightFlickerAnomaly : MonoBehaviour, IAnomaly
         return Mathf.Max(0f, remaining);
     }
 
-    // Optional: Manual control methods (for testing)
+    // Manual control methods (for testing)
     [ContextMenu("Test Trigger")]
     private void TestTrigger()
     {
