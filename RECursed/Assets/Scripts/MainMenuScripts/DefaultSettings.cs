@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class DefaultSettingsButton : MonoBehaviour
 {
+    // UI References for settings
     public Slider fovSlider;       
     public Slider brightnessSlider;
     public Toggle subtitlesToggle;
@@ -10,6 +11,7 @@ public class DefaultSettingsButton : MonoBehaviour
     public Slider musicSlider;
     public Slider sfxSlider;
 
+    // Player prefs to save settings
     private const string FOVKey = "PlayerFOV";
     private const string BrightnessKey = "Brightness";
     private const string SubtitlesKey = "SubtitlesEnabled";
@@ -30,6 +32,7 @@ public class DefaultSettingsButton : MonoBehaviour
         Debug.Log("Settings reset to defaults ✅");
     }
 
+    // Resets to default FOV
     private void ResetFOV()
     {
         float defaultFOV = 60f;
@@ -43,6 +46,7 @@ public class DefaultSettingsButton : MonoBehaviour
         Debug.Log("FOV reset to default: " + defaultFOV);
     }
 
+    // Resets to default brightness level
     private void ResetBrightness()
     {
         float defaultBrightness = 1f;
@@ -56,6 +60,7 @@ public class DefaultSettingsButton : MonoBehaviour
         Debug.Log("Brightness reset to default: " + defaultBrightness);
     }
 
+    // Resets subtitles to ON
     private void ResetSubtitles()
     {
         int defaultSubtitles = 1;
@@ -69,6 +74,7 @@ public class DefaultSettingsButton : MonoBehaviour
         Debug.Log("Subtitles reset to default: ON ✅");
     }
 
+    // Reset master volume
     private void ResetMasterVolume()
     {
         float defaultVolume = 0.5f;
@@ -81,6 +87,7 @@ public class DefaultSettingsButton : MonoBehaviour
         Debug.Log("Master volume reset to default: " + defaultVolume);
     }
 
+    // Reset music volume
     private void ResetMusicVolume()
     {
         float defaultVolume = 0.5f;
@@ -93,6 +100,7 @@ public class DefaultSettingsButton : MonoBehaviour
         Debug.Log("Music volume reset to default: " + defaultVolume);
     }
 
+    // Reset SFX volume
     private void ResetSFXVolume()
     {
         float defaultVolume = 0.5f;

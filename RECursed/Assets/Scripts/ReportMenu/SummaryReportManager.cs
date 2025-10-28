@@ -5,6 +5,7 @@ public class SummaryReportManager : MonoBehaviour
 {
     [SerializeField] private TMP_Text summaryText;
 
+    // Counters for each result type
     private int correctCount = 0;
     private int missedCount = 0;
     private int misreportedCount = 0;
@@ -17,23 +18,28 @@ public class SummaryReportManager : MonoBehaviour
         RefreshText();
     }
 
+    // Called when player correctly reports an anomaly
     public void ShowSuccess()
     {
         correctCount++;
         RefreshText();
     }
 
+    // Called when player misses to report an anomaly
     public void ShowMissed()
     {
         missedCount++;
         RefreshText();
     }
 
+    // Called when player reports a false anomaly
     public void ShowMisreport()
     {
         misreportedCount++;
         RefreshText();
     }
+
+    // Resets all counts to zero
     public void ResetCounts()
     {
         correctCount = 0;
@@ -42,6 +48,7 @@ public class SummaryReportManager : MonoBehaviour
         RefreshText();
     }
 
+    // Update UI with current results
     private void RefreshText()
     {
         summaryText.text =

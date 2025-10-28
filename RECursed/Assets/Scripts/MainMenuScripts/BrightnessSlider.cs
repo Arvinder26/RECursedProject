@@ -7,10 +7,9 @@ public class BrightnessSlider : MonoBehaviour
 
     void Start()
     {
-        //Remove if player brightness should be saved and kept for next game launch
-        PlayerPrefs.DeleteKey("Brightness");
-
         float saved;
+
+        // Load saved brightness
         if (PlayerPrefs.HasKey("Brightness"))
         {
             saved = PlayerPrefs.GetFloat("Brightness");
@@ -21,13 +20,15 @@ public class BrightnessSlider : MonoBehaviour
             PlayerPrefs.SetFloat("Brightness", saved);
         }
 
+        // Sync slider with the current brightness
         slider.value = saved;
+
+        // Apply brightness to screen
         BrightnessManager.Instance.SetBrightness(saved);
         slider.onValueChanged.AddListener(OnSliderChanged);
     }
 
-
-
+    // Called when brightness slider is moved
     void OnSliderChanged(float value)
     {
         BrightnessManager.Instance.SetBrightness(value);

@@ -1,38 +1,25 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using System.Collections;
 
 public class SFXVolumeSetting : MonoBehaviour
 {
     public Slider sfxSlider;
     private const string SFXKey = "SFXVolume";
 
-    void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
-    }
-
-    void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
     void Start()
     {
+        // Load saved volume (default: full volume)
         float savedVolume = PlayerPrefs.GetFloat(SFXKey, 1f);
+
+        // Sync slider with saved value
         if (sfxSlider != null)
             sfxSlider.value = savedVolume;
 
-        // Apply immediately, even on first scene load
-        StartCoroutine(ApplyVolumeNextFrame(savedVolume));
+        // Apply volume to all SFX sources right away
+        ApplyVolume(savedVolume);
     }
 
+    // Called when slider value changes
     public void OnSFXSliderChanged(float value)
     {
         ApplyVolume(value);
@@ -40,37 +27,29 @@ public class SFXVolumeSetting : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        float savedVolume = PlayerPrefs.GetFloat(SFXKey, 1f);
-        StartCoroutine(ApplyVolumeNextFrame(savedVolume));
-    }
-
-    private IEnumerator ApplyVolumeNextFrame(float value)
-    {
-        yield return null; // wait one frame for all objects to exist
-        ApplyVolume(value);
-    }
-
+    // Update all AudioSources tagged "SFX"
     private void ApplyVolume(float value)
     {
-        // Find all AudioSources, including inactive ones
-        AudioSource[] allSources = Resources.FindObjectsOfTypeAll<AudioSource>();
+        var sfxSources = GameObject.FindGameObjectsWithTag("SFX");
 
-        bool foundAny = false;
-        foreach (var audio in allSources)
+        if (sfxSources.Length == 0)
         {
-            if (audio.gameObject.CompareTag("SFX"))
-            {
-                audio.volume = value;
-                foundAny = true;
-                Debug.Log($"[SFXVolumeSetting] Adjusted SFX on: {audio.gameObject.name}");
-            }
+            Debug.Log($"No SFX sources found in scene: {UnityEngine.SceneManagement.SceneManager.GetActiveScene().name}");
         }
 
-        if (!foundAny)
+        // Apply volume for each found source
+        foreach (var go in sfxSources)
         {
-            Debug.Log("[SFXVolumeSetting] No SFX audio sources found in scene: " + SceneManager.GetActiveScene().name);
+            var audio = go.GetComponent<AudioSource>();
+            if (audio != null)
+            {
+                audio.volume = value;
+                Debug.Log($"[SFXVolumeSetting] Adjusted SFX on: {go.name}");
+            }
+            else
+            {
+                Debug.Log($"GameObject tagged 'SFX' has no AudioSource: {go.name}");
+            }
         }
     }
 }
