@@ -8,11 +8,15 @@ public class MusicVolumeSetting : MonoBehaviour
 
     void Start()
     {
+        // Load saved value
         float savedVolume = PlayerPrefs.GetFloat(MusicKey, 1f);
         musicSlider.value = savedVolume;
+        
+        // Apply volume to all music sources
         ApplyVolume(savedVolume);
     }
 
+    // Called if music slider changes
     public void OnMusicSliderChanged(float value)
     {
         ApplyVolume(value);
@@ -20,6 +24,7 @@ public class MusicVolumeSetting : MonoBehaviour
         PlayerPrefs.Save();
     }
 
+    // Update volume for AudioSources tagged with "Music"
     void ApplyVolume(float value)
     {
         var musicSources = GameObject.FindGameObjectsWithTag("Music");
@@ -28,6 +33,7 @@ public class MusicVolumeSetting : MonoBehaviour
             Debug.Log("No music audio sources found in the scene.");
         }
 
+        // Apply volume for each found source
         foreach (var go in musicSources)
         {
             var audio = go.GetComponent<AudioSource>();

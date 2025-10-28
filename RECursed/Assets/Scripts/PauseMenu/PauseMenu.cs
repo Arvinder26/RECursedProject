@@ -23,6 +23,7 @@ public class PauseMenu : MonoBehaviour
         }
     }
 
+    // Resumes game loop when called
     public void ResumeGame()
     {
         PauseMenuUI.SetActive(false);
@@ -36,6 +37,7 @@ public class PauseMenu : MonoBehaviour
         Cursor.visible = false;
     }
 
+    // Opens pause menu when called
     void PauseGame()
     {
         PauseMenuUI.SetActive(true);
@@ -49,6 +51,7 @@ public class PauseMenu : MonoBehaviour
         Cursor.visible = true;
     }
 
+    // Returns to main menu while in pause menu
     public void ReturnToMenu()
     {
         Time.timeScale = 1f;
